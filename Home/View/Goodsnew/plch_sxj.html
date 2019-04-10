@@ -1,0 +1,386 @@
+<block name="head">
+<include file="Public/head" />
+
+<css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+<js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+<js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+<css href="__PUBLIC__/assets/css/ace.min.css" />
+<css href="__PUBLIC__/assets/css/ace-skins.min.css" />
+<js href="__PUBLIC__/layer/layer.js" />
+
+
+
+<!-- <css href="__PUBLIC__/jquery-ui-1.10.3/themes/base/jquery.ui.all.css" /> -->
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.core.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.widget.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.position.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.menu.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.autocomplete.js" />
+	 <css href="__PUBLIC__/jquery-ui-1.10.3/demos/demos.css" /> 
+  <style>
+   body{background:#fff;min-height:0px;max-height:700px;}
+   .pd15{padding:15px;}
+   .mg15{margin:15px;}
+   .mgb15{margin-bottom:15px;}
+   .sysline{
+      width:100%;;
+	  border-top:1px solid #c0dcea;
+	  border-bottom:1px solid #fff;
+	  margin:0px 0 20px;
+   }
+   .layFooter{
+      width:100%;height:40px; margin:0 auto 20px;text-align:center;
+   }
+   .fixedbottom{width:100%;position:fixed;bottom:0px;background-color:#fff;}
+   .biaodan{float:left;padding-left:15px;}
+   .search-bar input,.search-bar select{
+		display:inline-block;
+		height:30px;
+		font-size:14px;
+		line-height:
+		color:#555555;
+		vertical-align:middle;
+		-webkit-border-radius:4px !important;
+		-moz-border-radius:4px !important;
+		border-radius:4px !important;
+		border-color:#a4bed4;
+		text-align:left;
+		padding:4px 6px;
+		width:200px;
+	 }
+	 .search-bar input{width:200px;}
+	 .search-bar select{width:100px;}
+	 .btn1{
+		    font-size:12px;	
+			height:30px;
+			 width:90px;
+			-webkit-border-radius:2px;
+			-moz-border-radius:2px;
+			border-radius:2px;
+			border:0;
+			text-shadow:none;
+			background-image:none;
+			vertical-align:middle;
+			color:#ffffff;
+		 }
+   </style>
+</block>
+
+<block name="content">
+
+
+<div class="pd15">
+
+<span  id="zuhe_goodslist"  style="display:none">{$goods_list} </span>
+<span  id="checkeds_list_id"  style="display:none"> </span>
+		<div  class="row search-bar" >
+		<form >
+		   <span class="mgb15 biaodan">
+				<input class="form-control" name="goods_name" type="text"  placeholder="商品名称"  id="project"/>
+				<!-- <input class="form-control" name="goods_name" id="goods_name" type="text"  placeholder="商品名称"/> -->
+		  </span>
+
+
+					<span class="biaodan mgb15">商品类型
+	
+					
+					   <select id="goods_type" name="goods_type"  >
+					    <option value="0">全部</option>
+						<volist name="type_list" id="typeinfo">
+						  <option value="{$typeinfo.type_id}">{$typeinfo.type_name}</option>
+						</volist>
+					   </select>
+					</span>
+
+			<span class="mgb15 biaodan"> <button type="button" class="btn1 btn-purple btn-sm" onclick="doSearch()" id="sousuo">搜索<i class="fa fa-search"></i></button></span>
+
+		</form>
+	</div>
+
+		<div id="jqgrid" style="margin-bottom:82px;">
+			<table id="grid-table"></table>
+			 <div id="grid-pager"></div>
+		</div>
+		<!--
+  		<table class="table table-striped">
+				<thead>
+					<tr>
+					    <th>
+							<label><input type="checkbox" id='check_all' onclick='check_all(this),checked_list()'/>操作</label>
+						</th>
+						<th>
+							分类
+						</th>
+						<th>
+							商品名称
+						</th>
+		
+						<th>
+							仓库库存
+						</th>					
+					</tr>
+				</thead>
+				
+		
+	</table>
+		-->
+		
+		
+ <div class="fixedbottom">	
+	<div class="sysline"></div>
+	<div class="layFooter">
+        <button type="button" onclick="submitplch();" class="btn btn-primary">确定</button>
+		<button type="button" class="btn btn-default" onclick="exit()">取消</button>
+    </div>
+ </div>
+	
+
+
+</div>
+
+
+</block>
+
+<block name="script">
+<script>
+
+       $(function(){
+            $('#grid-table').jqGrid({
+                url: '{:U("getshangpininfo_plch_sxj_list")}',
+                datatype: "json",
+                type:"get",
+                height:"auto",
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[
+				    {label:'网吧id',name:'wbid',hidden:true,},
+                    {label:'商品id',name:'goods_id',hidden:true,},
+					{label:'商品类型',name:'type_name',width:50,},
+                    {label:'商品名称',name:'goods_name',width:100,},
+					{label:'货架数量',name:'kc_num',width:60},
+					{label:'仓库数量',name:'ck_num',width:60},
+                    {label:'商品规格',name:'guige',hidden:true},
+                    {label:'商品单位',name:'unit',hidden:true,width:70},	
+                ],
+                styleUI : 'Bootstrap',
+                rowNum:10,
+                pager:'#grid-pager',
+				multiselect: true,
+                viewrecords: true,
+				gridComplete: function()
+				{
+                   var ids = $("#grid-table").jqGrid('getDataIDs');
+                    var add,edit,save,del,bangding,info_edit,edit2,wbid = '';
+
+                    var end_str,sta_str,position_str;                                             										
+                    var storage=window.localStorage;
+					var yicun_id=storage.getItem("goods_id"); 
+					
+                        for(var i=0;i < ids.length;i++)
+                        {
+                            var getRow = $('#grid-table').getRowData(ids[i]);//获取当前的数据行  
+                            var colVal = getRow.wbid;    
+                            							
+                            var rownum = ids[i];
+							var col_position= getRow.position;  
+							if(col_position=='0')
+							{
+							  position_str='仓库';
+							}
+							else if(col_position=='1')
+							{
+							   position_str='货架';
+							}
+																					 						   				                                                         
+						
+							$("#grid-table").jqGrid('setRowData',ids[i],{position:position_str});													   								
+								
+                        }
+						
+						var index = parent.layer.getFrameIndex(window.name); 
+                          parent.layer.iframeAuto(index);	
+                                                  
+                }
+  
+    
+            });
+
+
+
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+		
+        function doSearch()
+		{
+    $('#grid-table').jqGrid('setGridParam',{
+        postData:{                 
+            goods_name:$('#goods_name').val(),
+            goods_type:$('#goods_type').val(),
+
+            
+           
+                  
+        }
+    }).trigger('reloadGrid');
+   }
+   
+   doSearch();
+ 
+
+	function submitplch()
+	{
+	  
+	    var storage=window.localStorage;  		
+       var newgoods_id_str='';
+	   var rowKey = $("#grid-table").getGridParam("selrow");
+		if (!rowKey)
+		{
+		  alert("必须选择一个商品");
+		  return;
+		}          
+		else 
+		{
+			var selectedIDs = $("#grid-table").getGridParam("selarrrow");
+			for (var i = 0; i < selectedIDs.length; i++) 
+			{
+				var row = $("#grid-table").jqGrid('getRowData', selectedIDs[i]);
+				newgoods_id_str += row.goods_id + ",";
+			}
+		}
+
+				
+		if (newgoods_id_str=='')
+		{
+		  alert("必须选择一个商品");
+		  return;
+		}          
+		else 
+		{
+		    var yuan_goods_id=storage.getItem("goods_id");
+			if(yuan_goods_id==null)
+			{
+			  var new_goods_id=newgoods_id_str;
+			}
+			else
+			{
+			  var new_goods_id=yuan_goods_id+','+newgoods_id_str;
+			}
+				
+			  storage.setItem("goods_id",new_goods_id); 		   
+			  parent.$('#flag').val('1').change();
+			  parent.layer.closeAll();
+		}
+		
+		
+		
+
+
+    }
+   function exit()
+   {
+        parent.layer.closeAll();
+   }
+</script>
+<script>
+    document.onkeydown = function(e){
+        if((e||event).keyCode==13)
+		  $("#goods_name").blur();
+		//doSearch();
+        // $("#sousuo").click();
+      };
+
+</script>
+
+<script>
+	function check_all(checkbox)
+	{
+		if(checkbox.checked == true)
+		{
+			$("input[name='checkbox']").each(function(){this.checked=true;});
+		}
+		else
+		{
+			 $("input[name='checkbox']").each(function(){this.checked=false;});
+		}
+	}
+	
+	function checked_list()
+	{
+		var check_list='';
+		$('input[name="checkbox"]:checked').each(function()
+		{ 
+			var check_list_id=$(this).attr('id');
+			check_list+=check_list_id.slice(8,check_list_id.length)+','; 
+		}); 
+		//console.log(check_list);
+		$('#checkeds_list_id').html(check_list)
+	}
+	
+	//  showallgoodslist();
+	  function  showallgoodslist()
+	  {
+	     var goods_list_str=$('#zuhe_goodslist').html();
+		
+		 console.log(goods_list_str);
+	     var data = JSON.parse(goods_list_str); 
+		console.log(goods_list_str);
+		
+	     var html="";		
+        for (var i = 0; i <data.length; i++) 
+		{	
+			if(data[i].is_zuhe==0)
+			{
+				var goods_name="'"+data[i].goods_name+"'";
+				html+='<tbody id=tb'+data[i].goods_id+'>';				
+				html+='	<tr>';
+				html+='     <td><input name="checkbox" type="checkbox"  id=checkbox'+data[i].goods_id+' onclick="checked_list()" /></td>';
+				html+='     <td>'+data[i].type_name+'</td>';
+				html+='		<td><span>'+data[i].goods_name+'</span></td>';
+				html+='		<td>'+data[i].ck_num+'</td>';												
+				html+='	</tr>';
+				html+='</tbody>';
+			}
+			else  if(data[i].is_zuhe==2)  //显示组合商品
+            {
+			   //有实际的组合商品
+			     var zuhedata=data[i].zuhelist;
+				 if(zuhedata.length>0)
+				 {
+					html+='<tbody id=tb'+data[i].goods_id+'>';			
+					html+='	<tr>';
+					html+='     <td><input type="checkbox" name="checkbox" id=checkbox'+data[i].goods_id+'   onclick="checked_list()" /></td>';
+					html+='     <td>'+data[i].type_name+'</td>';
+					html+='		<td><span>'+data[i].goods_name+'</span></td>';
+					html+='		<td></td>';												
+					html+='	</tr>';
+					
+					
+				     for(var j=0;j<zuhedata.length;j++)
+					 {
+						html+='	<tr>';
+						html+='     <td></td>';
+						html+='     <td></td>';
+						html+='		<td><span>'+zuhedata[j].goods_name+'</span></td>';
+						html+='		<td>'+zuhedata[j].ck_num+'</td>';												
+						html+='	</tr>';
+						
+					 }
+					 html+='</tbody>';
+				 }else
+				 {
+				 
+				 } 
+			
+			   
+			   
+			}
+			
+        }; 
+         $(" .table-striped").append(html);		 
+	  }
+
+</script>
+
+</block>

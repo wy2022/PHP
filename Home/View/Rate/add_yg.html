@@ -1,0 +1,105 @@
+<block name="head">
+<include file="Public/head" />
+<css href="__PUBLIC__/tree/css/common.css" />
+<js href="__PUBLIC__/layer/layer.js" />
+</block>
+
+<block name="content">
+<form id="form_add_yg">
+	<div id="divValidate" >
+        <div id="trnbid" class="queryItem">
+            <div class="inTitle fl"><label style="color: red;font-weight: bold;">*&nbsp;&nbsp;</label>账号</div>
+            <div class="inElmt fl">
+                <input type="text" name="txtUser" id="txtUser" value="" class="w170 required"  />
+            </div>
+        </div>
+
+        <div id="trpwd" class="queryItem">
+            <div class="inTitle fl">密码</div>
+            <div class="inElmt fl">
+                <input type="password" name="txtPwd" value="" class="w170"  />
+            </div>
+        </div>
+
+        <div class="queryItem">
+            <div class="inTitle fl">所在组</div>
+            <div class="inElmt fl">
+            <select name="yggroup_id">
+                        <volist name="yggrouplist" id="group">
+                            <option value="{$group.role_id}">{$group.role_name}</option>
+                        </volist>
+            </select>
+            </div>
+        </div>
+
+
+        <div class="sysLine"> </div>
+        <div class="layFooter">
+            <button type="button" class="btn btn-primary" onclick="submitAddYg();">确定</button>
+		    <button type="button" class="btn btn-default" onclick="exit()">取消</button>
+        </div>
+    </div>
+</form>
+</block>
+
+<block name="script">
+<script>
+  //判断文本框是否为空
+function checktext(id){
+    if(document.getElementById(id).value.length==0){
+      document.getElementById(id).focus();
+      return false;
+    }else{
+      return true;
+    }
+}
+function submitAddYg(){
+         var txtUser=checktext('txtUser');
+          if(txtUser==false)
+           {
+            layer.tips('账号不能为空！', '#txtUser');
+              return false;
+           }
+
+
+      var param = $("#form_add_yg").serialize();
+      $.ajax({
+       url : "{:U("add_yg_set")}",
+       type : "post",
+       dataType : "json",
+       data: param,
+       success : function(data) 
+       {
+        
+                   if(data.result==1)
+                  {
+                         layer.msg('添加成功', {
+                                  offset: 0,
+                                  shift: 6,
+                                  icon:1,
+                                },function(){ 
+                              parent.location.reload();
+                                            
+                              });
+                  }
+                  else
+                  {
+                  
+                                layer.msg(data.message, {
+                              offset: 0,
+                              shift: 6,
+                              icon:2,
+                            });
+                  } 
+       },//success完成
+    });  
+
+
+}
+   function exit(){
+        parent.layer.closeAll();
+   }
+
+
+</script>
+</block>

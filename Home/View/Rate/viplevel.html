@@ -1,0 +1,417 @@
+<extend name="Public/base" />
+<block name="head">
+<js href="__PUBLIC__/layer/layer.js" />
+    <js href="__PUBLIC__/layer/myalert.js" />
+  <css href="__PUBLIC__/layer/myalert.css"/>
+</block>
+<block name="content">
+    <div class="tabbable">
+        <include file="nav" />
+        <div class="tab-content">
+            <div class="tab-pane active">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!-- <div>提升等级：<label><input type="checkbox" />按积分提升会员级别</label>  <button class="btn btn-success btn-minier">确定</button></div> -->
+                        <!-- <hr /> -->
+                        <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#addviplevel" onclick="addVipLevel();" style="margin-bottom:10px;">添加会员等级</button>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>最小积分</th>
+                                    <th>上机费折扣(单位：%)</th>
+                                    <th>商品销售折扣(单位：%)</th>
+                                    <th colspan="2">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tb">
+                                <volist name="viplevellist" id="viplevel">
+                                    <tr id="v{$viplevel.id}">
+									        
+                                        <td>{$viplevel.Name}</td>
+                                        <td>{$viplevel.SmallIntegral|default=0}</td>
+                                        <td>{$viplevel.SjDiscount|default='100%'}</td>
+                                        <td>{$viplevel.SpDiscount|default='100%'}</td>
+                                        <td><a href="javascript:editVipLevel({$viplevel.id});">修改</a></td>
+                                        <td><a href="javascript:deleteVipLevel({$viplevel.id});">删除</a></td>
+                                    </tr>
+                                </volist>
+                            </tbody>
+                        </table>
+						
+						<!-- <div>女性上机折扣<input type="type" id='female_discount' value="0" onkeyup="integer2Validate('female_discount','女性上机费折扣不能为空','只能输入0-100的数字')" /> %</div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+    <div class="modal fade" id="addviplevel" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title">添加会员等级</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <input class="hidden" type="text" name="id"/>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">等级名称：</label>
+                            <input type="text" class="col-sm-4" id="name_add_yz" name="name" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">最小积分：</label>
+                            <input type="text" class="col-sm-4" id="minpoints_add_yz" onkeyup="integerValidate('minpoints_add_yz','最小积分不能为空','最小积分只能输入数字')"  name="minpoints" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">上机费折扣：</label>
+                            <input type="text" class="col-sm-4" id="logsdiscount_add_yz" onkeyup="integerValidate('logsdiscount_add_yz','上机费折扣不能为空','上机费折扣输入数字')" name="logsdiscount" /><span style="padding-left:5px;line-height:28px;">%</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">商品销售折扣：</label>
+                            <input type="text" class="col-sm-4" id="goodsdiscount_add_yz" onkeyup="integerValidate('goodsdiscount_add_yz','商品销售折扣不能为空','商品销售折扣输入数字')" name="goodsdiscount" /><span style="padding-left:5px;line-height:28px;">%</span>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align:center;">
+                    <button type="button" class="btn btn-primary" onclick="submitAddVipLevel();">添加</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editviplevel" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title">修改会员等级</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <input class="hidden" type="text" name="id"/>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">等级名称：</label>
+                            <input type="text" class="col-sm-4" id="name_edit_yz" name="name" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">最小积分：</label>
+                            <input type="text" class="col-sm-4" id="minpoints_edit_yz" onkeyup="integerValidate('minpoints_edit_yz','最小积分不能为空','最小积分只能输入数字')" name="minpoints" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">上机费折扣：</label>
+                            <input type="text" class="col-sm-4" id="logsdiscount_edit_yz"  onkeyup="integerValidate('logsdiscount_edit_yz','上机费折扣不能为空','上机费折扣输入数字')" name="logsdiscount" /><span style="padding-left:5px;line-height:28px;">%</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">商品销售折扣：</label>
+                            <input type="text" class="col-sm-4" id="goodsdiscount_edit_yz" onkeyup="integerValidate('goodsdiscount_edit_yz','商品销售折扣不能为空','商品销售折扣输入数字')" name="goodsdiscount" /><span style="padding-left:5px;line-height:28px;">%</span>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align:center;">
+                    <button type="button" class="btn btn-primary" onclick="submitEditVipLevel();">修改</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+
+<block name="script">
+    <script>
+        function editVipLevel(id){
+            var tr = $('#v'+id);		    
+            $('#editviplevel input[name="id"]').val(id);
+            $('#editviplevel input[name="name"]').val(tr.find('td:eq(0)').text());
+            $('#editviplevel input[name="minpoints"]').val(tr.find('td:eq(1)').text());
+            $('#editviplevel input[name="logsdiscount"]').val(tr.find('td:eq(2)').text());
+            $('#editviplevel input[name="goodsdiscount"]').val(tr.find('td:eq(3)').text());
+			var name_val=$('#editviplevel input[name="name"]').val();
+			if(name_val=='普通会员'||name_val=='黄金会员'||name_val=='钻石会员'){
+			   $('#editviplevel input[name="name"]').attr("disabled",true); 
+			}
+			else{
+			$('#editviplevel input[name="name"]').attr("disabled",false); 
+			}
+            $('#editviplevel').modal('show');
+        }
+        function addVipLevel()
+		{
+            $('#addviplevel input').val('');
+            $('#addviplevel input[name="name"]').val('');
+			$('#addviplevel input[name="minpoints"]').val('');
+            $('#addviplevel input[name="logsdiscount"]').val('');
+            $('#addviplevel input[name="goodsdiscount"]').val('');
+        }
+		//普通会员、黄金会员、钻石会员没有删除
+		var tb = document.getElementById("tb");  //根据id找到这个表格
+        var rows = tb.rows;               //取得这个table下的所有行
+		for(var i=0;i<rows.length;i++)
+		{
+		 var keyword=rows[i].cells[0].innerHTML;
+		 if(keyword=='普通会员'||keyword=='黄金会员'||keyword=='钻石会员'){
+		    rows[i].deleteCell(5);
+	     }
+		}
+
+
+
+        //判断文本框是否为空
+        function checktext(id){
+            if(document.getElementById(id).value.length==0){
+              document.getElementById(id).focus();
+              return false;
+            }else{
+              return true;
+            }
+        }
+       //判断文本框是否为空
+        function check_linshika(id){
+            if(document.getElementById(id).value=="临时卡"){
+              document.getElementById(id).focus();
+              return false;
+            }else{
+              return true;
+            }
+        }
+	    function check_kong(id){
+            if(document.getElementById(id).value.indexOf(" ")!=-1){
+              document.getElementById(id).focus();
+              return false;
+            }else{
+              return true;
+            }
+        }
+	   
+	   
+    //判断输入是否为数字
+    function isNum(id){
+      var val=document.getElementById(id).value;
+       var a=/^\d*$/;
+      if(!a.test(val))
+      {
+        document.getElementById(id).focus();
+        return false;
+      }else{
+        return true;
+      }
+    }
+
+function integerValidate(id,msg1,msg2){
+ var num=/^\d*$/;
+var value=$('#'+id).val();
+   if(value.length==0){ 
+     layer.tips(msg1, '#'+id);
+   }else if(!(num.test(value)))
+	{
+	   $('#'+id).val("");
+	  $('#'+id).focus();
+      layer.tips(msg2, '#'+id);
+	}
+}
+function integer2Validate(id,msg1,msg2){
+ var num=/^(100|[1-9]\d|\d)$/;
+var value=$('#'+id).val();
+   if(value.length==0){ 
+     layer.tips(msg1, '#'+id);
+   }else if(!(num.test(value)))
+	{
+	   $('#'+id).val("");
+	  $('#'+id).focus();
+      layer.tips(msg2, '#'+id);
+	}
+}
+        function submitAddVipLevel()
+		{
+
+          var addname=checktext('name_add_yz');
+          var addname1=check_linshika('name_add_yz');
+          var addname2=check_kong('name_add_yz');
+          if(addname==false)
+           {
+              layer.tips('等级名称不能为空', '#name_add_yz');
+              return false;
+           }
+		   
+		   if(addname1==false)
+           {
+              layer.tips('等级名称不能为临时卡', '#name_add_yz');
+              return false;
+           }
+		   if(addname2==false)
+           {
+              layer.tips('等级名称不能有空格', '#name_add_yz');
+              return false;
+           }
+          var addminpoints=checktext('minpoints_add_yz');
+          if(addminpoints==false)
+           {
+              layer.tips('最小积分不能为空', '#minpoints_add_yz');
+              return false;
+           }
+           var addminpoints1=isNum('minpoints_add_yz');
+          if(addminpoints1==false)
+           {
+              layer.tips('最小积分只能输入数字', '#minpoints_add_yz');
+              return false;
+           }
+
+          var addlogsdiscount=checktext('logsdiscount_add_yz');
+          if(addlogsdiscount==false)
+           {
+              layer.tips('上机费折扣不能为空', '#logsdiscount_add_yz');
+              return false;
+           }
+
+            var addlogsdiscount1=isNum('logsdiscount_add_yz');
+          if(addlogsdiscount1==false)
+           {
+              layer.tips('上机费折扣输入数字', '#logsdiscount_add_yz');
+              return false;
+           }
+           var addgoodsdiscount=checktext('goodsdiscount_add_yz');
+          if(addgoodsdiscount==false)
+           {
+              layer.tips('商品销售折扣不能为空', '#goodsdiscount_add_yz');
+              return false;
+           }
+            var addgoodsdiscount1=isNum('goodsdiscount_add_yz');
+          if(addgoodsdiscount1==false)
+           {
+              layer.tips('商品销售折扣输入数字', '#goodsdiscount_add_yz');
+              return false;
+           }
+
+        
+
+
+            $(function()
+              {
+                     $.ajax({  
+                         type: "post",
+                         url: '{:U("addVipLevel_set")}',
+                         data: {oper:'add',name:$('#addviplevel input[name="name"]').val(),minpoints:$('#addviplevel input[name="minpoints"]').val(),logsdiscount:$('#addviplevel input[name="logsdiscount"]').val(),goodsdiscount:$('#addviplevel input[name="goodsdiscount"]').val()},
+                         dataType: "json",
+                         success:function(data)
+                         {                                         
+
+                                if(data.result=="1")
+                                {
+                                    myalertsuccess('新增成功，请点击右侧 "更新重启网吧服务端"。');
+                                }else{
+                                     myalertdanger('新增失败,请重新操作');
+                                }
+                        },
+                        // error:function(data)
+                        // {
+                        //    alert('新增失败');
+                        // }
+                   })
+               })
+
+
+        }
+        function submitEditVipLevel()
+        {
+          var editname=checktext('name_edit_yz');
+          if(editname==false)
+           {
+              layer.tips('等级名称不能为空', '#name_edit_yz');
+              return false;
+           }
+          var editminpoints=checktext('minpoints_edit_yz');
+          if(editminpoints==false)
+           {
+              layer.tips('最小积分不能为空', '#minpoints_edit_yz');
+              return false;
+           }
+           var editminpoints1=isNum('minpoints_edit_yz');
+          if(editminpoints1==false)
+           {
+              layer.tips('最小积分只能输入数字', '#minpoints_edit_yz');
+              return false;
+           }
+
+          var editlogsdiscount=checktext('logsdiscount_edit_yz');
+          if(editlogsdiscount==false)
+           {
+              layer.tips('上机费折扣不能为空', '#logsdiscount_edit_yz');
+              return false;
+           }
+
+            var editlogsdiscount1=isNum('logsdiscount_edit_yz');
+          if(editlogsdiscount1==false)
+           {
+              layer.tips('上机费折扣输入数字', '#logsdiscount_edit_yz');
+              return false;
+           }
+           var editgoodsdiscount=checktext('goodsdiscount_edit_yz');
+          if(editgoodsdiscount==false)
+           {
+              layer.tips('商品销售折扣不能为空', '#goodsdiscount_edit_yz');
+              return false;
+           }
+            var editgoodsdiscount1=isNum('goodsdiscount_edit_yz');
+          if(editgoodsdiscount1==false)
+           {
+              layer.tips('商品销售折扣输入数字', '#goodsdiscount_edit_yz');
+              return false;
+           }
+
+
+            $(function()
+              {
+                     $.ajax({  
+                         type: "post",
+                         url: '{:U("editVipLevel_set")}',
+                         data: {oper:'edit',id:$('#editviplevel input[name="id"]').val(),name:$('#editviplevel input[name="name"]').val(),minpoints:$('#editviplevel input[name="minpoints"]').val(),logsdiscount:$('#editviplevel input[name="logsdiscount"]').val(),goodsdiscount:$('#editviplevel input[name="goodsdiscount"]').val()},
+                         dataType: "json",
+                         success:function(data)
+                         {                                         
+
+                                if(data.status)
+                                {
+                                    myalertsuccess('修改成功，请点击右侧 "更新重启网吧服务端"。');
+                                }else{
+                                    myalertdanger('修改失败,请重新操作');
+                                }
+                        },
+                        error:function(data)
+                        {
+                           myalertdanger('修改失败,请重新操作');
+                        }
+                   })
+               })
+
+
+
+
+
+        }
+		 function deleteVipLevel(id)
+		 {	
+		 
+		   var tr = $('#v'+id);
+           var name=tr.find('td:eq(0)').text();
+
+        layer.confirm('确定要删除"'+name+'"么？',{icon:3,title:'提示'},function(index){
+         $.post("{:U('deleteVipLevel')}",{oper:'del',id:id},function(data)
+         {
+                        if(data.result==1){
+                          myalertsuccess('删除成功，请点击右侧 "更新重启网吧服务端"。');
+                           
+                        }else{
+                          myalertdanger('删除失败,请重新操作');
+                        }
+                    });
+           layer.close(index);
+        }) 
+
+        }
+    </script>
+</block>

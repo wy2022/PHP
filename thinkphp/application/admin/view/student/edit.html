@@ -1,0 +1,31 @@
+{extend name="teacher/base" /}
+
+{block name="body"}
+<body class="contanier">
+<div class="row">
+    <div class="col-md-12">
+        <form action="{:url('update')}" method="post">
+            <label>姓名:</label>
+            <input type="hidden" name="id" value="{$student.id}" />
+            <input type="text" name="name" value="{$student.name}" />
+            <label>学号:</label>
+            <input type="text" name="num" value="{$student.num}" />
+            <label>性别:</label>
+            <input type="radio" name="sex" value="0" id="sex0" {eq name="student.sex" value="0"}checked="checked"{/eq}/><label for="sex0">男</label>
+            <input type="radio" name="sex" value="1" id="sex1" {eq name="student.sex" value="1"}checked="checked"{/eq}/><label for="sex1">女</label>
+            <label>班级</label>
+            <select name="klass_id">
+                {volist name="$student->Klass->all()" id="klass"}
+                <option value="{$klass.id}" {eq name="klass.id" value="$student.klass_id"}selected="selected"{/eq} >{$klass.name}</option>
+                {/volist}
+
+            </select>
+
+            <label>邮箱:</label>
+            <input type="email" name="email" value="{$student.email}" />
+            <button type="submit">保存</button>
+        </form>
+    </div>
+</div>
+</body>
+{/block}

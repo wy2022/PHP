@@ -1,0 +1,175 @@
+<extend name="Public/base" />
+
+<block name="head">
+<js href="__PUBLIC__/highcharts/highcharts.js" />
+<js href="__PUBLIC__/highcharts/exporting.js" />
+</block>
+
+<block name="content">
+<div class="row" id="count">
+	<present name="yestoday_online_count">
+		<div class="infobox infobox-blue" onclick="location.href='{:U('Bar/online')}?adddate={:date('Y-m-d',strtotime('-1 days'))}';" style="cursor:pointer;">
+			<div class="infobox-icon">
+				<i class="fa fa-desktop fa-3x"></i>
+			</div>
+			<div class="infobox-data">
+				<span class="infobox-data-number">{$yestoday_online_count}</span>
+				<div class="infobox-content">昨日在线网吧</div>
+			</div>
+		</div>
+	</present>
+	<present name="today_online_count">
+		<div class="infobox infobox-green" onclick="location.href='{:U('Bar/online')}';" style="cursor:pointer;">
+			<div class="infobox-icon">
+				<i class="fa fa-desktop fa-3x"></i>
+			</div>
+			<div class="infobox-data">
+				<span class="infobox-data-number">{$today_online_count}</span>
+				<div class="infobox-content">今日在线网吧</div>
+			</div>
+			<php>
+				if($yestoday_online_count>0){
+					$rate = round(($today_online_count-$yestoday_online_count) / $yestoday_online_count * 100,2);
+				}else{
+					$rate = ($today_online_count-$yestoday_online_count) / 1 * 100;
+				}
+			</php>
+			<egt name="rate" value="0">
+				<div class="stat stat-success">{$rate}%</div>
+			<else />
+				<div class="stat stat-important">{$rate|abs}%</div>
+			</egt>
+		</div>
+	</present>
+	<present name="today_reg_bar_count">
+		<div class="infobox infobox-green" onclick="location.href='{:U('Bar/index',array('regdate'=>date('Y-m-d')))}';" style="cursor:pointer;">
+			<div class="infobox-icon">
+				<i class="fa fa-desktop fa-3x"></i>
+			</div>
+			<div class="infobox-data">
+				<span class="infobox-data-number">{$today_reg_bar_count}</span>
+				<div class="infobox-content">今日注册网吧</div>
+			</div>
+		</div>
+	</present>
+	<present name="today_lost_bar_count">
+		<div class="infobox infobox-red" onclick="location.href='{:U('Bar/offline',array('type'=>1))}';" style="cursor:pointer;">
+			<div class="infobox-icon">
+				<i class="fa fa-desktop fa-3x"></i>
+			</div>
+			<div class="infobox-data">
+				<span class="infobox-data-number">{$today_lost_bar_count}</span>
+				<div class="infobox-content">今日离线网吧</div>
+			</div>
+		</div>
+	</present>
+	<present name="month_lost_bar_count">
+		<div class="infobox infobox-red" onclick="location.href='{:U('Bar/offline',array('enddate'=>date('Y-m-d',strtotime('-30 days'))))}';" style="cursor:pointer;">
+			<div class="infobox-icon">
+				<i class="fa fa-desktop fa-3x"></i>
+			</div>
+			<div class="infobox-data">
+				<span class="infobox-data-number">{$month_lost_bar_count}</span>
+				<div class="infobox-content">离线超一个月网吧</div>
+			</div>
+		</div>
+	</present>
+	<present name="month_lost_bar_count">
+		<div class="infobox infobox-red" onclick="location.href='';" style="cursor:pointer;">
+			<div class="infobox-icon">
+				<i class="fa fa-desktop fa-3x"></i>
+			</div>
+			<div class="infobox-data">
+				<span class="infobox-data-number">{$week_expire_bar_count}</span>
+				<div class="infobox-content">一周内到期网吧</div>
+			</div>
+		</div>
+	</present>
+</div>
+<div class="row">
+<div id="distribution">
+<present name="province_online_distribution">
+	<div class="widget-box col-sm-4">
+		<div class="widget-header widget-header-flat widget-header-small">
+			<h5><i class="fa fa-signal"></i>{$province_online_distribution.name}（{$province_online_distribution.count}）</h5>
+		</div>
+		<div class="widget-body">
+			<div class="widget-main">
+				<div id="province_online_distribution_chart" style="height:300px;"></div>
+			</div>
+		</div>
+	</div>
+</present>
+<present name="city_online_distribution">
+	<div class="widget-box col-sm-4">
+		<div class="widget-header widget-header-flat widget-header-small">
+			<h5><i class="fa fa-signal"></i>{$city_online_distribution.name}（{$city_online_distribution.count}）</h5>
+		</div>
+		<div class="widget-body">
+			<div class="widget-main">
+				<div id="city_online_distribution_chart" style="height:300px;"></div>
+			</div>
+		</div>
+	</div>
+</present>
+<present name="area_online_distribution">
+	<div class="widget-box col-sm-4">
+		<div class="widget-header widget-header-flat widget-header-small">
+			<h5><i class="fa fa-signal"></i>{$area_online_distribution.name}（{$area_online_distribution.count}）</h5>
+		</div>
+		<div class="widget-body">
+			<div class="widget-main">
+				<div id="area_online_distribution_chart" style="height:300px;"></div>
+			</div>
+		</div>
+	</div>
+</present>
+</div>
+</div>
+<present name="current_month_per_day_online_bar_count">
+<div class="row">
+	<div class="widget-box transparent">
+		<div class="widget-header">
+			<h4 class="lighter"><i class="fa fa-signal"></i>在线统计</h4>
+		</div>
+		<div class="widget-body">
+			<div class="widget-main padding-4">
+				<div id="online_bar_chart" style="height:350px;"></div>
+			</div>
+		</div>
+	</div>
+</div>
+</present>
+</block>
+
+<block name="script">
+<script>
+var default_data = {
+	current_month_per_day_online_bar_count:[{$current_month_per_day_online_bar_count|default=''}],
+	current_year_per_month_online_bar_count:[{$current_year_per_month_online_bar_count|default=''}],
+	province_online_distribution:[{$province_online_distribution.chart|default=''}],
+	city_online_distribution:[{$city_online_distribution.chart|default=''}],
+	area_online_distribution:[{$area_online_distribution.chart|default=''}]
+}
+</script>
+<js href="__PUBLIC__/js/index-chart.js" />
+<script>
+//重构界面分布
+if($('#distribution').children('div').length == 2){
+	//$('#count').removeClass('col-sm-3').addClass('col-sm-6');
+	//$('#distribution').removeClass('col-sm-9').addClass('col-sm-6');
+	$('#distribution .widget-box').removeClass('col-sm-4').addClass('col-sm-6');
+}else if($('#distribution').children('div').length == 1){
+	$('#count').removeClass('col-sm-3').addClass('col-sm-8');
+	$('#distribution').removeClass('col-sm-9').addClass('col-sm-4');
+	$('#distribution .widget-box').removeClass('col-sm-4').addClass('col-sm-12');
+}else if($('#distribution').children('div').length == 0){
+	$('#count').removeClass('col-sm-3').addClass('col-sm-12');
+	$('#distribution').removeClass('col-sm-9');
+}
+$('#online_bar_chart').highcharts(current_month_per_day_online_bar_count_chart);
+$('#province_online_distribution_chart').highcharts(province_online_distribution_chart);
+$('#city_online_distribution_chart').highcharts(city_online_distribution_chart);
+$('#area_online_distribution_chart').highcharts(area_online_distribution_chart);
+</script>
+</block>

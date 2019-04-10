@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>百果树</title>
+	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css" />
+<!--[if IE 7]>
+<link rel="stylesheet" type="text/css" href="assets/css/font-awesome-ie7.min.css" />
+<![endif]-->
+<!--[if lt IE 9]>
+<script type="text/javascript" src="js/html5shiv.min.js"></script>
+<script type="text/javascript" src="js/respond.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="js/jquery-1.11.2.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="assets/js/ace-extra.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="assets/css/ui.jqgrid.css" />
+<link rel="stylesheet" type="text/css" href="assets/css/ui.jqgrid-bootstrap.css" />
+<script type="text/javascript" src="assets/js/jqgrid/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="assets/js/jqgrid/i18n/grid.locale-cn.js"></script>
+<link rel="stylesheet" type="text/css" href="bootstrap/daterangepicker/daterangepicker-bs3.css" />
+<script type="text/javascript" src="bootstrap/daterangepicker/moment.min.js"></script>
+<script type="text/javascript" src="bootstrap/daterangepicker/daterangepicker.js"></script>
+<style>
+    #search div {float:left;margin-right:50px;margin-bottom:15px;font-size:12px;}
+	#td_detail tr td{width:auto;font-size:14px; padding:10px 30px 20px 0px}
+    .ui-jqgrid-labels th div{line-height: 12px;} 
+</style>
+
+<link rel="stylesheet" type="text/css" href="assets/css/ace.min.css" />
+<link rel="stylesheet" type="text/css" href="assets/css/ace-skins.min.css" />
+<!--[if lt IE 9]>
+<link rel="stylesheet" type="text/css" href="assets/css/ace-ie.min.css" />
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="css/common.css" />
+<script type="text/javascript" src="assets/js/ace-elements.min.js"></script>
+<script type="text/javascript" src="assets/js/ace.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+</head>
+<body>
+<!-- header---start -->
+<div class="navbar navbar-default" id="navbar">
+    <div class="navbar-container" id="navbar-container">
+        <div class="navbar-header pull-left">
+            <a href="/mq/index.html" class="navbar-brand" style="height:auto;">
+                <small> <i class="fa fa-tree"></i> 百果树</small>
+            </a>
+        </div>
+
+        <div class="navbar-header pull-right" role="navigation">
+            <ul class="nav ace-nav">
+                <li class="light-blue">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                        <img class="nav-user-photo" src="assets/avatars/avatar.png" />
+                        <span class="user-info" id="username"></span><i class="fa fa-caret-down"></i>
+                    </a>
+					
+		<script type="text/javascript">
+		   function getusername(data){
+		      document.getElementById("username").innerHTML="<small>欢迎光临</small>"+data.username;
+		   };
+		   var s=document.createElement("script");
+		   s.src="/mq/getuserinfo.psp?callback=getusername&tblname=getusername&abc=1";
+		   document.body.appendChild(s);
+		</script>					
+                    <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                        <li><a href="/mq/editpassword.html"><i class="fa fa-cog"></i>修改密码</a></li>
+                        <li><a href="/mq/logout.psp"><i class="fa fa-power-off"></i>退出</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- header---end -->
+ <!--  body---start -->
+<div class="main-container" id="main-container">
+    <div class="main-container-inner">
+        <a class="menu-toggler" id="menu-toggler" href="#">
+            <span class="menu-text"></span>
+        </a>
+		
+		<!-- sidebar ---start -->
+        <div class="sidebar" id="sidebar">
+    <div class="sidebar-shortcuts" id="sidebar-shortcuts">
+      <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+           <a href="/mq/index.html" title="网站首页" class="btn btn-success">首页</a>
+          <a href="/mq/message.html" title="用户中心" class="btn btn-info">用户</a>
+          <a href="/mq/indexCha.html" title="查账中心" class="btn btn-warning">查账</a> 
+          <!-- <button class="btn btn-danger"><i class="fa fa-cogs fa-lg"></i></button>  -->
+        </div>
+
+    </div>
+     <ul class="nav nav-list">
+        <li id="Index"><a href="/MQ/indexCha.html"><i class="fa fa-dashboard fa-lg"></i><span class="menu-text">查账首页</span></a></li>
+        <li>
+            <a href="#" class="dropdown-toggle"><i class="fa fa-desktop fa-lg"></i><span class="menu-text">网吧管理</span><b class="arrow fa fa-angle-down fa-lg"></b></a>
+            <ul class="submenu">
+                <li id="Vipcard"><a href="/MQ/vipcard.html"><i class="fa fa-angle-double-right fa-lg"></i>会员管理</a></li>
+                
+            </ul>
+        </li>
+       
+        <li>
+            <a href="#" class="dropdown-toggle"><i class="fa fa-file-text-o fa-lg"></i><span class="menu-text">账目明细</span><b class="arrow fa fa-angle-down fa-lg"></b></a>
+            <ul class="submenu">
+                <li id="shift"><a href="/MQ/shift.html"><i class="fa fa-angle-double-right"></i>交班明细</a></li>
+                <li id="addmoney"><a href="/MQ/addmoney.html"><i class="fa fa-angle-double-right"></i>加钱明细</a></li>
+                 <li id="logs"><a href="/MQ/logs.html"><i class="fa fa-angle-double-right"></i>上机明细</a></li>
+                 <li id="jfdh"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Change/index.html"><i class="fa fa-angle-double-right"></i>积分兑换</a></li>                 
+                
+            </ul>
+        </li>
+
+        <li>
+            <a href="#" class="dropdown-toggle"><i class="fa fa-pie-chart fa-lg"></i><span class="menu-text">经营分析</span><b class="arrow fa fa-angle-down fa-lg"></b></a>
+            <ul class="submenu">
+                <li id="income"><a href="/MQ/income.html"><i class="fa fa-angle-double-right fa-lg"></i>收入分析</a></li>
+                <li id="business"><a href="/MQ/business.html"><i class="fa fa-angle-double-right fa-lg"></i>经营分析</a></li>
+                <li id="vip"><a href="/MQ/vip.html"><i class="fa fa-angle-double-right fa-lg"></i>会员分析</a></li>
+                <li id="ranking"><a href="/MQ/ranking.html"><i class="fa fa-angle-double-right fa-lg"></i>消费排行</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#" class="dropdown-toggle"><i class="fa fa-credit-card fa-lg"></i><span class="menu-text">其他支付</span><b class="arrow fa fa-angle-down fa-lg"></b></a>
+            <ul class="submenu">
+                <li id="weixin"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Wx/wxpay.html"><i class="fa fa-angle-double-right fa-lg"></i>微信支付</a></li>
+                <li id="alipay"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Zfb/alipay.html"><i class="fa fa-angle-double-right fa-lg"></i>支付宝支付</a></li>
+                <li id="gzh"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Gzh/gzhpay.html"><i class="fa fa-angle-double-right fa-lg"></i>公众号支付</a></li>
+            </ul>
+        </li>
+           <li>
+            <a href="#" class="dropdown-toggle"><i class="fa fa-money fa-lg"></i><span class="menu-text">提现管理</span><b class="arrow fa fa-angle-down fa-lg"></b></a>
+            <ul class="submenu">
+                <li id="addcard"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/cash/addcard.html"><i class="fa fa-angle-double-right fa-lg"></i>添加银行卡</a></li>
+                <li id="cash"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/cash/cash.html
+"><i class="fa fa-angle-double-right fa-lg"></i>提现</a></li>
+               <li id="showtxinfo"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/cash/showtxinfo.html
+"><i class="fa fa-angle-double-right fa-lg"></i>提现明细</a></li>
+
+            </ul>
+        </li>
+         <li>
+            <a href="#" class="dropdown-toggle"><i class="fa fa-gift fa-lg"></i><span class="menu-text">商品管理</span><b class="arrow fa fa-angle-down fa-lg"></b></a>
+            <ul class="submenu">
+                <li id="jhtj"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Goods/jhtj.html"><i class="fa fa-angle-double-right fa-lg"></i>进货统计</a></li>
+                <li id="xstj"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Goods/xstj.html"><i class="fa fa-angle-double-right fa-lg"></i>销售统计</a></li>
+                <li id="jxc"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Goods/kclog.html"><i class="fa fa-angle-double-right fa-lg"></i>商品库存</a></li>
+                <li id="jh_detail"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Goods/jhlog.html"><i class="fa fa-angle-double-right fa-lg"></i>进货日志</a></li>
+                <li id="xs_detail"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Goods/xslog.html"><i class="fa fa-angle-double-right fa-lg"></i>出货日志</a></li>
+            </ul>
+        </li>
+        <li id="log"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/admin/log.html"><i class="fa fa-cog fa-lg"></i><span class="menu-text">操作日志</span></a></li>
+    </ul>
+    <div class="sidebar-collapse" id="sidebar-collapse">
+        <i class="fa fa-angle-double-left fa-lg icon-" data-icon1="fa fa-angle-double-left fa-lg" data-icon2="fa fa-angle-double-right fa-lg"></i>
+    </div>
+    <script>
+        $('#Vipcard').addClass('active').parent().closest('li').addClass('active open');
+
+    </script>
+</div>
+
+<!-- sidebar --end -->
+
+        <div class="main-content">
+            <div class="breadcrumbs" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li><i class="fa fa-home home-icon"></i><a href="/mq/indexCha.html">首页</a></li>
+					   <li><a href="/mq/vipcard.html">会员管理</a></li>
+                       <li>查看详情</li>
+                </ul>
+            </div>
+            <div class="page-content">
+                 <div class="page-header" >
+                   <a href="/MQ/vipcard.html" style="color:#2b7dbc;font-size:12px;"><<返回</a>
+                </div> 
+                <div class="row" style="margin-top:30px">
+                    <div class="col-xs-12">
+
+						  <!-- content---start -->
+						  
+	 <div>
+	   <table id="td_detail">
+	   <tr>
+	      <td>会员姓名：<span id="hyname"></span></td>
+		   <td>会员类型：<span id="KCardLx"></span></td>
+		   <td>证件类型：<span id="zjlx"></span></td>
+		   <td>证件号码：<span id="zjNo"></span></td>
+		   <td>卡状态：<span id="State"></span></td>
+		   <td>收费类型：<span id="SFlx"></span></td>		   
+	   </tr>
+	   	   <tr>
+		   <td>剩余金额：<span id="surplus"></span></td>
+	      <td>奖励金额：<span id="JlJe"></span></td>
+		   <td>会员积分：<span id="integral"></span></td>
+		   <td>开卡时间：<span id="NewTime"></span></td>
+		   <td>最后上机时间：<span id="LastSjTime"></span></td>
+		   <td>到期时间：<span id="CancelTime"></span></td>
+	   </tr>
+		</table>
+	 </div>
+	 <hr/>
+     <div id="search" class="clearfix" style="margin-top:20px">
+	   <form method="post" action="/MQ/vipcard_detail.psp"  onsubmit="return checkform()">
+       <input type="hidden" name="SessionSave" value="hyManageDetail">
+        <div>消费记录时间 <input type="text" id="daterange" name="daterange" class="daterange" style="width:300px;" value="" placeholder="请选择日期" placeholder="上机时间"  required/></div>
+        <div><button class="btn btn-primary btn-sm" type="submit">查询</button></div>
+		</form>
+        <script type="text/javascript">
+    function getCondition(data)
+    {   if($.isEmptyObject(data)){
+        return false;
+    }else{
+        document.getElementById("daterange").value=data.daterange;
+    }
+       
+    }
+      var s=document.createElement("script"); 
+      s.src="/mq/SessionDB.psp?callback=getCondition&varName=hyManageDetail";
+      document.body.appendChild(s);
+ 
+     </script>
+    </div>
+	
+	
+										<div class="tabbable">
+											<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4" style="font-size:12px;">
+												<li class="active">
+													<a data-toggle="tab" href="#sale" >会员消费明细</a>
+												</li>
+
+ 												<li>
+													<a data-toggle="tab" href="#add" >会员加钱明细</a>
+												</li>
+											</ul>
+
+											<div class="tab-content" >
+												<div id="sale" class="tab-pane in active">
+												  <div id="jqgrid">
+                                                <table id="grid-table"></table>
+                                               <div id="grid-pager"></div>
+                                             </div>	
+
+												</div>
+
+  												<div id="add" class="tab-pane">
+												   <div id="jqgrid1">
+                                                <table id="grid-table1">
+		                                         </table>
+                                                 <div id="grid-pager1"></div>
+                                             </div>
+                                             
+												</div>
+										  </div>  
+									</div>
+  	                                     
+										  
+										 
+						  <!-- content---end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+		<!-- setting_box---start -->
+     <div class="ace-settings-container" id="ace-settings-container">
+    <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn"><i class="fa fa-cog bigger-150"></i></div>
+    <div class="ace-settings-box" id="ace-settings-box">
+        <div>
+            <div class="pull-left">
+                <select id="skin-colorpicker" class="hide">
+                    <option data-skin="default" value="#438EB9">#438EB9</option>
+                    <option data-skin="skin-1" value="#222A2D">#222A2D</option>
+                    <option data-skin="skin-2" value="#C6487E">#C6487E</option>
+                    <option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>
+                </select>
+            </div>
+            <span>&nbsp; 选择皮肤</span>
+        </div>
+        <div>
+            <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-navbar" />
+            <label class="lbl" for="ace-settings-navbar">固定导航条</label>
+        </div>
+        <div>
+            <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-sidebar" />
+            <label class="lbl" for="ace-settings-sidebar">固定滑动条</label>
+        </div>
+        <div>
+            <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-breadcrumbs" />
+            <label class="lbl" for="ace-settings-breadcrumbs">固定面包屑</label>
+        </div>
+        <div>
+            <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-rtl" />
+            <label class="lbl" for="ace-settings-rtl">切换到左边</label>
+        </div>
+        <div>
+            <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-add-container" />
+            <label class="lbl" for="ace-settings-add-container">
+                切换窄屏 <b></b>
+            </label>
+        </div>
+    </div>
+</div>
+   <!-- setting_box---end -->
+
+    </div>
+</div>
+<!-- body---end -->
+
+<!-- footer---start -->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="bootstrap/js/bootstrap-ie.js"></script>
+<![endif]-->
+<!-- footer---end -->
+<!-- script---start -->
+<script>
+  // var Server_detail={
+   //"hyname":"张三11","KCardLx":"普通会员","zjlx":"身份证","zjNo":"411423199311160058","State":"不限","SFlx":"计费卡","surplus":"32.0","JlJe":"10.0","integral":"236","NewTime":"2015-10-28 19:41:05",
+  // "LastSjTime":"2015-10-22 19:41:05","CancelTime":"2015-10-23 19:41:05"
+  // };
+        function maindata(Server_detail){
+        	//alert(Server_detail);
+			document.getElementById("hyname").innerHTML=Server_detail.hyname
+			document.getElementById("KCardLx").innerHTML=Server_detail.KCardLx
+			document.getElementById("zjlx").innerHTML=Server_detail.zjlx
+			document.getElementById("zjNo").innerHTML=Server_detail.zjNo
+			document.getElementById("State").innerHTML=Server_detail.State
+			document.getElementById("SFlx").innerHTML=Server_detail.SFlx
+			document.getElementById("surplus").innerHTML=Server_detail.surplus
+			document.getElementById("JlJe").innerHTML=Server_detail.JlJe
+			document.getElementById("integral").innerHTML=Server_detail.integral
+			document.getElementById("NewTime").innerHTML=Server_detail.NewTime
+			document.getElementById("LastSjTime").innerHTML=Server_detail.LastSjTime
+			document.getElementById("CancelTime").innerHTML=Server_detail.CancelTime
+      };
+		  var s=document.createElement("script");
+		  s.src="/mq/vipcard_detail.psp?callback=maindata&tblname=maindata";
+		  document.body.appendChild(s);
+
+</script>
+
+     <script>
+        $(function(){
+            $('#grid-table').jqGrid({
+                url: 'vipcard_detail.psp?callback=?&tblname=hysaledetail',
+				datatype: "jsonp",
+				mtype: "GET",
+                height:"100%",
+                autowidth:true,
+                shrinkToFit:true,
+                colNames:['上机时间','下机时间','上机时长','消费方式','押金','应收','实收','其他金额','经办人','收银台'],
+                colModel:[
+                    {name:'SjTime',width:220},
+                    {name:'XjTime',width:200},          
+                    {name:'TimeSize',width:60},
+                    {name:'sjLx',width:60},  
+                    {name:'foregift',width:60},                                                               
+                    {name:'Yje',width:60},
+                    {name:'je',width:60},              
+                    {name:'qtje',width:60},
+                    {name:'EndOperate',width:60},
+					{name:'JzSyId',width:60},
+                ],
+				styleUI : 'Bootstrap',
+                rowNum:20,
+                viewrecords: true,
+				pager:'#grid-pager',
+                loadError:function(xhr,status,error){  
+                     window.location.href="http://www.wbzzsf.com/mq/login.html"   },
+            });
+			
+			  // var Server_addMoneyDetail=[
+			 //  {
+           //"SjTime":"2015-10-28 19:41:05","XjTime":"2015-10-22 19:41:05","TimeSize":"300","sjLx":"会员","foregift":"100.0","Yje":"50.0","je":"50.0","qtje":"0","EndOperate":"张三","integral":"236","NewTime":"2015-10-28 19:41:05",
+          //  "JzSyId":"1"
+            //  },{
+          // "SjTime":"2015-10-28 19:41:05","XjTime":"2015-10-22 19:41:05","TimeSize":"300","sjLx":"会员","foregift":"100.0","Yje":"50.0","je":"50.0","qtje":"0","EndOperate":"张三","integral":"236","NewTime":"2015-10-28 19:41:05",
+          //  "JzSyId":"1"
+          //    }
+			//  ];
+			  
+			//for(var i=0;i<Server_addMoneyDetail.length;i++){
+		//$("#grid-table").jqGrid('addRowData',i+1,Server_addMoneyDetail[i]);
+	//}
+			  
+            $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+			$(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $(window).width()*0.8, true);
+            });	
+        });
+       
+
+	
+	<!--第二个表 -->
+
+        $(function(){
+            $('#grid-table1').jqGrid({
+                url: 'vipcard_detail.psp?callback=?&tblname=hyaddmoneydetail',
+				datatype: "jsonp",
+				mtype: "GET",
+                height:"100%",
+                autowidth:true,
+                shrinkToFit:true,
+                colNames:['收银ID','充值金额','奖励金额','操作时间','操作人'],
+                colModel:[
+                    {name:'SyId',width:80},
+                    {name:'je',width:60},  
+                    {name:'jlJe',width:60},        
+                    {name:'cTime',width:220},
+                    {name:'Operation',width:60},  
+                ],
+				styleUI : 'Bootstrap',
+                rowNum:20,
+                viewrecords: true,
+			    pager:'#grid-pager1',
+                loadError:function(xhr,status,error){  
+                     window.location.href="http://www.wbzzsf.com/mq/login.html"   },
+            });
+			
+			 //  var Server_addMoneyDetail1=[
+			  // { "SyId":"1415456454","je":"10.0","cTime":"2015-10-28 19:41:05","Operation":"李明"},
+			  // { "SyId":"1415456454","je":"10.0","cTime":"2015-10-28 19:41:05","Operation":"李明"},
+			  // { "SyId":"1415456454","je":"10.0","cTime":"2015-10-28 19:41:05","Operation":"李明"},
+			  // { "SyId":"1415456454","je":"10.0","cTime":"2015-10-28 19:41:05","Operation":"李明"},
+			  // { "SyId":"1415456454","je":"10.0","cTime":"2015-10-28 19:41:05","Operation":"李明"},
+			 //  { "SyId":"1415456454","je":"10.0","cTime":"2015-10-28 19:41:05","Operation":"李明"}
+			 // ];
+			  
+			  //	for(var i=0;i<Server_addMoneyDetail1.length;i++){
+		//$("#grid-table1").jqGrid('addRowData',i+1,Server_addMoneyDetail1[i]);
+	//}
+			  
+            $('#grid-table1').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+			$(window).resize(function(){
+                $('#grid-table1').jqGrid('setGridWidth', $(window).width()*0.8, true);
+            });	
+ $('#daterange').val(moment().startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+            $('.daterange').daterangepicker({
+                format:'YYYY/MM/DD hh:mm:ss',
+				timePicker: true,
+				timePickerIncrement: 1,
+				timePickerSeconds:true,
+				startDate:moment().startOf('day'),  
+                endDate: moment(),
+                timePicker12Hour:false,			
+                ranges: {  
+                           '今天': [moment().startOf('day'), moment().endOf('day')],  
+                           '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+                           '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+                           '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+                           '本月': [moment().startOf('month'), moment().endOf('month')],  
+                           '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+                        },				
+                locale:{
+                    applyLabel:'确定',
+                    cancelLabel:'取消',
+                    fromLabel:'从',
+                    toLabel:'至',
+                    daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+                    monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+					customRangeLabel: '自定义',
+					firstDay : 1
+                }
+
+            },function(start,end,label){//格式化日期显示框
+			$('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+			});
+
+        });
+       
+    </script>
+	<script>
+ function checkform(){
+    var daterange=$("#daterange").val();
+	if(daterange==""||daterange=="请选择日期"){
+	   alert("请选择日期");
+	   return false;
+	}
+  return true;
+ }
+
+</script>
+<!-- script---end -->
+</body>
+</html>

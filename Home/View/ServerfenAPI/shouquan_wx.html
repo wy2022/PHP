@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name="format-detection" content="telephone=no">
+        <title>页面</title>
+        <link rel="stylesheet" href="__PUBLIC__/wxsq/css/frozen.css">
+        <script src="__PUBLIC__/js/jquery-1.11.1.min.js" ></script>
+		<style>
+           .hua-ui-panel{background:#fff;width:90%;margin:40px auto 0;border-radius:15px;padding:20px 0px 60px;}
+		   .hua-success-ui-icon{font-size:100px;line-height:100px;color:#6bc639;}
+		   .hua-ui-p{text-align:center;}
+		   .hua-txt-success{font-size:24px;font-weight:bold;line-height:48px;}
+		   .hua-ui-left{float:left;}
+		   .hua-ui-right{float:right;}
+		   .hua-clearfloat{clear:both} 
+		   .hua-padding30{padding:30px 0}
+		   .btn_style{
+		           width: 40%;
+    height: 30px;
+    background-color: deepskyblue;
+    border-radius: 9px;
+    color: #fff;
+    text-align: center;
+    line-height: 30px;
+    margin: 50px auto;
+		   }
+           #wbpassword{
+            width:96px;
+           }
+		</style>
+    </head>
+    <body ontouchstart="" style="background:#f1f1f1">
+
+        <section class="ui-panel hua-ui-panel" >
+   
+
+   
+   
+
+        <div class="demo-block hua-padding30">
+            <ul class="ui-list ui-list-pure ">
+                <li class=" ui-txt-info hua-clearfloat">
+                    <span class="hua-ui-left">网吧名称</span><span class="hua-ui-right" id="wb_name">{$barinfo.WbName}</span>					  
+                </li>
+                <li class=" ui-txt-info hua-clearfloat" >
+                   <span class="hua-ui-left">老板名称</span><span class="hua-ui-right" id="boss_name">{$barinfo.WBManager}</span>
+				   
+                </li>
+                <li class=" ui-txt-info hua-clearfloat">
+                    <span class="hua-ui-left">老板电话</span><span class="hua-ui-right" id="boss_tel">{$barinfo.WBTel}</span>
+                </li>
+                <li class=" ui-txt-info hua-clearfloat">
+                   <span class="hua-ui-left">网吧密码</span><input type="password" class="hua-ui-right" id="wbpassword">
+                </li>
+
+            </ul>
+		<p class="btn_style" onclick="tijiao()">确认授权</p>
+        </div>
+  
+          <div class=" ui-txt-info " style="font-size:12px;text-align:right;padding-right:15px">
+             <p >河南会昌文化传媒有限公司</p>
+             <p >客服电话：0371-67375567</p>
+          </div>
+
+</section>
+</body>
+<script>
+  function tijiao(){
+    //var wb_name=$('#wb_name').text();
+	//var boss_name=$('#boss_name').text();
+
+	var wbpassword=$('#wbpassword').val();
+	$.ajax({
+             type: "post",
+             url: "{:U('ServerfenAPI/shouquan_wx_set')}",
+             data: {wbpassword:wbpassword},
+             dataType: "json",
+             success: function(data){
+                if(data.status==1){
+                   alert('微信授权成功');
+                }
+				else if(data.status==-1)
+				{
+                    alert('微信授权失败');
+                }
+				else  if(data.status==-2)
+				{
+                     alert('该微信已授权过,请联系客服');
+                }
+
+             },
+			 error:function(data){}
+         });
+  }
+</script>
+</html>

@@ -1,0 +1,152 @@
+<block name="head">
+<include file="Public/head" />
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+	<css href="__PUBLIC__/assets/css/ace.min.css" />
+    <css href="__PUBLIC__/assets/css/ace-skins.min.css" />
+    <js href="__PUBLIC__/layer/layer.js" />
+		<css href="__PUBLIC__/jquery-ui-1.10.3/demos/demos.css" /> 
+	<style>
+	  body{background:#fff;min-height:200px;font-size:13px;}
+	  
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+     .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+		 .fontsize12{font-size:12px;}
+		 .pd15{padding:15px;}
+	.search-bar input,.search-bar select{
+		display:inline-block;
+		height:30px;
+		font-size:14px;
+		line-height:
+		color:#555555;
+		vertical-align:middle;
+		-webkit-border-radius:4px !important;
+		-moz-border-radius:4px !important;
+		border-radius:4px !important;
+		border-color:#a4bed4;
+		text-align:left;
+		padding:4px 6px;
+		width:200px;
+	 }
+	 .search-bar input{width:200px;}
+	 .search-bar select{width:100px;}
+	 .btn1{
+		    font-size:13px;	
+			height:30px;
+			 width:90px;
+			-webkit-border-radius:2px;
+			-moz-border-radius:2px;
+			border-radius:2px;
+			border:0;
+			text-shadow:none;
+			background-image:none;
+			vertical-align:middle;
+			color:#ffffff;
+		 }
+	</style>
+</block>
+
+<block name="content">
+
+<div class="tabbable">
+    <div class="tab-content" >
+        <table id='tab' class='table table-striped' style="text-align: center;">
+			<thead>
+				<tr>
+					<th>
+						商品名称
+					</th>
+					<th>
+						原库存数量
+					</th>
+					<th>
+						现库存数量
+					</th>
+					<th>
+						销售数量
+					</th>
+					<th>
+						交班销售数量
+					</th>			
+				</tr>
+			</thead>
+			<tbody>
+			<volist name="goodslist" id="vo">	
+			    <tr>
+			      						
+                   <td>{$vo.goods_name}</td>
+                   <td>{$vo.old_kc_num}</td>
+			       <td>{$vo.now_kc_num}</td>
+			       <td>{$vo.xiaoshou_num}</td>
+			       <td>{$vo.jb_xs_num}</td>
+
+			       </tr>
+			    </volist>
+			    
+			</tbody>
+		<table>
+		
+
+	   
+	</div><!-- //.tab-content -->
+
+</div>
+</block>
+
+
+
+	
+
+<block name="script">
+    <script>
+        getgoodslist();	 
+		function  getgoodslist()
+		{
+		
+			$.ajax({
+					type:"get",
+					url: '{:U("Goodsnew/getjb_mx_list")}',
+					async:true,
+					success:function(data)
+					{
+					   $('tbody').remove();
+						showallgoodslist(data)
+					}
+				});
+		
+		}
+	  
+	
+	
+		
+	  function  showallgoodslist(data)
+	  {
+	    var html="";
+		var position;
+		//console.log(data)
+        for (var i = 0; i <data.length; i++) 
+		{		
+				var goods=data[i];
+				//alert(JSON.stringify(goods))
+				
+				
+				
+			
+        
+		}; 
+         $(" .table-striped").append(html);	
+	  }	
+        
+	</script>
+</block>

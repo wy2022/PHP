@@ -1,0 +1,176 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+	<style>
+	 .profile-info-value{height:30px;}
+	 .mgb15{margin-bottom:15px;}
+	</style>
+</block>
+
+<block name="content">
+
+
+<div class="row search-bar mgb15"   <if condition="$agentinfo.bing_status neq '0' "> style="display: none"</if>>
+	<form >
+        <input type="hidden" name="wbid" id="wbid" value="{$wbid}"/>
+		<input type="hidden" name="agent_id"  id="agent_id" value=""/>
+		<input type="hidden" name="daili_url_zong"  id="daili_url_zong" value="{$daili_url_zong}"/>
+
+        <div class="col-xs-6 col-sm-2">
+            <div class="input-group">
+                <input class="form-control" name="agent_name" id="agent_name" type="text" placeholder="代理商帐号" />
+            </div>
+        </div>
+		<div class="col-xs-8 col-sm-1"><button type="button" class="btn btn-purple btn-sm" onclick="doSearch()">搜索<i class="fa fa-search"></i></button></div>
+	</form>
+</div>
+
+
+   
+
+    <div class="row">  
+      <div class="col-sm-6" id="tuoguanInfo">
+        <div class="profile-user-info profile-user-info-striped">
+		
+          <div class="profile-info-row">
+          <div class="profile-info-name">代理商姓名</div>
+            
+          <div class="profile-info-value">
+          <span class="editable" id="agent_realname">{$agentinfo.agent_name}</span>
+          </div>
+          </div>
+
+          <div class="profile-info-row">
+          <div class="profile-info-name">代理商电话</div>
+
+          <div class="profile-info-value">
+          <span class="editable" id="agent_phone">{$agentinfo.agent_phone}</span>
+          </div>
+          </div>
+
+          <div class="profile-info-row">
+          <div class="profile-info-name">绑定时间</div>
+
+          <div class="profile-info-value">
+          <span class="editable" id="dtInsertTime">{$agentinfo.dtInsertTime}</span>
+          </div>
+          </div>
+		  
+    
+          <div class="profile-info-row">
+          <div class="profile-info-name">绑定状态</div>
+
+          <div class="profile-info-value">
+          <span class="editable label label-sm label-warning" id="bing_status">{$agentinfo.bing_text}</span>
+          </div>
+          </div>
+		  
+		
+		  
+		  <div class="profile-info-row" id="opera"    <if condition="$agentinfo.bing_status neq '0' "> style="display: none"</if>>
+          <div class="profile-info-name">操作</div>
+
+          <div class="profile-info-value">
+          <span class="editable"><a  onclick="query_bangding();">申请绑定</a></span>
+          </div>
+          </div>
+
+
+        </div>
+ 	
+      </div>
+    </div>
+
+</block>
+
+
+
+
+<block name="script">
+    <script>
+
+
+   
+    function doSearch()
+	{
+	    var   daili_url_zong=$('#daili_url_zong').val();
+	    var  url=daili_url_zong+'/index.php/ServerzongAPI/API_query_oneagentinfo.html';
+        $.ajax(
+        {
+          url:url,
+          type:"post",
+          dataType:"text",
+          data:{agent_name:$('#agent_name').val()},
+          success:function(data)
+          { 
+		     
+             var jsondata=eval("("+data+")");	
+             		 
+		     if(jsondata.result==1)
+			 {
+			    //alert(jsondata.body);
+				$("#agent_realname").text(jsondata.body.agent_name);
+				$("#agent_phone").text(jsondata.body.agent_phone);
+				$("#dtInsertTime").text(jsondata.body.dtInsertTime);
+				$("#agent_id").val(jsondata.body.agent_id);
+			 }
+			 else if(jsondata.result==-1)
+			 {
+			 
+			 } 
+		     //$("#tuoguanInfo").show();
+
+
+          },
+		 
+       })
+   }   
+   
+
+
+    function query_bangding()
+	{
+
+            var  agentid_str=$("#agent_id").val();
+			var  wbid_str=$("#wbid").val();
+			var   daili_url_zong=$('#daili_url_zong').val();
+			
+		    var  post_url=daili_url_zong+'/index.php/ServerzongAPI/API_agent_bangding_set.html';
+			
+			var  agent_realname_str=$("#agent_realname").text();
+			  
+			if(agent_realname_str==''){
+			   alert("请先搜索要绑定的代理商");
+			}else{
+				if( confirm('确定要绑定代理商“'+agent_realname_str+'”吗？'))
+				{
+					$.post(post_url,{wbid:wbid_str,agent_id:agentid_str},function(data)
+					{   
+
+						if(data.status==1)
+						{
+							alert('申请绑定提交成功');  
+							window.location.reload();
+													
+						}
+						else if(data.status==0)
+						{
+							alert('申请绑定提交失败');
+						}
+					});
+				}
+			
+			   
+			}
+			
+
+        }
+
+   </script>
+</block>

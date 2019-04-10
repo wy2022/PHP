@@ -1,0 +1,215 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+	<js href="__PUBLIC__/layer/layer.js" />
+	
+	<js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.src.js" />
+	<js href="__PUBLIC__/js/Blob.js" />
+	<js href="__PUBLIC__/js/FileSaver.js" />
+	<js href="__PUBLIC__/js/tableExport.js" />
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+       .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+	</style>
+</block>
+
+<block name="content">
+<div class="row search-bar" >
+  <div class="col-sm-12">
+ <div class="alert alert-warning bolder">总收入金额 <span class="orange" id="summoney">0.00</span> 元&nbsp;&nbsp;&nbsp;总退款金额 <span class="orange" id="refund">0.00</span>元</div> </div>
+	<form >
+
+      <span class="mgb15 biaodan" style="width:380px;">
+              <span class="input-group" >
+                <input class="form-control daterange" name="daterange" id="daterange" type="text" placeholder="请选择日期"  value="" />
+                <span class="input-group-addon">
+                  <i class="fa fa-calendar"></i>
+                </span>
+              </span>
+     </span>
+
+      <span class="mgb15 biaodan" >
+               <input name="sOrderNo" id="sOrderNo" type="text" class="form-control"  placeholder="商户订单号" />
+               
+     </span>
+	 
+	  <span class="mgb15 biaodan" >
+               <input name="sHyCardNo" id="sHyCardNo" type="text" class="form-control"  placeholder="会员卡号" />
+               
+     </span>
+
+
+	    <!-- <span class="mgb15 biaodan" > -->
+              <!-- <select id="trade_status" name="trade_status" class="form-control"> -->
+                <!-- <option value=" ">所有类型</option> -->
+                <!-- <option value="100" selected="selected">已支付</option> -->
+                <!-- <option value="2">已取消</option> -->
+                <!-- <option value="3">已退款</option> -->
+              <!-- </select>	 -->
+		<!-- </span> -->
+
+    <span class="mgb15 biaodan" style="width:300px;">交易金额
+      <input type="text" name="min_amount" id="min_amount"  style="width:85px;" />
+      <span style="padding:0 4px;">至</span>
+      <input type="text" name="max_amount" id="max_amount"  style="width:85px;" />
+    </span>
+
+		<span class="mgb15 biaodan" ><button type="button" class="btn btn-purple btn-sm" onclick="doSearch()">搜索<i class="fa fa-search"></i></button></span>
+		 <div id="export" class="biaodan mgb15" >
+								<a data-type="xls" href="" class="btn btn-sm btn-primary">导出<i class="fa fa-print" style="font-size:16px;"></i></a>
+							</div>
+							<script>
+							var $exportLink = document.getElementById('export');
+							$exportLink.addEventListener('click', function(e){
+								e.preventDefault();
+								if(e.target.nodeName === "A"){
+									tableExport('grid-table', '客户端微信支付表单', e.target.getAttribute('data-type'));
+								}
+							}, false);
+							</script>
+	</form>
+</div>
+<div id="jqgrid">
+    <table id="grid-table"></table>
+    <div id="grid-pager"></div>
+</div>
+
+
+</block>
+
+
+
+
+<block name="script">
+    <script>
+        $(function(){
+            $('#grid-table').jqGrid({
+                url:'{:U("getwxpayinfo")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colNames:['交易时间','商户订单号','流水账号','交易状态','交易金额(元)','会员卡号','商品信息','收银员ID'],
+                colModel:[
+                    {name:'time_post',editable:true,},               
+                    {name:'post_order_no',editable:true},
+                    {name:'transaction_id',editable:true},
+                    {name:'s_status',editable:true},
+                    {name:'total_fee',editable:true},
+                    {name:'CardNo',editable:true},  
+                    {name:'kcardlx',editable:true},                
+                    {name:'operator_id',editable:true}, 
+                ],
+                rowNum:30,
+				rowList:[30,100,500,1000],
+                viewrecords: true,
+				sortorder: "desc",
+                pager:'#grid-pager',
+                loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+                    
+                    $("#summoney").html(data['pay_sum']);
+                    $("#refund").html(data['refund_sum']);                  
+                 }, 
+
+                gridComplete: function(data)
+                {
+                      // alert(data['pay_sum']);
+                      // $("#summoney").html(data['pay_sum']);
+                      // $("#refund").html(data['refund_sum']);
+
+                    // var ids = $("#grid-table").jqGrid('getDataIDs');
+                    // var add,edit,save,del = '';
+                    // var s_status='';
+
+                    // for(var i=0;i < ids.length;i++)                   	
+                    // {
+                    // 	var rownum = ids[i];
+                    //     var getRow = $('#grid-table').getRowData(ids[i]);//获取当前的数据行  
+                    //     var wbid = getRow.wbid;
+                    //     var sBarName = getRow.sBarName;   
+                    //     var nOnlineStatus = getRow.nOnlineStatus; 
+      
+           
+ 
+                                                
+                    //     $("#grid-table").jqGrid('setRowData',ids[i],{opera:edit,nOnlineStatus:col_nOnlineStatus,sBarName:wbnamemodal,nSoftStatus:col_nSoftStatus,nBusinessStatus:col_nBusinessStatus});
+                    // }
+
+                }
+            }).jqGrid('navGrid','#grid-pager',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+		
+	$('#daterange').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+	$('.daterange').daterangepicker({
+		format:'YYYY-MM-DD hh:mm:ss',
+		timePicker: true,
+		timePickerIncrement: 1,
+		timePickerSeconds:true,
+		startDate:moment().startOf('day'),  
+		endDate: moment(),
+		timePicker12Hour:false,			
+		ranges: {  
+				   '今天': [moment().startOf('day'), moment().endOf('day')],  
+				   '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+				   '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+				   '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+				   '本月': [moment().startOf('month'), moment().endOf('month')],  
+				   '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+				},				
+		locale:{
+			applyLabel:'确定',
+			cancelLabel:'取消',
+			fromLabel:'从',
+			toLabel:'至',
+			daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+			monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+			customRangeLabel: '自定义',
+			firstDay : 1
+		}
+
+	},function(start,end,label){
+	$('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+	}).next().click(function(){$(this).prev().focus();});
+
+    function doSearch(){
+    $('#grid-table').jqGrid('setGridParam',{
+        postData:{
+            daterange:$('#daterange').val(),
+            <!-- trade_status:$('#trade_status').val(), -->
+            min_amount:$('#min_amount').val(),
+            max_amount:$('#max_amount').val(),
+            sHyCardNo:$('#sHyCardNo').val(),
+			sOrderNo:$('#sOrderNo').val()
+   
+        
+        }
+    }).trigger('reloadGrid');
+   }
+
+   </script>
+</block>

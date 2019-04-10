@@ -1,0 +1,600 @@
+<extend name="Public/base" />
+
+<block name="head">
+
+     	      <css href="__PUBLIC__/jquery-ui-1.10.3/themes/base/jquery.ui.all.css" />
+	 <js href="__PUBLIC__/jquery-ui-1.10.3/jquery-1.9.1.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.core.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.widget.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.position.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.menu.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.autocomplete.js" />
+	 <css href="__PUBLIC__/jquery-ui-1.10.3/demos/demos.css" /> 
+	 
+	 
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+    <js href="__PUBLIC__/layer/layer.js" />
+    <js href="__PUBLIC__/layer/myalert.js" />
+     <css href="__PUBLIC__/layer/myalert.css"/>
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+     .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+		 .fontsize12{font-size:12px;}
+		 .fl{float:left;};
+		 .fr{float:right};
+		 .text-right{text-align:right;}
+		 .btn1{
+		    font-size:12px;
+			height:28px;
+			line-height:28px;
+			width:90px;
+			-webkit-border-radius:2px;
+			-moz-border-radius:2px;
+			border-radius:2px;
+			border:0;
+			padding:6px 8px;
+			text-shadow:none;
+			background-image:none;
+		 }
+		 a:hover{text-decoration:none;}
+         #tableid td{vertical-align:middle;}
+		 #tableid tr td input[type="text"],#bz{
+		    display:inline-block;
+			height:22px;
+			font-size:14px;
+			line-height:22px;
+			color:#555555;
+			vertical-align:middle;
+			-webkit-border-radius:4px !important;
+			-moz-border-radius:4px !important;
+			border-radius:4px !important;
+			border-color:#a4bed4;
+			text-align:center;
+			padding:0;
+			width:65px;
+		 }
+		 #bz{height:30px;line-height:30px;width:560px;text-align:left;padding:4px 6px;}
+		 .fa-times-circle{cursor:pointer;}
+		 .pdl5{padding-left:5px;}
+		 .pdl20{padding-left:20px;}
+		 #project {
+				display:inline-block;
+				height:30px;
+				font-size:14px;
+				line-height:
+				color:#555555;
+				vertical-align:middle;
+				-webkit-border-radius:4px !important;
+				-moz-border-radius:4px !important;
+				border-radius:4px !important;
+				border-color:#a4bed4;
+				text-align:left;
+				padding:4px 6px;
+				width:200px;
+			 }
+	</style>
+</block>
+
+<block name="content">
+<div class="tabbable">
+	<ul class="nav nav-tabs">
+		<li id="pdhj"><a href="{:U('chaoshi/pdhj')}">盘点货架</a></li>
+		<li id="pdck"><a href="{:U('chaoshi/pdck')}">盘点仓库</a></li>
+	</ul>
+<script>
+    $('.nav li#{$Think.const.ACTION_NAME}').addClass('active');
+
+</script>
+  <div class="tab-content">
+
+      <div class="mgb15">
+
+        <div class="fr text-right">
+             <input type="hidden" name="TOKEN" id="TOKEN" value="{:session('TOKEN')}">
+               <input type="hidden"  id="ght_goodslist" value="{$goodslist}">    
+            <input type="text" placeholder="检索商品" id="project">
+            <a href="javascript:void(0);" class="btn1 btn-primary " id="js-import-products" style="vertical-align:top;"  onclick="plch();">选择商品</a>
+        </div>
+
+    </div>
+<div class="page_body">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover" id="tableid">
+            <thead>
+            <tr id="theadid">
+                <th>操作</th>
+                <th>商品名称</th>
+				 <th>仓库数量</th>
+                <th>盘点数量</th>
+				<th>损溢</th>
+				 <th>数量</th>
+				
+            </tr>
+            </thead>
+            <tbody id="pdhj_text">
+            <tr class="nothing" >
+                <td colspan="7" class="text-center muted td_tip" id="js_in_tip" style="color:#999999;">若不想检索商品，您可以点击右上角  <strong style="color:#428bca">选择商品</strong></td>
+            </tr> 
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="foot-container" id="js-foot-container">
+            <div class="mgb15">
+                <span>报损金额：<b id="baosun">0.00</b>元</span><span class="pdl20">报溢金额：<b id="baoyi">0.00</b>元</span>
+            </div>
+            <div class="text-left mgb15">
+                备注&nbsp;&nbsp;<input type="text" name="bz" id="bz" maxlength="200" >
+            </div>
+			<input id="flag" value="" type="hidden"/>
+            <div class="text-center tip">
+                <span style="padding:14px 0px;cursor:pointer;"><button class="btn btn-primary js-btn-save" id="btn_save" type="button" disabled>保存</button></span>
+            </div>
+      </div>
+
+  
+</div>
+  </div>
+</div>
+
+
+</block>
+<block name="script">
+<script>
+
+var storage=window.localStorage;
+storage.removeItem('goods_id');
+
+ function plch()
+{   
+  var storage=window.localStorage;
+  var yixuan_id  =  storage.getItem("goods_id");
+  //alert(yixuan_id);
+  
+  layer.open({
+  type: 2,
+  offset: '100px',
+  skin: 'layui-layer-lan',
+  title: '选择仓库商品',
+  maxmin: true,
+  shadeClose: true, //点击遮罩关闭层
+  area : '930px',
+  content: '{:U("chaoshi/plch_pd")}?goods_id='+yixuan_id,
+  });
+}
+
+
+/*
+$("#flag").change(function()
+{
+
+ var storage=window.localStorage;
+ var b  =  storage.getItem("goods_id");
+ 
+
+ 	  $.ajax({
+	  url:"{:U('getShangpinkucuinfolist')}",
+	  type:"post",
+	  dataType:"json",
+	  data:{canshu:b},
+	  success:function(data)
+	  {       
+	    <!-- var myobj=eval("("+data+")");  -->
+		var tip= $('#pdhj_text tr').hasClass('nothing');
+		 if(tip==true)
+		 {
+			$('.nothing').remove()
+		 }
+		var html="";
+		
+        for (var i = 0; i <data.length; i++) 
+		{
+			html+="<tr>"; 
+            html+='<td><i class="fa fa-times-circle fa-2x text-danger qx" onclick="return del('+i+')" id=del'+i+'></i></td>';				
+			html+='<td>'+data[i].goods_name+'</td>';
+            html+='<td id=ck1'+i+'>'+data[i].ck_num+'</td>';
+			html+='<td><input  name="hjnum"  type="text" value="'+data[i].ck_num+'" onchange="hjnum('+i+')" id=ck'+i+'><span class="pdl5">个</span></td>';
+			html+='<td id=status'+i+'>--</td>';
+            html+='<td><span id=num'+i+' class="num">--</span><span class="pdl5">个</span></td>';			
+			html+='<td class="hide" id=goods_id'+i+'>'+data[i].goods_id+'</td>'; 
+			
+            html+='<td class="hide" id=price'+i+'>2</td>'; 			
+			html+="</tr>"			
+        }; 
+         $("#pdhj_text").append(html);		
+	   
+	  }
+  }); 
+
+})
+
+*/
+
+
+
+$("#flag").change(function()
+{	
+	var storage=window.localStorage;
+    var storage_goods_id_str  =  storage.getItem("goods_id");
+    var bFind;
+    if(storage_goods_id_str)
+    {
+	   var storage_goods_id_list=storage_goods_id_str.split(",");  	
+    }
+	
+	 //判断界面是否有此数据，无则新增 ，否则就不加
+	 //先获取界面已有的数据，
+	 	
+    var jiemian_goods_id_list,one_jiamian_goods_id='';	  
+    for(var i=0;i<storage_goods_id_list.length;i++)
+    {	
+	    var  a_goods_id=	storage_goods_id_list[i];	
+	    var bShow=0;
+        if(storage_goods_id_list[i] && storage_goods_id_list[i]!='undefined')
+		{
+
+		   	var tip= $('#pdhj_text tr').hasClass('nothing');
+			if(tip==true)
+			{
+				$('.nothing').remove()
+			}
+		
+            var tbl=$('#pdhj_text');
+	        var trlist=tbl.find("tr");	
+            <!-- var n=trlist.length; -->
+ 			  <!-- alert(n); -->
+		   	for (var j = 0; j<trlist.length; j++) 
+			{   
+			  
+				var tr1=$(trlist[j]);
+				one_jiamian_goods_id=tr1.find('td:eq(6)').text();				
+				if(storage_goods_id_list[i]==one_jiamian_goods_id)
+				{
+					bShow=1;   //已存在该商品					
+				}						
+			}
+						
+			if(bShow==0)//未显示的则显示
+			{
+				var jsonlist={$goodslist};						     
+				var data=jsonlist; 				
+				var html="";													
+				for (var k = 0; k <data.length; k++) 
+				{			              		
+				  if(data[k]['goods_id']==storage_goods_id_list[i])
+				  {
+					html+="<tr>"; 
+					html+='<td><i class="fa fa-times-circle fa-2x text-danger qx" onclick="return del('+a_goods_id+')" id=del'+a_goods_id+'></i></td>';				
+					html+='<td>'+data[k].goods_name+'</td>';
+					html+='<td id=ck1'+a_goods_id+'>'+data[k].ck_num+'</td>';
+					html+='<td><input  name="hjnum"  type="text" value="'+data[k].ck_num+'" onkeyup="hjnum('+a_goods_id+')" id=ck'+a_goods_id+'><span class="pdl5">个</span></td>';
+					html+='<td id=status'+a_goods_id+'>--</td>';
+					html+='<td><span id=num'+a_goods_id+' class="num">--</span><span class="pdl5">个</span></td>';			
+					html+='<td class="hide" id=goods_id'+a_goods_id+'>'+data[k].goods_id+'</td>'; 						
+					html+='<td class="hide" id=price'+a_goods_id+'>'+data[k].shou_price+'</td>'; 			
+					html+="</tr>"	
+					$("#pdhj_text").append(html);	
+                    issubmit();						
+					break;				
+				  }	
+
+				}; 
+			}
+			          			
+		}		  
+    }
+ 	
+
+	
+})
+
+
+
+
+
+function del(id){
+   var newgoods_id_list='';
+   var a_goods_id=$('#goods_id'+id).text();
+   var storage=window.localStorage;
+   var goods_id_str  =  storage.getItem("goods_id");
+   
+   var goods_id_list=goods_id_str.split(",");  
+   for(var i=0;i<goods_id_list.length;i++)
+   {
+      if(goods_id_list[i]==a_goods_id)
+	  {
+	    
+	  }
+	  else
+	  {
+	    newgoods_id_list+=goods_id_list[i]+',';
+	  }
+   }
+ 
+   storage.setItem("goods_id",newgoods_id_list);
+   $('#del'+id).parents('tr').remove();
+   
+   
+  
+}
+function hjnum(id){
+   var num=/^\+?(0|[1-9][0-9]*)$/;
+   var ck1=Number($('#ck1'+id).text());
+   var ck=Number($('#ck'+id).val());
+   var price=Number($('#price'+id).text());
+   if(!(num.test(ck))){
+     myalertdanger("盘点数量只能输入正整数");
+	  $('#ck'+id).val("");
+	  return false;
+   }else{
+  
+   if(ck>ck1){
+      var shuliang=ck-ck1;
+	  $('#status'+id).text('报溢');
+	  $('#num'+id).text(shuliang);
+	  
+   }else if(ck<ck1){
+      var shuliang=ck1-ck;
+	  $('#status'+id).text('报损');
+	  $('#num'+id).text(shuliang);
+   }else if(ck=ck1){
+      $('#status'+id).text('--');
+	  $('#num'+id).text('--');
+   }
+   var baosunprice=0;
+   var baoyiprice=0;
+   var tbl=$('#pdhj_text');
+   var trlist=tbl.find('tr');
+   for(var i=0;i<trlist.length;i++){
+       var tr1=$(trlist[i]);
+	   var status=tr1.find('td:eq(4)').text();
+	   if(status=='报损'){
+	    var onebaosunprice=Number(tr1.find('td:eq(7)').text());
+		var onebaosunnum=Number(tr1.find('td:eq(5) .num').text());
+	      baosunprice+=onebaosunprice*onebaosunnum;
+	   }else if(status=='报溢'){
+	     var onebaoyiprice=Number(tr1.find('td:eq(7)').text());
+		 var onebaoyinum=Number(tr1.find('td:eq(5) .num').text());
+	      baoyiprice+=onebaoyiprice*onebaoyinum;
+	   }
+   }
+    $('#baosun').text(baosunprice);
+	$('#baoyi').text(baoyiprice);
+	 }
+	 issubmit();
+}
+function issubmit(){
+   $("#pdhj_text tr").find('td:eq(3) input').each(function(){
+	  if($(this).val()==""){
+
+	    $("#btn_save").attr("disabled",true);
+		return false;
+	  }else{
+
+	    $("#btn_save").attr("disabled",false); 
+		
+	  }
+	
+   });
+   
+
+}
+
+
+ $(".tip span").click(function(){
+ 	var tip= $('#pdhj_text tr').hasClass('nothing');
+
+   if($("#btn_save").prop("disabled")){
+   
+     if(tip==true){
+	   myalertdanger("请先选择盘点商品！");
+	 }else{
+	   myalertdanger("盘点数量不能为空！");
+	 }
+		   
+   }
+   })
+
+$("#btn_save").click(function(){
+
+     <!-- var param = $("#agent_reg").serialize(); -->
+
+	 
+	var tableInfo = "";
+	var data = [] ; 
+    var tbl=$('#pdhj_text');
+    var trlist=tbl.find("tr");
+	var sunyi_status='';
+	
+	for (var i = 0; i<trlist.length; i++) 
+	{    //遍历Table的所有Row
+		var tr1=$(trlist[i]);		
+		var row1 = {};
+		row1.goods_id = tr1.find('td:eq(6)').text();;
+		row1.pdnum = Number(tr1.find('td:eq(3) input').val());      
+	    row1.price	   = Number(tr1.find('td:eq(7)').text());	
+		sunyi_status = tr1.find('td:eq(4)').text();
+	
+		if(sunyi_status=='报损')
+		{
+		  row1.sunyi_status='-1';
+		  row1.sunyi_num = Number(tr1.find('td:eq(5) .num').text());		 
+		}
+		else if(sunyi_status=='报溢')
+		{
+		  row1.sunyi_status='1';
+		  row1.sunyi_num = Number(tr1.find('td:eq(5) .num').text());
+		  
+		}
+		else if(sunyi_status=='--')
+		{
+		  row1.sunyi_status='0';
+		  row1.sunyi_num = 0;
+		}
+		data.push(row1);	
+	}
+    var param = JSON.stringify(data);
+	var bs_je_str=$('#baosun').text();
+	var by_je_str=$('#baoyi').text();
+	var bz_str=$('#bz').val();
+	 var token_str=$('#TOKEN').val(); 
+     $.ajax({
+      url : "{:U("pdck_edit_set")}",
+      type : "post",
+      dataType : "json",
+      data: {goodsinfo:param,bs_je:bs_je_str,by_je:by_je_str,bz:bz_str,token:token_str},
+      success : function(data) 
+      {
+      if(data.status=="1")
+      {
+	    $("#btn_save").addClass("hide");
+	     myalertsuccess("盘点成功");
+    }
+	else if(data.status =="-1")
+    {
+       myalertdanger("盘点失败");
+	   
+    }else if(data.status =="-2")
+		{
+		 myalertdanger('数据重复提交,盘点失败');
+		 
+		   
+		}
+    },//success完成
+ });
+
+}); 
+
+
+
+
+
+
+</script>
+
+
+<script>
+	$(function() {
+	
+	var projects={$goodslist};
+	
+		$( "#project" ).autocomplete({
+			minLength: 0,
+			source: projects,
+			focus: function( event, ui ) 
+			{			    
+				$( "#project" ).val( ui.item.goods_name );
+				return false;
+			},
+			select: function( event, ui ) 
+			{			
+			   var newgoods_id_list='';
+			   var a_goods_id=ui.item.goods_id;
+			   
+			   var storage=window.localStorage;
+			   var goods_id_str  =  storage.getItem("goods_id");
+			   var bFind=0;
+			   if(goods_id_str)
+			   {
+			       var goods_id_list=goods_id_str.split(",");  		   
+				 
+				   for(var i=0;i<goods_id_list.length;i++)
+				   {
+					  if(goods_id_list[i]==a_goods_id)
+					  {
+						bFind=1;   //已存在该商品
+					  }			  
+				   }
+			   }
+			   else
+			   {
+			     bFind=0;
+			   }
+			   
+
+			   
+			   
+			   
+			   if(bFind==0)
+			   {
+			     				 
+				 	if(goods_id_str==null)
+					{
+					   goods_id_str=a_goods_id;
+					}
+					else
+					{
+					   goods_id_str=goods_id_str+','+a_goods_id;
+					   
+					}
+				
+				    storage.setItem("goods_id",goods_id_str);				 			 
+				<!--  	 var newstorage=window.localStorage;
+					 <!-- var b  =  newstorage.getItem("goods_id"); --> -->
+					 
+					 //从大json里解析出来这个网吧信息,然后追加
+					
+                  				
+					var jsonlist={$goodslist};						     
+					var data=jsonlist; 	
+                    var tip= $('#pdhj_text tr').hasClass('nothing');
+					 if(tip==true)
+					 {
+						$('.nothing').remove()
+					 }					
+					var html="";					
+					for (var i = 0; i <data.length; i++) 
+					{
+					  
+					  if(data[i]['goods_id']==a_goods_id)
+					  {
+					    html+="<tr>"; 
+						html+='<td><i class="fa fa-times-circle fa-2x text-danger qx" onclick="return del('+a_goods_id+')" id=del'+a_goods_id+'></i></td>';				
+						html+='<td>'+data[i].goods_name+'</td>';
+						html+='<td id=ck1'+a_goods_id+'>'+data[i].ck_num+'</td>';
+						html+='<td><input  name="hjnum"  type="text" value="'+data[i].ck_num+'" onkeyup="hjnum('+a_goods_id+')" id=ck'+a_goods_id+'><span class="pdl5">个</span></td>';
+						html+='<td id=status'+a_goods_id+'>--</td>';
+						html+='<td><span id=num'+a_goods_id+' class="num">--</span><span class="pdl5">个</span></td>';			
+						html+='<td class="hide" id=goods_id'+a_goods_id+'>'+data[i].goods_id+'</td>'; 						
+						html+='<td class="hide" id=price'+a_goods_id+'>'+data[i].shou_price+'</td>'; 			
+						html+="</tr>"	
+						$("#pdhj_text").append(html);	
+						issubmit();
+						break;
+					  }	
+		
+					}; 
+					
+                   					 
+				   				  												 				 				 
+			   }
+			   else  if(bFind==1)
+			   {
+			   
+			   }			 			   										  												
+			
+				return false;
+			}
+		})
+		.data( "ui-autocomplete" )._renderItem = function( ul, item ) 
+		{
+			return $( "<li>" )
+				.append( "<a>" + item.goods_name +  "</a>" )
+				.appendTo( ul );
+		};
+	});
+	</script>
+</block>

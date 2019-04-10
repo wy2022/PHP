@@ -1,0 +1,279 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <!-- <css href="__PUBLIC__/assets/css/ui.jqgrid.css" /> -->
+    <!-- <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" /> -->
+    <!-- <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" /> -->
+    <!-- <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" /> -->
+    <!-- <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" /> -->
+    <!-- <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" /> -->
+    <!-- <js href="__PUBLIC__/layer/layer.js" /> -->
+	
+	
+    <css href="__PUBLIC__/jquery-ui-1.10.3/themes/base/jquery.ui.all.css" />
+	 <js href="__PUBLIC__/jquery-ui-1.10.3/jquery-1.9.1.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.core.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.widget.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.position.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.menu.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.autocomplete.js" />
+	 <css href="__PUBLIC__/jquery-ui-1.10.3/demos/demos.css" /> 
+	 
+	 
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+    <js href="__PUBLIC__/layer/layer.js" />
+    <js href="__PUBLIC__/layer/myalert.js" />
+     <css href="__PUBLIC__/layer/myalert.css"/>
+	
+	
+	
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+     .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+		 .fontsize12{font-size:12px;};
+		 .red{
+			color:red;
+			font-weight:bolder;
+		 }
+	</style>
+
+</block>
+
+<block name="content">
+
+ <span  id="unzuhe_goodslist" style="display:none">{$unzuhe_goodslist}</span>   
+ 
+<div class="tabbable">
+	<ul class="nav nav-tabs">
+		<li id="kucun"><a href="{:U('chaoshi/kucun')}">货架库存</a></li>
+		<li id="ckkc"><a href="{:U('chaoshi/ckkc')}">仓库库存</a></li>
+	</ul>
+<script>
+//alert({$Think.const.ACTION_NAME})
+    $('.nav li#{$Think.const.ACTION_NAME}').addClass('active');
+
+</script>
+     <div class="tab-content">
+
+	
+
+		<div class="row search-bar" >
+		<form >
+		   <!-- <span class="mgb15 biaodan"><input class="form-control" name="goods_name" id="goods_name" type="text"  placeholder="请输入商品名称"  /> -->
+		    
+			<span class="mgb15 biaodan"> 
+				<input type="text" class="form-control" placeholder="检索商品" id="project"> 
+		    </span>
+			<!-- <span class="mgb15 biaodan"> <button type="button" class="btn btn-purple btn-sm" onclick="doSearch()">搜索<i class="fa fa-search"></i></button></span> -->
+
+		</form>
+	</div>
+
+		<table id='tab' class='table table-striped'>
+			<thead>
+				<tr>
+					<th>
+						商品分类
+					</th>
+					<!-- <th>
+						商品位置
+					</th>	 -->
+					<th>
+						商品名称
+					</th>
+					<th>
+						库存数量
+					</th>
+					<th>
+						单价（元）
+					</th>
+					<th>
+						商品总价（元）
+					</th>
+									
+				</tr>
+			</thead>
+	
+		<table>
+  
+
+
+</div>
+
+
+</block>
+
+</block>
+<block name="script">
+      <script>
+	 $('#project').keyup(function(){
+		var goods_name=$('#project').val();
+		$.ajax({
+				type:"get",
+				//url: '{:U("getkucuninfolist_hj")}?goods_id='+a_goods_id,
+				async:true,
+				data:{'goods_name':goods_name},
+				success:function(data)
+				{
+				    
+				   $('tbody').remove();
+					var data=data;
+					showallgoodslist(data)
+				}
+		});
+	 })
+    getgoodslist();	 
+	function  getgoodslist(a_goods_id=0)
+	{
+	
+	   	$.ajax({
+				type:"get",
+				url: '{:U("getkucuninfolist_hj")}?goods_id='+a_goods_id,
+				async:true,
+				//data:'',
+				success:function(data)
+				{
+				    
+				   $('tbody').remove();
+					var data=data;
+					showallgoodslist(data)
+				}
+			});
+	
+	}
+	  
+	
+	
+		
+	  function  showallgoodslist(data)
+	  {
+	    var html="";
+		var position;
+		console.log(data);
+        for (var i = 0; i <data.length; i++) 
+		{	
+			if(data[i].position==1){
+				position='货架库存';
+				var price=Number(data[i].shou_price);
+				var Num=Number(data[i].num);
+				var zong_num=price*Num;
+				var goods_name="'"+data[i].goods_name+"'";
+				console.log(data[i].type_name);
+				if(data[i].is_zuhe==0)
+				{	
+					html+='<tbody id=tb'+data[i].goods_id+'>';
+					html+='	<tr>';
+					html+='     <td>'+data[i].type_name+'</td>';
+					//html+='		<td><span>'+position+'</span></td>';
+					html+='		<td><span>'+data[i].goods_name+'</span></td>';
+					html+='		<td><span>'+data[i].num+'</span></td>';	
+					html+='		<td><span>'+data[i].shou_price+'</span></td>';					
+					html+='		<td><span>'+zong_num+'</span></td>';
+					html+='	</tr>';
+					html+='</tbody>';
+				}
+				else  if(data[i].is_zuhe==2)  //显示组合商品
+				{
+				   //有实际的组合商品
+					 var zuhedata=data[i].zuhelist;
+					 if(zuhedata.length>0)
+					 {
+						html+='<tbody id=tb'+data[i].goods_id+'>';
+						html+='	<tr>';
+						html+='     <td>'+data[i].type_name+'</td>';
+						//html+='		<td><span>'+position+'</span></td>';
+						html+='		<td><span class="red">'+data[i].goods_name+'</span></td>';
+						html+='		<td><span>'+data[i].num+'</span></td>';	
+						html+='		<td><span>'+data[i].shou_price+'</span></td>';					
+						html+='		<td><span>'+zong_num+'</span></td>';
+						html+='	</tr>';
+						 for(var j=0;j<zuhedata.length;j++)
+						 {
+							html+='	<tr>';
+							html+='     <td></td>';
+							//html+='		<td></td>';
+							html+='		<td><span>'+zuhedata[j].goods_name+'</span></td>';
+							html+='		<td></td>';	
+							html+='		<td></td>';					
+							html+='		<td></td>';
+							html+='	</tr>';
+							
+						 }
+						 html+='</tbody>';
+					 }else
+					 {
+					 
+					 } 
+				}
+				
+				
+			}
+        
+		}; 
+         $(" .table-striped").append(html);	
+	  }
+		
+		
+		
+		
+
+	
+   
+
+    </script>
+  
+<script>
+    document.onkeydown = function(e){
+        if((e||event).keyCode==13)
+        $("#sousuo").click();
+      };
+	  
+	  
+	  
+	  
+	  
+	  
+$(function() 
+{
+	   var projects={$unzuhe_goodslist};
+	
+		$( "#project" ).autocomplete({
+			minLength: 0,
+			source: projects,
+			focus: function( event, ui ) 
+			{			    
+				$( "#project" ).val( ui.item.goods_name );
+				return false;
+			},
+			select: function( event, ui ) 
+			{			
+			   var a_goods_id=ui.item.goods_id;
+			//   alert(a_goods_id);
+			   getgoodslist(a_goods_id);
+			   				   			 		   		 			   										  												
+				return false;
+			}
+		})
+		.data( "ui-autocomplete" )._renderItem = function( ul, item ) 
+		{
+			return $( "<li>" )
+				.append( "<a>" + item.goods_name +  "</a>" )
+				.appendTo( ul );
+		};
+	});
+	  
+	  
+</script>
+</block>

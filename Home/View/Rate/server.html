@@ -1,0 +1,581 @@
+<extend name="Public/base" />
+
+<block name="head">
+     <js href="__PUBLIC__/layer/layer.js" />
+    <js href="__PUBLIC__/layer/myalert.js" />
+  <css href="__PUBLIC__/layer/myalert.css"/>
+    <style>
+        .list div {margin-bottom: 10px;margin-left:20px;}
+        hr {margin:20px 0;}
+        input[type="text"] {width:50px;}
+        .clearfix div {float:left;width:230px;}
+        .fuxuan{font-size: 13px;margin-bottom: 10px;}
+    </style>
+</block>
+
+<block name="content">
+    <button type="button" class="btn btn-primary btn-sm"  onclick="restart_server1()" style="float:right;">更新重启网吧服务端</button>
+    <div style="clear:both;"></div>
+    <form method="post" id="form_server" >
+
+    <div class="tabbable">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#jihuo">激活</a></li>
+            <li><a data-toggle="tab" href="#shangji">上机</a></li>
+            <li><a data-toggle="tab" href="#jiezhang">结账</a></li>
+            <li><a data-toggle="tab" href="#fwdmanage">服务端管理</a></li>
+            <li><a data-toggle="tab" href="#khdmanage">客户端管理</a></li>
+			<!-- <li><a data-toggle="tab" href="#oide">声音控制</a></li> -->
+            <li><a data-toggle="tab" href="#qitaset">其他设置</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="jihuo">
+           
+
+           
+              <div class="list">
+			         <label><b>临时卡:</b></label>
+                    <div>自定义非实名卡位数 
+					   <select name="jh_ls_cardnum" id="jh_ls_cardnum">
+						  <option value ="10">10</option>
+						  <option value ="9">9</option>
+						  <option value="8">8</option>
+						  <option value="7">7</option>
+						  <option value="6">6</option>
+						  <script> $('#jh_ls_cardnum option[value={$oneserverinfo.FCardNoCount}]').prop('selected',true); </script>
+						</select>
+					  </div>
+                    <div>临时卡激活窗口停留时间 <input type="text" onkeyup="return num('jh_ls_tltime','临时卡激活窗口停留时间不能为空','只能输入整数')"  id="jh_ls_tltime"  name="jh_ls_tltime" value="{$oneserverinfo.m_TemOpenDigTime}"/> 秒（输入0表示不限制）</div>
+                    <div>临时卡激活窗口停留超时默认处理方式
+					    <select name="jh_ls_ClFs" id="jh_ls_ClFs">
+						  <option value ="0">关闭激活框</option>
+						  <option value ="1">自动激活</option>
+						   <script> $('#jh_ls_ClFs option[value={$oneserverinfo.m_TemOpenDigResult}]').prop('selected',true); </script>
+
+						</select>
+					  </div>
+					  <div>默认临时卡押金  <input type="text" onkeyup="return num('jh_ls_defaultmoney','默认临时卡押金不能为空','只能输入整数')"  id="jh_ls_defaultmoney"   name="jh_ls_defaultmoney" value="{$oneserverinfo.FTemDefJe}"/> 元</div>
+					  <div>临时卡未登录  <input type="text" onkeyup="return num('jh_ls_shixiao','临时卡未登录失效时间不能为空','只能输入整数')"  id="jh_ls_shixiao" name="jh_ls_shixiao" value="{$oneserverinfo.m_TemCardInvalidTime}"/> 分钟失效</div>
+                    <hr>
+					  
+					  <label><b>会员卡：</b></label>
+					  <div>会员卡已激活窗口停留  <input type="text" onkeyup="return num('jh_hy_tltime','会员卡已激活窗口停留超时时间不能为空','只能输入整数')"  id="jh_hy_tltime" name="jh_hy_tltime" value="{$oneserverinfo.m_HyOpenDigTime}"/> 秒超时后关闭窗口（输入0表示不限制）</div>
+					  <div>会员卡激活窗口停留超时默认处理方式
+					    <select name="jh_hy_ClFs" id="jh_hy_ClFs">
+						  <option value ="0">关闭激活框</option>
+						  <option value ="1">自动激活</option>
+						  <script> $('#jh_hy_ClFs option[value={$oneserverinfo.m_HyOpenDigResult}]').prop('selected',true); </script>
+
+						</select>
+					  </div>
+					  
+					  <div>会员卡最少加钱金额  <input type="text" onkeyup="return num('jh_hy_FHyAddLowestJe','会员卡最少加钱金额不能为空','只能输入整数')"  id="jh_hy_FHyAddLowestJe"   name="jh_hy_FHyAddLowestJe" value="{$oneserverinfo.FHyAddLowestJe}"/> 元</div>
+					  <hr>
+					  
+					  <label><b>激活管理：</b></label>
+					  <div>
+                      <label class="fuxuan"><input type="checkbox" name="FHyAutoOpenCard" <if condition="$oneserverinfo.FHyAutoOpenCard eq 'true'"> checked="checked"</if>/>
+						会员不激活直接上机（非实名下生效）
+						</label>
+                    </div>
+              </div>
+             </div>
+            
+
+            <div class="tab-pane" id="shangji">
+			  <div class="list">
+
+			    <label><b>会员卡：</b></label>
+				<div>
+				     <label class="fuxuan">会员“定额上机”可使用金额类型
+ 					 <input type="checkbox" name="sj_hy_lx_yj" id="sj_hy_lx_yj" <if condition="$oneserverinfo.FAllowHyCardToTemCardXf eq 'true'"> checked="checked"</if>/> 押金</label>
+                     <label class="fuxuan"> <input type="checkbox" name="sj_hy_lx_bj" id="sj_hy_lx_bj" <if condition="$oneserverinfo.FHyAllowBs eq 'true'"> checked="checked"</if>/> 本金</label>
+					 <label class="fuxuan"><input type="checkbox" name="sj_hy_lx_jlje" id="sj_hy_lx_jlje" <if condition="$oneserverinfo.m_HyZhengSongBaoShi eq 'true'"> checked="checked"</if>/> 奖励金额</label>
+                </div>
+				<div>
+                    <label class="fuxuan"><input type="checkbox" name="sj_m_HyYa_JinToYu_e" <if condition="$oneserverinfo.m_HyYa_JinToYu_e eq '1'"> checked="checked"</if>/> 会员押金上机结束自动转为余额上机</label>
+                </div>
+				<hr/>
+				<label><b>上机管理：</b></label>
+
+				<div>
+                    <label class="fuxuan"><input type="checkbox" name="sj_manage_kcset" <if condition="$oneserverinfo.m_HyDeductScheme eq '0'"> checked="checked"</if>/> 会员上机优先扣除本金余额，再扣除奖励余额</label>
+                </div>
+    <!--             <div>
+                    <label class="fuxuan"><input type="checkbox" name="sj_manage_bjset" <if condition="$oneserverinfo.FBjAllowOneCp eq true"> checked="checked"</if>/> 
+					   包间内电脑可以作为单机上机
+					 </label>
+                </div> -->
+
+                <div>
+                    <label class="fuxuan"><input type="checkbox" name="sj_manage_zhset" <if condition="$oneserverinfo.m_HyBsChangeBz eq 'true'"> checked="checked"</if>/> 定额结束自动转为标准上机</label>
+                </div>
+
+
+                <div>
+                    <label class="fuxuan"><input type="checkbox" name="lsk_go_baoshi" <if condition="$oneserverinfo.m_TemCardAutoBs eq 'true'"> checked="checked"</if>/> 允许临时卡自动转包时</label>
+                </div>
+
+
+        
+
+
+				 <div>
+                    <label class="fuxuan" > 剩余时间小于 <input type="text" onkeyup="return num('sj_manage_tipmin','进行余额不足提醒时间设置不能为空','只能输入整数')"  id="sj_manage_tipmin" name="sj_manage_tipmin" value="{$oneserverinfo.m_EndTimeCard}"/> 分钟时进行余额不足提醒，提醒 <input type="text" onkeyup="return num('sj_manage_tiptimes','进行余额不足提醒设置次数不能为空','只能输入整数')"  id="sj_manage_tiptimes" name="sj_manage_tiptimes" value="{$oneserverinfo.m_MessageCount}"/> 次</label>
+                </div>
+				</div>
+            </div>
+
+            <div class="tab-pane" id="jiezhang">
+                <div class="list">
+				   <label><b>会员卡：</b></label>
+				   　<div>
+                    <label class="fuxuan"><input type="checkbox" name="jz_hy_khd" <if condition="$oneserverinfo.m_ProhibitHyAutoEnd eq 'true'"> checked="checked"</if>/> 
+						禁止会员在客户端自主结账
+					  </label>
+					 </div>
+					 <div>
+					 
+					  <label class="fuxuan">
+						 会员标准上机，客户机关闭<input type="text" onkeyup="return num('jz_hy_khjclose_time','会员标准上机，客户机关闭几分钟自动结转值不能为空','只能输入整数')" name="jz_hy_khjclose_time" id="jz_hy_khjclose_time" value="{$oneserverinfo.FHyCloseCpEndAcc}" /> 分钟将会自动结账
+					  </label>
+
+					  </div>
+					  <hr>
+					<label><b>收银结账：</b></label>
+					<div>结账窗口停留  <input type="text" onkeyup="return num('jz_sy_staytime','结账窗口停留时间不能为空','只能输入整数')" id="jz_sy_staytime" name="jz_sy_staytime" value="{$oneserverinfo.m_HyEndDigTime}"/> 秒</div>
+					<div>结账窗口超时默认处理方法
+					    <select name="jz_sy_clfs" id="jz_sy_clfs">
+						  <option value ="0">关闭结账窗口</option>
+						  <option value ="1">自动结账</option>
+						  <script> $('#jz_sy_clfs option[value={$oneserverinfo.m_HyEndDigResult}]').prop('selected',true); </script>
+						</select>
+					</div>
+					<div>
+						<label class="fuxuan"><input type="checkbox" name="jz_sy_editmoney" <if condition="$oneserverinfo.m_ChangeJe eq 'true'"> checked="checked"</if>/> 
+							允许修改实收金额
+						</label>
+					</div>
+					<hr>
+					<label><b>下机：</b></label>
+					<div>
+                       临时卡下机以后默认操作
+					    <select name="jz_lsxj_defaultoper" id="jz_lsxj_defaultoper">
+						  <option value ="1">锁定计算机</option>
+						  <option value ="2">重新启动这台计算机</option>
+						  <option value ="0">关闭这台计算机</option>
+						  <script> $('#jz_lsxj_defaultoper option[value={$oneserverinfo.m_TemCardEndTimeAnswer}]').prop('selected',true); </script>
+						</select>
+					</div>
+					<div>
+                       会员卡下机以后默认操作
+					    <select name="jz_hyxj_defaultoper" id="jz_hyxj_defaultoper">
+						  <option value ="1">锁定计算机</option>
+						  <option value ="2">重新启动这台计算机</option>
+						  <option value ="0">关闭这台计算机</option>
+						  <script> $('#jz_hyxj_defaultoper option[value={$oneserverinfo.m_HyEndTimeAnswer}]').prop('selected',true); </script>
+						</select>
+					</div>
+					<div>
+					  <label class="fuxuan"><input type="checkbox" name="jz_xj_closecomputer" id="jz_xj_closecomputer" <if condition="$oneserverinfo.FLockLoginCloseComputer eq 'true'"> checked="checked"</if>/> 
+						<input type="text" onkeyup="return num('jz_xj_closecomputer_time','无人使用关闭计算机时间不能为空','只能输入整数')" id="jz_xj_closecomputer_time" name="jz_xj_closecomputer_time" value="{$oneserverinfo.FLockLoginCloseComputerTime}" disabled/> 分钟无人使用则关闭计算机 
+					  </label>
+					</div>
+                </div>
+
+            </div>
+
+            <div class="tab-pane" id="fwdmanage">
+                <div class="list">
+				   <label><b>维护：</b></label>
+                   <div>
+					  <label class="fuxuan"><input type="checkbox" name="fwd_wh_hidemoney" <if condition="$oneserverinfo.m_ChangeShiftsVisible eq 'true'"> checked="checked"</if>/> 隐藏交班时的上缴金额
+
+					  </label>
+					</div>
+                 <div>
+					  <label class="fuxuan"><input type="checkbox" name="fwd_wh_sjmoney" <if condition="$oneserverinfo.FChangeWorkNotKeepJe eq 'true'"> checked="checked"</if>/> 现金全部上缴
+
+					  </label>
+					</div>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="khdmanage">
+                <div class="list">
+				   <label><b>客户端设置：</b></label>
+                    <div>
+					   <label class="fuxuan"><input type="checkbox" name="khd_set_khdhj" <if condition="$oneserverinfo.m_ClientChangeCp eq 'true'"> checked="checked"</if>/> 
+					   允许客户端换机
+					   </label>
+					</div>
+					  <div><label class="fuxuan"><input type="checkbox" name="khd_set_kqyhj" <if condition="$oneserverinfo.FClientGroupChangeCp eq 'true'"> checked="checked"</if>/>  
+						允许跨区域换机</label></div>
+					  <div><label class="fuxuan"><input type="checkbox" name="khd_set_khdzzbs" <if condition="$oneserverinfo.m_ClientChangeXf eq 'true'"> checked="checked"</if>/>  
+						允许客户端自主包时</label></div>
+						<div><label class="fuxuan"><input type="checkbox" name="khd_set_khdhjqr" <if condition="$oneserverinfo.m_ClientOkChangeCp eq 'true'"> checked="checked"</if>/>  
+						客户端换机需原机确认</label></div>
+						<div><label class="fuxuan"><input type="checkbox" name="khd_set_khdxshyjf" <if condition="$oneserverinfo.m_NotShowHyJiFen eq '1'"> checked="checked"</if>/>  
+						客户端不显示会员积分</label></div>
+						
+						<div>
+						<label class="fuxuan"><input type="checkbox" name="khd_set_hyzzxgmm" <if condition="$oneserverinfo.m_ClientEditHyPw eq 'true'"> checked="checked"</if>/>  
+						允许会员自助修改密码</label>
+						</div>
+		<!-- 			  <div>
+					  <label class="fuxuan">同时解锁台数
+						<input type="text" name="khd_set_jstimes" value="0"/> （输入0表示不限制）  
+					  </label>
+					  </div> -->
+                    <div>
+					  <label class="fuxuan"><input type="checkbox" name="khd_set_fwdlinkerror" id="khd_set_fwdlinkerror" <if condition="$oneserverinfo.m_ClientCloseYorN eq 'true'"> checked="checked"</if>/> 检测与服务端的连接失败后
+						<input type="text" onkeyup="num('khd_set_fwdlinkerror_time','检测与服务端的连接失败后的执行时间不能为空','只能输入整数')" id="khd_set_fwdlinkerror_time" name="khd_set_fwdlinkerror_time" value="{$oneserverinfo.m_ClientCloseMin}" disabled/> 分钟,将执行  
+						<select name="khd_set_fwdlinkerror_clfs" disabled="disabled">
+						  <!-- <option value ="1">锁定计算机</option> -->
+						  <!-- <option value ="2">关闭所有程序</option> -->
+						  <!-- <option value ="3">重新计算机</option> -->
+						  <option value ="4">关机</option>
+						  <!-- <option value ="5">不处理</option> -->
+						</select>
+					  </label>
+					</div>
+
+		
+					
+                   <div>
+				      <input type="hidden">  
+					  
+					  <label class="fuxuan">客户端解锁密码：
+						<input type="password" name="khd_set_password" id="khd_set_password" onkeyup="return passwordValidate('khd_set_password','客户端解锁密码不能为空')" style="width:300px;" value="{$oneserverinfo.m_ClientUnLockPw}"autocomplete="off"/> 
+					  </label> 默认密码：123<br/>
+					</div>
+					<div>
+					  <label class="fuxuan">临时卡默认上机密码： 
+						<input type="text" name="khd_set_ls_password" id="khd_set_ls_password" onkeyup="return passwordValidate('khd_set_ls_password','临时卡默认上机密码不能为空')" style="width:300px;" value="{$oneserverinfo.m_TempCardPw}"/> 
+					  </label> 默认密码：0<br/>
+					</div>
+                  <div>
+					  <label class="fuxuan">新增会员默认上机密码： 
+						<input type="text" name="khd_set_xzhy_password" id="khd_set_xzhy_password" onkeyup="return passwordValidate('khd_set_xzhy_password','新增会员默认上机密码不能为空')" style="width:300px;" value="{$oneserverinfo.FGlwAddDefaultPw}"/> 
+					  </label> 默认密码：0（过滤王实名下生效）<br/>
+					</div>
+					<div>
+                         <input type="text" style="display: none;">
+						 
+                         <input type="password" style="display: none;">
+
+					  <label class="fuxuan">管理员最大解锁台数：<input type="input" onkeyup="return num1()"  id="khd_set_max_unlock_count" style="width:300px;" name="khd_set_max_unlock_count" value="{$oneserverinfo.m_SuperCount}" autocomplete="off"/> 
+					  
+					  </label> 台<br/>
+					  
+				
+					</div>
+					
+				     <div>
+                         <input type="text" style="display: none;">						                     						  
+					  	<label class="fuxuan">管理员最大解锁时间：<input type="input" onkeyup="return num2()"  id="khd_set_max_unlock_time" style="width:300px;" name="khd_set_max_unlock_time" value="{$oneserverinfo.m_SuperJMTime}" autocomplete="off"/> 
+					  
+					  </label> 分钟 （注:0表示无限制 客户机版本需>=41版本才有效）<br/>
+					</div>
+					
+                </div>
+            </div>
+			<!--
+			<div class="tab-pane" id="oide">
+					<div class="list">
+					   <label><b>客户端设置：</b></label>
+					  
+						<div>
+						   <label class="fuxuan"><input type="checkbox" name="khd_set_khdhj" <if condition="$oneserverinfo.m_ClientChangeCp eq 'true'"> checked="checked"</if>/> 
+						   允许客户端换机
+						   </label>
+						</div>
+					  <div><label class="fuxuan"><input type="checkbox" name="khd_set_kqyhj" <if condition="$oneserverinfo.FClientGroupChangeCp eq 'true'"> checked="checked"</if>/>  
+						允许跨区域换机</label></div>
+					  <div><label class="fuxuan"><input type="checkbox" name="khd_set_khdzzbs" <if condition="$oneserverinfo.m_ClientChangeXf eq 'true'"> checked="checked"</if>/>  
+						允许客户端自主包时</label></div>
+						<div><label class="fuxuan"><input type="checkbox" name="khd_set_khdhjqr" <if condition="$oneserverinfo.m_ClientOkChangeCp eq 'true'"> checked="checked"</if>/>  
+						客户端换机需原机确认</label></div>
+						<div>
+							<label class="fuxuan"><input type="checkbox" name="khd_set_khdxshyjf" <if condition="$oneserverinfo.m_NotShowHyJiFen eq '1'"> checked="checked"</if>/>  
+							客户端不显示会员积分</label>
+						</div>
+						
+						<div>
+							<label class="fuxuan"><input type="checkbox" name="khd_set_hyzzxgmm" <if condition="$oneserverinfo.m_ClientEditHyPw eq 'true'"> checked="checked"</if>/>  
+							允许会员自助修改密码</label>
+						</div>
+                </div>
+            </div>
+			
+			-->
+			
+            <div class="tab-pane" id="qitaset">
+                <div class="list">
+                   <label><b>设置积分兑换权限</b></label>
+				     <div>
+					  <label class="fuxuan"><input type="checkbox" name="qt_jf_dh" <if condition="$oneserverinfo.FHyDhJf eq 'true'"> checked="checked"</if>/> 允许会员积分兑换
+
+					  </label>
+					 </div>
+					 <div>
+					  <label class="fuxuan"><input type="checkbox" name="qt_jf_khddh" <if condition="$oneserverinfo.FHyDhJfClient eq 'true'"> checked="checked"</if>/> 允许会员在客户端积分兑换
+
+					  </label>
+					</div>
+					
+					<label><b>设置会员等级</b></label>
+					<div>
+					  <label class="fuxuan">提升级别： <input type="checkbox" name="qt_viplever_ts" <if condition="$oneserverinfo.FHyAutoLevel eq 'true'"> checked="checked"</if>/> 按积分提升会员级别
+					  </label>
+					</div>
+					<div>
+					  <label class="fuxuan">积分奖励： <input type="radio" name="qt_viplever_jf"  value="0" <if condition="$oneserverinfo.m_Jifen_Jiangli eq 0"> checked="checked"</if>/> 加钱一元送一积分
+					  <input type="radio" name="qt_viplever_jf" value="1"  <if condition="$oneserverinfo.m_Jifen_Jiangli eq 1"> checked="checked"</if>/> 消费一个小时送一积分
+					  </label>
+					</div>
+					
+					
+					
+					<label><b>设置会员购买商品</b></label>
+								
+					 <div>
+					  <label class="fuxuan"><input type="checkbox" name="ShangPin_HyMaiSp" <if condition="$oneserverinfo.ShangPin_HyMaiSp eq '1'"> checked="checked"</if>/> 允许会员买商品
+
+					  </label>
+					 </div>
+					 <div>
+					  <label class="fuxuan"><input type="checkbox" name="ShangPin_HyJlje" <if condition="$oneserverinfo.ShangPin_HyJlje eq '1'"> checked="checked"</if>/> 允许奖励买商品
+
+					  </label>
+					</div>
+					
+                </div>
+            </div>
+			
+</div>
+
+        </div>
+    
+    <div class="clearfix form-actions">
+        <button type="button" class="btn btn-warning" onclick="submitServer();">保存修改</button>
+    </div>
+    </form>
+</block>
+<block name="script">
+   <script>
+	$('#jz_hy_khjclose').change(function(){
+		if($('#jz_hy_khjclose').prop('checked')){
+			$('input[name="jz_hy_khjclose_time"]').prop('disabled',false);
+		}else{
+			$(' input[name="jz_hy_khjclose_time"]').prop('disabled',true);
+		}
+	})
+	if($('#jz_xj_closecomputer').prop('checked')){
+			$('input[name="jz_xj_closecomputer_time"]').prop('disabled',false);
+		}else{
+			$(' input[name="jz_xj_closecomputer_time"]').prop('disabled',true);
+		}
+	$('#jz_xj_closecomputer').change(function(){
+		if($('#jz_xj_closecomputer').prop('checked')){
+			$('input[name="jz_xj_closecomputer_time"]').prop('disabled',false);
+		}else{
+			$(' input[name="jz_xj_closecomputer_time"]').prop('disabled',true);
+		}
+	})
+	if($('#khd_set_fwdlinkerror').prop('checked')){
+			$('input[name="khd_set_fwdlinkerror_time"]').prop('disabled',false);
+			$('select[name="khd_set_fwdlinkerror_clfs"]').prop('disabled',false);
+		}else{
+			$(' input[name="khd_set_fwdlinkerror_time"]').prop('disabled',true);
+			$('select[name="khd_set_fwdlinkerror_clfs"]').prop('disabled',true);
+		}
+	$('#khd_set_fwdlinkerror').change(function(){
+		if($('#khd_set_fwdlinkerror').prop('checked')){
+			$('input[name="khd_set_fwdlinkerror_time"]').prop('disabled',false);
+			$('select[name="khd_set_fwdlinkerror_clfs"]').prop('disabled',false);
+		}else{
+			$(' input[name="khd_set_fwdlinkerror_time"]').prop('disabled',true);
+			$('select[name="khd_set_fwdlinkerror_clfs"]').prop('disabled',true);
+		}
+	})
+	// $('#khd_set_adminjs').change(function(){
+	// 	if($('#khd_set_adminjs').prop('checked')){
+	// 		$('input[name="khd_set_adminjs_time"]').prop('disabled',false);
+	// 	}else{
+	// 		$(' input[name="khd_set_adminjs_time"]').prop('disabled',true);
+	// 	}
+	// })
+	
+	function submitServer(){
+	
+	         var password=$('#khd_set_password').val();
+		     var lspassword=$('#khd_set_ls_password').val();
+			 var hypassword=$('#khd_set_xzhy_password').val();
+			 if((password.length>0)&&(lspassword.length>0)&&(hypassword.length>0)){
+				   		 var param = $("#form_server").serialize();
+						 $.ajax({
+						  url : "{:U("server_set")}",
+						  type : "post",
+						  dataType : "json",
+						  data: param,
+						  success : function(data) 
+						  {
+						  	myalertsuccess('操作成功，请点击右侧 "更新重启网吧服务端"。');
+						  },//success完成
+					 });
+				 
+				
+			 }else if(password.length<1)
+			 {
+			    	layer.msg('客户端解锁密码不能为空');
+					return false;
+			 }else if(lspassword.length<1)
+			 {
+			    	layer.msg('临时卡默认上机密码不能为空');
+					return false;
+			 }else if(hypassword.length<1)
+			 {
+			    	layer.msg('新增会员默认上机密码不能为空');
+					return false;
+			 }
+	   
+	}
+	
+<!-- $('#khd_set_password').change(function(){ -->
+	<!-- if($(this).val().length<1){ -->
+		<!-- layer.msg('客户端解锁密码不能为空'); -->
+	<!-- } -->
+
+<!-- }); -->
+<!-- $('#khd_set_ls_password').change(function(){ -->
+	<!-- if($(this).val().length<1){ -->
+		<!-- layer.msg('临时卡默认上机密码不能为空'); -->
+	<!-- } -->
+
+<!-- }); -->
+<!-- $('#khd_set_xzhy_password').change(function(){ -->
+	<!-- if($(this).val().length<1){ -->
+		<!-- layer.msg('新增会员默认上机密码不能为空'); -->
+	<!-- } -->
+
+<!-- }); -->
+
+
+// $('input[name="sj_hy_lx_yj"]').prop('checked',true);
+// $('input[name="sj_hy_lx_bj"]').prop('checked',true);
+// $('input[name="sj_hy_lx_jlje"]').prop('checked',true);
+
+$("#sj_hy_lx_yj").change(function(){
+if(($('#sj_hy_lx_yj').is(":checked")==false)&&($('#sj_hy_lx_bj').is(":checked")==false)){
+
+     $('input[name="sj_hy_lx_yj"]').prop('checked',true);
+    layer.msg('押金和本金至少选一个', function(){});
+}
+})
+$("#sj_hy_lx_bj").change(function(){
+if(($('#sj_hy_lx_yj').is(":checked")==false)&&($('#sj_hy_lx_bj').is(":checked")==false)){
+
+    $('input[name="sj_hy_lx_bj"]').prop('checked',true);
+    layer.msg('押金和本金至少选一个', function(){});
+}
+if($('#sj_hy_lx_bj').is(":checked")==false){
+  $('input[name="sj_hy_lx_jlje"]').prop('checked',false);
+  $('input[name="sj_hy_lx_jlje"]').prop("disabled",true);
+  $('.sj_hy_lx_jlje').css('color','#999');
+}else{
+  $('input[name="sj_hy_lx_jlje"]').prop("disabled",false);
+  $('.sj_hy_lx_jlje').css('color','#393939');
+}
+})
+
+
+
+
+function restart_server1()
+{
+
+    $.post("{:U('post_restart_server')}",{tablename:'WIniTable'},function(data)
+    {
+
+        if(data.result==1)
+        {
+           myalertsuccess('重启成功');
+        }
+        else if(data.result==-1)
+        {
+            myalertdanger('重启失败');
+        }
+    });                   
+}
+
+function num(id,msg1,msg2)
+{
+    var num=/^\d*$/;
+	var value=$('#'+id).val();
+	if(value.length==0){
+	  myalertdanger(msg1);
+	  $('#'+id).val(0);
+	  
+	}else if(!(num.test(value)))
+	{
+	  myalertdanger(msg2);
+	  $('#'+id).val(0);
+	}				
+}
+
+
+function num1()
+{
+    var num=/^[1-9]\d*$/;
+	var value=$('#khd_set_max_unlock_count').val();
+	if(value.length==0){
+	   myalertdanger("管理员最大解锁台数不能为空");
+	   $('#khd_set_max_unlock_count').val(100);
+	}else if(!(num.test(value)))
+	{
+	  myalertdanger("只能输入整数");
+	  $('#khd_set_max_unlock_count').val(100);
+	}else if(value>999){
+	 myalertdanger("最大为999台");
+	  $('#khd_set_max_unlock_count').val(100);
+	}				
+}
+
+
+function num2()
+{
+    var num=/^[0-9]\d*$/;
+	var value=$('#khd_set_max_unlock_time').val();
+	if(value.length==0)
+	{
+	   myalertdanger("管理员最大解锁时间不能为空");
+	   $('#khd_set_max_unlock_time').val(999);
+	}
+	else if(!(num.test(value)))
+	{
+	  myalertdanger("只能输入整数");
+	  $('#khd_set_max_unlock_time').val(999);
+	}else if(value>999){
+	 myalertdanger("最大为999");
+	  $('#khd_set_max_unlock_time').val(999);
+	}				
+}
+
+function passwordValidate(id,msg){
+   var num=/^\w+$/;
+   var value=$('#'+id).val();
+   if(value.length==0){
+	  myalertdanger(msg);
+	  
+	}else if(!(num.test(value)))
+	{
+	  myalertdanger("密码只能输入数字、字母、下划线");
+	  $('#'+id).val('')
+	}
+	
+}
+
+
+</script>
+</block>

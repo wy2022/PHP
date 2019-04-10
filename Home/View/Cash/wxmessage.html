@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>微信验证</title>
+	<style>
+        .tishi{
+        	width: 100%;
+        	margin: 0 auto;
+        }
+        .juzhong{
+        	display: block;
+        	margin: 16px auto;
+        	color: #fff;
+        	background-color: #1b6aaa;
+        	border:none;
+        	outline: none;
+            width: 80px;
+            height: 30px;
+            border-radius: 5px;
+        }
+        .red{
+        	color: red;
+        }
+        .pstyle{
+        	margin: 10px 0 0 10px;
+        }
+	</style>
+</head>
+<body>
+<div>
+    <div id="qrcode" style="width:300px; height:300px; margin:10px auto 0;"></div>
+    <button id="shuaxin" class="btn btn-primary juzhong" onclick="gengxin_Data()">确认授权</button>
+    <div class="tishi">
+        <p class="pstyle"> 步骤说明：</p>
+        <p class="pstyle">1.手机微信扫描二维码，查看并填写页面数据提交。</p>
+        <p class="pstyle">2.保证手机页面授权成功，在关闭此页面。</p>
+        <p class="red">注：微信只能进行一次授权，一经确认，<span class="red">不可修改微信号</span>。</p>
+    </div>
+    </div>
+</body>
+	<script type="text/javascript" src="__PUBLIC__/jquery-ui-1.10.3/jquery-1.9.1.js"></script>
+<script src="__PUBLIC__/qrcodejs/qrcode.js" type="text/javascript"></script>
+<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+ <script>
+   var qrcode = new QRCode(document.getElementById("qrcode"),
+ {
+	width : 300,
+	height : 300
+});
+//生成二维码
+
+function makeCode () 
+{		
+	var  dianhuo_url='{$wxurl}';
+	qrcode.makeCode(dianhuo_url);
+}
+makeCode();
+
+function gengxin_Data(){
+	var  wbaccount="{$wbaccount}";
+	var url='{:U('ServerfenAPI/getwxid')}';
+	$.ajax({
+      url : url,
+      type : "get",
+      dataType : "json",
+      data: {wbaccount:wbaccount},
+      success : function(data) 
+      {
+      	if(data.status==1){
+	     	var str=data.wxid;
+	      	parent.$('#wxid').val(str).change();
+		    parent.layer.closeAll();
+      	}else{
+      		alert('请先在手机端获取微信授权');
+      	}
+ 
+      },
+      error:function(data){}
+})	
+};
+</script>
+</html>

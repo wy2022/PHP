@@ -1,0 +1,349 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+     <js href="__PUBLIC__/layer/layer.js" />
+     <script type="text/javascript" src="__PUBLIC__/highcharts/highcharts.js"></script>
+	     <js href="__PUBLIC__/echarts/echarts.common.min.js" />
+
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+	</style>
+</block>
+
+<block name="content">
+
+
+              <!-- content---start -->
+  <div id="search" class="clearfix">
+  <form onsubmit="return checkform()" class="mgb15">
+     <span>开卡时间 <input type="text" class="daterange" id="daterange" style="width:300px;" value=""/></span>
+     <span><button class="btn btn-primary btn-sm" type="button" id="chaxun" onclick="go()" >查询</button></span>
+   </form>
+  </div>
+    <div id="huiyuan_chart"></div>
+	
+ <!-- 
+        <div  class="widget-box" >
+      <div class="widget-header"><i class="fa fa-hand-o-right" ></i><span style="margin-left:5px;">2017年06月29日 07:00 会员构成</span>
+      </div>
+			<div class="widget-body">
+			   <div >
+			      <div class="row">
+				     <div class="col-sm-12">
+					  
+						   
+						 
+						     <div class="row">
+                  <div class="col-sm-12">
+                  <div class="row">
+							 <div class="col-sm-6">
+					          <div id="pie_income" style="height:150px;"></div>
+							 </div>
+							 <div class="col-sm-5">
+							  <div class="lengend" >
+								  <ul class="lengend_list">
+                    <li style="position:relative;" class="has_child" ><i class="sq" style="background-color:#90A7EB;"></i>网费<b>{$money_array.wf_money}<i class="fa fa-angle-right" style="position:absolute;right:5px;"></i></b>
+                     <div class="sub_item">
+                        <table>
+                          <tbody>
+                             <tr>
+                                <th>会员卡</th>
+                                <td>{$money_array.hyk_money}</td>
+                             </tr>
+                             <tr>
+                                <th>临时卡</th>
+                                <td>{$money_array.lsk_money}</td>
+                             </tr>
+                          </tbody>
+                        </table>
+                     </div>
+                    </li>
+								     <li><i class="sq" style="background-color:#FFD76B;"></i>公众号充值<b>{$money_array.gzh_money}</b></li>
+									 <li><i class="sq" style="background-color:#FEBD4F;"></i>微信支付<b>{$money_array.wx_money}</b></li>
+									 <li><i class="sq" style="background-color:#B2E472;"></i>支付宝支付<b>{$money_array.zfb_money}</b></li>
+									 
+								  </ul>                     
+    
+
+								</div>
+               
+								</div>
+                 
+                 </div>
+                   <p style="color:#7d7d7d;text-align:center;">以上信息统计{$today.begtime}到{$today.endtime}</p>
+                 </div>
+               </div>
+						 
+						 
+
+					
+				  </div>
+			   </div>
+			</div>
+		  </div>
+	   </div>
+-->
+	
+ <!-- content---end -->
+
+
+</block>
+
+
+
+
+<block name="script">
+
+  <script>
+       // var day = new Date();
+       // day.setDate(day.getDate()-29);
+        var huiyuan_chart = {
+            title:{
+                text:null
+            },
+            credits:{
+                enabled:false
+            },
+            xAxis:{
+               // type:'datetime',
+                //labels:{
+                    //format:'{value:%m/%d}'
+                //}
+        categories: [],
+                labels: {
+                  step:1,
+                  staggerLines: 1
+              }
+            },
+            yAxis:{
+                title:{
+                    text:'人数'
+                }
+            },
+            tooltip:{
+                shared: true,
+         xDateFormat: '%Y-%m-%d',
+                 valueSuffix: ''
+        
+            },
+            plotOptions:{
+          line:{
+              dataLabels: {
+                        enabled: false
+                    }
+          },
+              //  series:{
+                    //pointStart:Date.UTC(day.getUTCFullYear(),day.getUTCMonth(),day.getUTCDate()),
+                    //pointInterval:24*3600000
+                //}
+            },
+            legend: {
+                align:'',
+                verticalAlign: 'top'
+            },
+            series:[{
+                name:'新增会员',
+                data:[]
+            },{
+                name:'流失会员',
+                data:[]
+            }]
+        };
+    
+
+   
+        var chart;
+
+        $('#daterange').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+  $('.daterange').daterangepicker({
+    format:'YYYY-MM-DD hh:mm:ss',
+    timePicker: true,
+    timePickerIncrement: 1,
+    timePickerSeconds:true,
+    startDate:moment().startOf('day'),  
+    endDate: moment(),
+    timePicker12Hour:false,     
+    ranges: {  
+           '今天': [moment().startOf('day'), moment().endOf('day')],  
+           '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+           '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+           '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+           '本月': [moment().startOf('month'), moment().endOf('month')],  
+           '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+        },        
+    locale:{
+      applyLabel:'确定',
+      cancelLabel:'取消',
+      fromLabel:'从',
+      toLabel:'至',
+      daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+      monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+      customRangeLabel: '自定义',
+      firstDay : 1
+    }
+
+  },function(start,end,label){
+  $('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+  }).next().click(function(){$(this).prev().focus();});
+
+
+
+    
+    function go()
+   {   
+   
+       
+        $.ajax(
+        {
+          url:'{:U("getHyLiushiData")}',
+          type:"post",
+          dataType:"text",
+		  beforeSend:function(){ 
+          $("#chaxun").attr("disabled",true);		  
+		   layer.load(2);
+		  }, 
+          data:{daterange:$("#daterange").val()},
+          success:function(data)
+          { 
+              var aa=data.indexOf("flower123");
+            if(aa!=(-1))
+            {
+              window.location.href="/mq/login.html" ;
+            }
+            else
+            {
+              var json=eval("("+data+")"); 
+      
+
+             if(json.xAxis.length>47)
+             {
+                 huiyuan_chart.xAxis.labels.step=4;
+             }
+             else if(json.xAxis.length>20)
+             {
+                huiyuan_chart.xAxis.labels.step=2;
+             }
+
+               huiyuan_chart.series[0].data=json.money[0].data;
+               huiyuan_chart.series[1].data=json.money[1].data;
+               huiyuan_chart.xAxis.categories=json.xAxis;
+              // $("#xianjin").html(json.xianjin);
+               $("#yingye").html(json.yingye);
+               $('#huiyuan_chart').highcharts(huiyuan_chart);
+               chart= $('#huiyuan_chart').highcharts();
+           }
+         },
+		 complete:function(){ 
+		    $("#chaxun").attr("disabled",false);
+			layer.closeAll('loading');
+		   },
+       })
+   }
+   go(); 
+</script>
+<script>
+ function checkform(){
+    var daterange=$("#daterange").val();
+  if(daterange==""||daterange=="请选择日期")
+  {
+     // alert("请选择日期");
+        layer.msg('请选择日期', {
+                    offset: 0,
+                    shift: 6
+                  });
+     return false;
+  }
+  return true;
+ }
+
+</script>
+
+     <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('pie_income'));
+
+        // 指定图表的配置项和数据
+option = {
+    tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b}: {c} ({d}%)"
+    },
+
+    series: [
+        {
+            name:'访问来源',
+            type:'pie',
+            radius: ['40%', '80%'],
+            avoidLabelOverlap: false,
+            label: {
+                normal: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    show: true,
+                    textStyle: {
+                        fontSize: '14',
+                        fontWeight: 'bold'
+                    }
+                }
+            },
+            labelLine: {
+                normal: {
+                    show: false
+                }
+            },
+            data:[]
+                // {value:0, name:'网费'},
+                // {value:0, name:'购买商品'},
+                // {value:0, name:'0013手机充值'},
+                // {value:0, name:'增收宝加钱'},
+                // {value:0, name:'其他收入'}
+            
+        }
+    ],
+	color:['#90A7EB','#FFD76B','#FEBD4F','#B2E472','#58DBD7',]
+};
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+      <script>
+    getData();
+    function getData(){
+      
+     $.get("{:U('Index/getData')}",function(data)
+     { 
+
+        // alert(data.data[0]['value']);
+		 //alert(data.data[0]['name']);
+		 
+		 //alert(data.data[1]['value']);
+		 //alert(data.data[1]['name']);
+		 
+		 
+        myChart.setOption({
+        series:[{data:data.data}]
+       });
+ 
+       
+        
+        });  
+    // $('#type-list li').removeClass('active');
+    // $('#type_'+type).addClass('active');
+    }
+  </script>
+</block>

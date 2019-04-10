@@ -1,0 +1,916 @@
+<extend name="Public/base" />
+
+<block name="head">
+
+      <css href="__PUBLIC__/jquery-ui-1.10.3/themes/base/jquery.ui.all.css" />
+	 <js href="__PUBLIC__/jquery-ui-1.10.3/jquery-1.9.1.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.core.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.widget.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.position.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.menu.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.autocomplete.js" />
+	 <css href="__PUBLIC__/jquery-ui-1.10.3/demos/demos.css" /> 
+	 
+
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+    <js href="__PUBLIC__/layer/layer.js" />
+    <js href="__PUBLIC__/layer/myalert.js" />
+     <css href="__PUBLIC__/layer/myalert.css"/>
+	 
+	<style>
+
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+     .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+		 .fontsize12{font-size:12px;}
+		 .fl{float:left;};
+		 .fr{float:right};
+		 .text-right{text-align:right;}
+		 .btn1{
+		    font-size:12px;
+			height:28px;
+			line-height:28px;
+			width:90px;
+			-webkit-border-radius:2px;
+			-moz-border-radius:2px;
+			border-radius:2px;
+			border:0;
+			padding:6px 8px;
+			text-shadow:none;
+			background-image:none;
+		 }
+		 a:hover{text-decoration:none;}
+         #tableid td{vertical-align:middle;}
+		 #tableid tr td input[type="text"],#bz{
+		    display:inline-block;
+			height:22px;
+			font-size:14px;
+			line-height:22px;
+			color:#555555;
+			vertical-align:middle;
+			-webkit-border-radius:4px !important;
+			-moz-border-radius:4px !important;
+			border-radius:4px !important;
+			border-color:#a4bed4;
+			text-align:center;
+			padding:0;
+			width:65px;
+		 }
+		 #bz{height:30px;line-height:30px;width:560px;text-align:left;padding:4px 6px;}
+		 .fa-times-circle{cursor:pointer;}
+		 .pdl5{padding-left:5px;}
+		 	#project {
+				display:inline-block;
+				height:30px;
+				font-size:14px;
+				line-height:
+				color:#555555;
+				vertical-align:middle;
+				-webkit-border-radius:4px !important;
+				-moz-border-radius:4px !important;
+				border-radius:4px !important;
+				border-color:#a4bed4;
+				text-align:left;
+				padding:4px 6px;
+				width:200px;
+			 }
+	</style>
+</block>
+
+<block name="content">
+<div class="tabbable">
+	<ul class="nav nav-tabs">
+		<li id="jinhuo"><a href="{:U('goodsnew/jinhuo')}">进货</a></li>
+		<li id="chuhuo"><a href="{:U('goodsnew/chuhuo')}">出货</a></li>
+	</ul>
+<script>
+    $('.nav li#{$Think.const.ACTION_NAME}').addClass('active');
+
+</script>
+     <div class="tab-content">
+      <div class="mgb15">
+   
+		<!--         <div class="fl" id="js-multi-term-wp"><span class="lable_for_header">超市收银端</span>
+            <select class="input-small" id="js-multi-term">
+               	<volist name="sylist" id="sy">
+							<option value="{$sy.Syid}">{$sy.syname}</option>
+				</volist>
+            </select>
+        </div> -->
+
+        <div class="fl" style="padding-top: 4px; padding-left: 6px;" >
+
+            <span>出货方式:</span>
+            <label><input type="radio" name="unit" value="1" checked />按件</label>
+            <label><input type="radio" name="unit" value="2"  />按个</label> 
+
+        </div>
+
+        <div class="fr text-right">
+            <input type="hidden" name="TOKEN" id="TOKEN" value="{:session('TOKEN')}">
+            <input type="hidden"  id="ght_goodslist" value="{$goodslist}">
+ 			
+            <input type="text" placeholder="检索商品" id="project">  
+         <!--   <ul class="span3 dropdown-menu text-left" id="js-result-list" role="menu"  aria-labelledby="dLabel"></ul> -->
+            <a href="javascript:void(0);" class="btn1 btn-primary " id="js-import-products" style="vertical-align:top;"  onclick="plch();">批量出货</a>
+            <!-- <a data-toggle="modal" href="../../barshop/statics/helpxml/inventory_inout-form.html" data-target="#modal-question" class="help_btn"><i class="icon-question-circle mt5 ml20" title="网吧超市帮助"></i></a> -->
+        </div>
+
+    </div>
+<div class="page_body">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover" id="tableid">
+            <thead>
+            <tr id="theadid">
+                <th>操作</th>
+				<!-- <th>商品id</th> -->
+                <th class="text-left">名称</th>
+                <th>每件规格</th>
+                <th>出货件数</th>
+                <th class="hide">每个价格</th>
+                <th>每件价格</th>
+                <th>出货数量</th>
+				<th>仓库数量</th>
+				<th>货架数量</th>
+            </tr>
+            </thead>
+            <tbody id="chuhuo_text">
+            <tr class="nothing" >
+                <td colspan="8" class="text-center muted td_tip" id="js_in_tip" style="color:#999999;">若不想检索商品，您可以点击右上角 <strong style="color:#428bca">批量出货</strong></td>
+            </tr> 
+            </tbody>
+        </table>
+    </div>
+</div>
+
+    <div class="foot-container" id="js-foot-container">
+      
+            <div class="mgb15">
+
+                <span class="js-t-out">应付</span>：<span id="js-actual-amount">0.00</span>元
+            </div>
+            <div class="text-left mgb15">
+                备注&nbsp;&nbsp;<input type="text" name="bz" id="bz" maxlength="200" >
+            </div>
+			<input id="flag" value="" type="hidden"/>
+			
+            <div class="text-center tip">
+                <span style="padding:14px 0px;cursor:pointer;"><button class="btn btn-primary js-btn-save" id="btn_save" type="button">保存</button></span>
+
+            </div>
+
+    </div>
+  
+
+  </div>
+
+</div>
+
+</block>
+<block name="script">
+<script>
+
+var storage=window.localStorage;
+storage.removeItem('goods_id');
+
+ function plch()
+{   
+  var storage=window.localStorage;
+  var yixuan_id  =  storage.getItem("goods_id");
+  //alert(yixuan_id);
+  
+  layer.open({
+  type: 2,
+  offset: '100px',
+  skin: 'layui-layer-lan',
+  title: '批量出货',
+  maxmin: true,
+  shadeClose: true, //点击遮罩关闭层
+  area : '930px' , 
+  content: '{:U("Goodsnew/plch_jch")}?goods_id='+yixuan_id,
+  });
+}
+
+
+/*
+$("#flag").change(function()
+{
+   
+  
+   	var storage=window.localStorage;
+    var storage_goods_id_str  =  storage.getItem("goods_id");
+    var bFind;
+    if(storage_goods_id_str)
+    {
+	   var storage_goods_id_list=storage_goods_id_str.split(",");  	
+      <!-- alert(storage_goods_id_list.length);	    -->
+    }
+	
+	 //判断界面是否有此数据，无则新增 ，否则就不加
+	 //先获取界面已有的数据，	
+	var tbl=$('#chuhuo_text');
+	var trlist=tbl.find("tr");	
+    var jiemian_goods_id_list,one_jiamian_goods_id='';
+	  
+    for(var i=0;i<storage_goods_id_list.length;i++)
+    {	
+	    var bShow=0;
+        if(storage_goods_id_list[i])
+		{
+		   <!-- alert(storage_goods_id_list[i]); -->		   
+		   	for (var j = 0; j<trlist.length; j++) 
+			{   
+			   <!--  alert(trlist.length); -->
+				var tr1=$(trlist[j]);
+				one_jiamian_goods_id=tr1.find('td:eq(7)').text();				
+				if(storage_goods_id_list[i]==one_jiamian_goods_id)
+				{
+					bShow=1;   //已存在该商品					
+				}						
+			}
+			
+			
+			if(bShow==0)//未显示的则显示
+			{
+			    <!-- alert('新增一条'); -->
+				var jsonlist={$goodslist};						     
+				var data=jsonlist; 	
+				var tip= $('#chuhuo_text tr').hasClass('nothing');
+				if(tip==true)
+				{
+					$('.nothing').remove()
+				}					
+				var html="";					
+				for (var k = 0; k <data.length; k++) 
+				{			  
+				  if(data[k]['goods_id']==storage_goods_id_list[i])
+				  {
+					html+="<tr>";   
+					html+='<td><i class="fa fa-times-circle fa-2x text-danger qx" onclick="return del('+k+')" id=del'+k+'></i></td>';		
+					html+='<td>'+data[k].goods_name+'</td>';
+					html+='<td><span id=guige'+k+'>'+data[k].one_jian_num+'</span>个/件</td>';
+					html+='<td><input type="text" name="jian" onkeyup="return num('+k+')" onchange="sum()" value="" id=jian'+k+'></td>';
+					html+='<td class="hide"><input  type="text" value='+data[k].one_ge_jin_price+' onchange="sum()"><span class="pdl5">元</span></td>';
+					html+='<td><input name="price"  type="text" value='+data[k].one_jian_jin_price+' onchange="sum()"><span class="pdl5">元</span></td>';
+					html+='<td><input  name="shuliang"  type="text" value="" onchange="sum()" id=shuliang'+k+'><span class="pdl5">个</span></td>';
+					html+='<td class="hide" id=goods_id'+k+'>'+data[k].goods_id+'</td>'; 
+					html+='<td><span id=ck_num_ght'+k+'>'+data[k].ck_num+'</span>个</td>'; 
+					html+="</tr>"		
+					$("#chuhuo_text").append(html);		
+						  $('input[name="unit"]').change(); 
+					
+				  }	
+
+				}; 
+			}
+			          			
+		}		  
+    }
+
+
+
+
+
+
+<!-- var  a =$('#flag').val(); -->
+<!-- alert(a); -->
+
+ var storage=window.localStorage;
+ var b  =  storage.getItem("goods_id");
+ 
+<!-- alert(b); -->
+
+ 	  $.ajax({
+	  url:"{:U('getShangpinlist')}",
+	  type:"post",
+	  dataType:"json",
+	  data:{canshu:b},
+	  success:function(data)
+	  {       
+	    <!-- var myobj=eval("("+data+")");  -->
+		<!-- $("#chuhuo_text").html(''); -->
+		var tip= $('#chuhuo_text tr').hasClass('nothing');
+		 if(tip==true)
+		 {
+			$('.nothing').remove()
+		 }
+		var html="";
+		
+        for (var i = 0; i <data.length; i++) 
+		{
+			html+="<tr>";   
+			html+='<td><i class="fa fa-times-circle fa-2x text-danger qx" onclick="return del('+i+')" id=del'+i+'></i></td>';		
+			html+='<td>'+data[i].goods_name+'</td>';
+			html+='<td><span id=guige'+i+'>'+data[i].one_jian_num+'</span>个/件</td>';
+			html+='<td><input type="text" name="jian" onkeyup="return num('+i+')" onchange="sum()" value="" id=jian'+i+'></td>';
+			html+='<td class="hide"><input  type="text" value="0" onchange="sum()"><span class="pdl5">元</span></td>';
+			html+='<td><input name="price"  type="text" value="0" onchange="sum()"><span class="pdl5">元</span></td>';
+			html+='<td><input  name="shuliang"  type="text" value="" onchange="sum()" id=shuliang'+i+'><span class="pdl5">个</span></td>';
+			html+='<td class="hide" id=goods_id'+i+'>'+data[i].goods_id+'</td>'; 
+			html+='<td><span id=ck_num_ght'+i+'>'+data[i].ck_num+'</span>个</td>'; 
+			html+="</tr>"			
+        }; 
+         $("#chuhuo_text").append(html);		
+		 $('input[name="unit"]').change();
+	   
+	  }
+  }); 
+ 
+ 
+})
+
+*/
+
+
+
+$("#flag").change(function()
+{	
+	var storage=window.localStorage;
+    var storage_goods_id_str  =  storage.getItem("goods_id");
+    var bFind;
+    if(storage_goods_id_str)
+    {
+	   var storage_goods_id_list=storage_goods_id_str.split(",");  	
+    }
+	
+	 //判断界面是否有此数据，无则新增 ，否则就不加
+	 //先获取界面已有的数据，
+	 	
+    var jiemian_goods_id_list,one_jiamian_goods_id='';	  
+    for(var i=0;i<storage_goods_id_list.length;i++)
+    {	
+	    var  a_goods_id=	storage_goods_id_list[i];	
+	    var bShow=0;
+        if(storage_goods_id_list[i] && storage_goods_id_list[i]!='undefined')
+		{
+
+		   	var tip= $('#chuhuo_text tr').hasClass('nothing');
+			if(tip==true)
+			{
+				$('.nothing').remove()
+			}
+		
+            var tbl=$('#chuhuo_text');
+	        var trlist=tbl.find("tr");	
+            <!-- var n=trlist.length; -->
+ 
+		   	for (var j = 0; j<trlist.length; j++) 
+			{   
+			  
+				var tr1=$(trlist[j]);
+				one_jiamian_goods_id=tr1.find('td:eq(7)').text();				
+				if(storage_goods_id_list[i]==one_jiamian_goods_id)
+				{
+					bShow=1;   //已存在该商品					
+				}						
+			}
+						
+			if(bShow==0)//未显示的则显示
+			{
+				var jsonlist={$goodslist};						     
+				var data=jsonlist; 				
+				var html="";													
+				for (var k = 0; k <data.length; k++) 
+				{			  
+				  if(data[k]['goods_id']==storage_goods_id_list[i])
+				  {
+					html+="<tr>";   
+					html+='<td><i class="fa fa-times-circle fa-2x text-danger qx" onclick="return del('+a_goods_id+')" id=del'+a_goods_id+'></i></td>';		
+					html+='<td>'+data[k].goods_name+'</td>';
+					<!--html+='<td><span id=guige'+a_goods_id+'>'+data[k].one_jian_num+'</span>个/件</td>';-->
+					html+='<td><input type="text" name="onejian_num"  onkeyup="return one_shuliang('+a_goods_id+')" onchange="sum()" value="" id=jian_'+a_goods_id+'>个/件</td>';
+					html+='<td><input type="text" name="jian" onkeyup="return num('+a_goods_id+')" onchange="sum()" value="" id=jian'+a_goods_id+'></td>';
+					html+='<td class="hide"><input  type="text" value='+data[k].one_ge_jin_price+' onkeyup="return price1('+a_goods_id+')" onchange="sum()" id=geprice'+a_goods_id+'><span class="pdl5">元</span></td>';
+					html+='<td><input name="price"  type="text" value='+data[k].one_jian_jin_price+'  onkeyup="return price('+a_goods_id+')" onchange="sum()" id=jianprice'+a_goods_id+'><span class="pdl5">元</span></td>';
+					html+='<td><input  name="shuliang"  type="text" value="" onkeyup="return shuliang('+a_goods_id+')" onchange="sum()" id=shuliang'+a_goods_id+'><span class="pdl5">个</span></td>';
+					html+='<td class="hide" id=goods_id'+a_goods_id+'>'+data[k].goods_id+'</td>'; 
+					html+='<td><span id=ck_num_ght'+a_goods_id+'>'+data[k].ck_num+'</span>个</td>'; 
+                    html+='<td><span id=hj_num_ght'+a_goods_id+'>'+data[k].kc_num+'</span>个</td>';
+                    html+='<td class="hide"><span id=ck_num_ght_fu'+a_goods_id+'>'+data[k].ck_num+'</span>个</td>'; 
+                    html+='<td class="hide"><span id=hj_num_ght_fu'+a_goods_id+'>'+data[k].kc_num+'</span>个</td>';
+					html+="</tr>"		
+					$("#chuhuo_text").append(html);		
+					change(); 
+					issubmit();
+					break;
+					
+				  }	
+
+				}; 
+			}
+			          			
+		}		  
+    }
+ 	
+
+	
+})
+  $('input[name="unit"]').change(function(){
+       change();
+	   var tb=$('#tableid tr');
+	    tb.find('td:eq(6) input').val('');
+	    tb.find('td:eq(3) input').val('');
+    }) 
+
+
+
+function change(){
+	var unitval=$('input[name="unit"]:checked').val();
+	var tb=$('#tableid tr');
+	if(unitval=='2'){
+
+	   tb.find('th:eq(4)').removeClass("hide");
+	   tb.find('th:eq(2)').addClass("hide");
+	   tb.find('th:eq(3)').addClass("hide");
+	   tb.find('th:eq(5)').addClass("hide");
+	   
+	   tb.find('td:eq(4)').removeClass("hide");
+	   tb.find('td:eq(2)').addClass("hide");
+	   tb.find('td:eq(3)').addClass("hide");
+	   tb.find('td:eq(5)').addClass("hide");
+	   
+	   tb.find('td:eq(6) input').attr("disabled",false);
+	   <!-- //tb.find('td:eq(6) input').val(''); -->
+	   
+	    $('#js-actual-amount').text('0.00');
+		issubmit();
+	}else if(unitval=='1'){
+	   tb.find('th:eq(4)').addClass("hide");
+	   tb.find('th:eq(2)').removeClass("hide");
+	   tb.find('th:eq(3)').removeClass("hide");
+	   tb.find('th:eq(5)').removeClass("hide");
+	   
+	   tb.find('td:eq(4)').addClass("hide");
+	   tb.find('td:eq(2)').removeClass("hide");
+	   tb.find('td:eq(3)').removeClass("hide");
+	   tb.find('td:eq(5)').removeClass("hide");
+	   
+	   tb.find('td:eq(6) input').attr("disabled",true);
+	   <!-- //tb.find('td:eq(6) input').val(''); -->
+	   <!-- //tb.find('td:eq(3) input').val(''); -->
+	   
+	   $('#js-actual-amount').text('0.00');
+	   issubmit();
+	}
+}
+
+//$('#tableid tr').find('td:eq(5)').change(function(){
+
+ //   var num = new Number(sum);
+    //    sum1=num.toFixed(2);
+//})
+
+function num(id)
+{
+var num=/^[1-9]\d*$/;
+var val=$('#jian'+id).val(); // 输入多少件
+var ck_num_fu=Number($('#ck_num_ght_fu'+id).text()); // 仓库库存
+var onejian=Number($('#jian_'+id).val()); //设置每件多少个
+
+//ckjian仓库有多少件
+var ckjian=Math.floor(ck_num_fu/onejian);
+if(ckjian>0){
+  if(!(num.test(val)))
+	{
+	//输入错误字符
+	  myalertdanger("出货件数最小为1且只能输入整数");
+	  $('#jian'+id).val(1);
+	  $('#jian'+id).change();
+	  val=1;
+	}else if(val>ckjian){
+	//出货数量大于仓库数量
+      myalertdanger("出货件数不足");
+	  $('#jian'+id).val(ckjian);
+	  $('#jian'+id).change();
+	  val=ckjian;
+	}
+	//输入正常的情况下
+                var shuliang=val*onejian;
+	$('#shuliang'+id).val(shuliang);
+	//console.log(ck_num_fu-shuliang);
+	$('#ck_num_ght'+id).html(ck_num_fu-shuliang);
+	issubmit(); 
+}else{
+   myalertdanger("仓库数量不足一件，请按个出货");
+   $('#jian'+id).val("");
+   issubmit();
+   return false;
+}
+}
+
+
+function one_shuliang(id)
+{
+var num=/^[1-9]\d*$/;
+var val=$('#jian'+id).val(); // 输入多少件
+var ck_num_fu=Number($('#ck_num_ght_fu'+id).text()); // 仓库库存
+var onejian=Number($('#jian_'+id).val()); //设置每件多少个
+
+//ckjian仓库有多少件
+var ckjian=Math.floor(ck_num_fu/val);
+if(ckjian>0){
+  if(!(num.test(onejian)))
+	{
+	//输入错误字符
+	  myalertdanger("每件规格最小为1且只能输入整数");
+	  $('#jian_'+id).val(1);
+	  $('#jian_'+id).change();
+	  onejian=1;
+	}else if(onejian>ckjian){
+
+	//出货数量大于仓库数量
+      myalertdanger("出货件数不足");
+	  $('#jian_'+id).val(ckjian);
+	  $('#jian_'+id).change();
+	  onejian=ckjian;
+	}
+	//输入正常的情况下
+    var shuliang=val*onejian;
+	$('#shuliang'+id).val(shuliang);
+	//console.log(ck_num_fu-shuliang);
+	$('#ck_num_ght'+id).html(ck_num_fu-shuliang);
+	issubmit(); 
+}else{
+   myalertdanger("仓库数量不足一件，请按个出货");
+   $('#jian_'+id).val("");
+   issubmit();
+   return false;
+}
+}
+
+<!-- function one_shuliang(id) -->
+<!-- { -->
+<!-- var num=/^[1-9]\d*$/; -->
+<!-- var val=$('#jian_'+id).val(); -->
+
+<!-- if(!(num.test(val))) -->
+<!-- { -->
+  <!-- myalertdanger("进货件数最小为1且只能输入整数"); -->
+  <!-- $('#jian_'+id).val(1); -->
+  <!-- $('#jian_'+id).change(); -->
+<!-- } -->
+					
+<!-- var onejian=$('#jian_'+id).val(); -->
+<!-- var guige=$('#jian'+id).val(); -->
+<!-- var true_kucun=$('#ck_num_ght'+id).val(); -->
+<!-- var shuliang=onejian*guige; -->
+<!-- if(shuliang>true_kucun){ -->
+   <!-- myalertdanger("下架库存大于货架真实库存！"); -->
+   <!-- return; -->
+<!-- }else{ -->
+    <!-- $('#shuliang'+id).val(shuliang); -->
+    <!-- issubmit(); -->
+<!-- } -->
+
+<!-- } -->
+
+function shuliang(id)
+{
+var num=/^[1-9]\d*$/;
+var val=$('#shuliang'+id).val();
+var shuliang=Number($('#shuliang'+id).val());
+var ck_num_fu=Number($('#ck_num_ght_fu'+id).text());
+if(!(num.test(val)))
+{
+  myalertdanger("出货件数最小为1且只能输入整数");
+  $('#shuliang'+id).val(1);
+  $('#shuliang'+id).change();
+  shuliang=1;
+}else if(shuliang>ck_num_fu){
+  myalertdanger("货架数量不足");
+  $('#shuliang'+id).val(ck_num_fu);
+  $('#shuliang'+id).change();
+  shuliang=ck_num_fu;
+}
+$('#ck_num_ght'+id).text(ck_num_fu-shuliang);
+issubmit();			
+}
+
+
+function price(id){
+var num=/^([1-9][0-9]{0,7}|0)(\.[0-9]{0,2})?$/;
+var val=$('#jianprice'+id).val();
+if(!(num.test(val)))
+{
+  myalertdanger("商品价格输入有误，请重新输入！");
+  $('#jianprice'+id).val("");
+  $('#jianprice'+id).change();
+}
+}
+
+function price1(id){
+var num=/^([1-9][0-9]{0,7}|0)(\.[0-9]{0,2})?$/;
+var val=$('#geprice'+id).val();
+if(!(num.test(val)))
+{
+  myalertdanger("商品价格输入有误，请重新输入！");
+  $('#geprice'+id).val("");
+  $('#geprice'+id).change();
+}
+}
+
+function del(id){
+   var newgoods_id_list='';
+   var a_goods_id=$('#goods_id'+id).text();
+   var storage=window.localStorage;
+   var goods_id_str  =  storage.getItem("goods_id");
+   
+   var goods_id_list=goods_id_str.split(",");  
+   for(var i=0;i<goods_id_list.length;i++)
+   {
+      if(goods_id_list[i]==a_goods_id)
+	  {
+	    
+	  }
+	  else
+	  {
+	    newgoods_id_list+=goods_id_list[i]+',';
+	  }
+   }
+ 
+   storage.setItem("goods_id",newgoods_id_list);
+   $('#del'+id).parents('tr').remove();
+   
+   issubmit();
+  
+}
+
+function sum(){
+   var tbl=$('#chuhuo_text');
+   var trlist=tbl.find("tr");
+   var unitval=$('input[name="unit"]:checked').val();
+
+    var sum=0;
+	if(unitval=='1'){
+	  for (var i = 0; i<trlist.length; i++) 
+		{  
+			var tr1=$(trlist[i]);
+			var onejian=tr1.find('td:eq(2) input').val();	
+			var jian=tr1.find('td:eq(3) input').val();	
+			var price=tr1.find('td:eq(5) input').val();
+			 onezong=onejian*jian;
+			var num = new Number(onezong);
+             onenum=num.toFixed(0);
+			tr1.find('td:eq(6) input').val(onenum);
+			 sum+=onejian*jian*price;
+
+
+		}
+	}else if(unitval=='2'){
+	    for (var i = 0; i<trlist.length; i++) 
+		{  
+			var tr1=$(trlist[i]);
+			var jian=tr1.find('td:eq(4) input').val();	
+			var price=tr1.find('td:eq(6) input').val();
+			 sum+=jian*price;
+
+		}
+	
+	}
+	
+	var num = new Number(sum);
+        sum1=num.toFixed(2);
+   $('#js-actual-amount').text(sum1);
+}
+
+        function issubmit(){
+            /* $("#chuhuo_text tr").find('td:eq(6) input').each(function(){
+            $("#btn_save").attr("disabled",false);
+              /* if($(this).val()==""){
+
+                 $("#btn_save").attr("disabled",false);
+
+                 return false;
+               }else{
+
+                 $("#btn_save").attr("disabled",false);
+
+               }
+
+            });*/
+        }
+
+
+        $("#btn_save").click(function()
+        {
+            var ajaxflag;
+            var tip= $('#chuhuo_text tr').hasClass('nothing');
+            if(tip==true){
+                myalertdanger("请先选择出货商品！");
+                return;
+            }else{
+                $("#chuhuo_text tr").find('td:eq(6) input').each(function(){
+                    if($(this).val()=="" || $(this).val()==0){
+                        myalertdanger("出货数量不能为空！");
+                        return ajaxflag=false;
+                    }
+                })
+
+                if(ajaxflag==false){
+                    return;
+                }
+                var unit_str=$('input[name="unit"]:checked').val();
+
+                var tableInfo = "";
+                var data = [] ;
+                var tbl=$('#chuhuo_text');
+                var trlist=tbl.find("tr");
+
+
+                if(unit_str==1)  //按件
+                {
+                    for (var i = 0; i<trlist.length; i++)
+                    {    //遍历Table的所有Row
+                        var tr1=$(trlist[i]);
+                        var row1 = {};
+                        row1.goods_id   = tr1.find('td:eq(7)').text();
+                        row1.num        = tr1.find('td:eq(3) input').val();			//件数
+                        row1.price      = tr1.find('td:eq(5) input').val();         //每件个数
+                        row1.sumnum     = tr1.find('td:eq(6) input').val();   //总个数
+                        data.push(row1);
+
+                    }
+                }
+                else if(unit_str==2)
+                {
+                    for (var i = 0; i<trlist.length; i++)
+                    {    //遍历Table的所有Row
+                        var tr1=$(trlist[i]);
+                        var row1 = {};
+
+                        row1.goods_id   = tr1.find('td:eq(7)').text();
+                        row1.num        = tr1.find('td:eq(6) input').val();     //总个数
+                        row1.price      = tr1.find('td:eq(4) input').val();     //每个价格
+                        row1.sumnum     = tr1.find('td:eq(6) input').val();  //总个数
+                        data.push(row1);
+                    }
+                }
+
+                var param = JSON.stringify(data);
+                var bz_str=$('#bz').val();
+                var token_str=$('#TOKEN').val();
+                <!-- alert(param); -->
+                var sumje_str=$('#js-actual-amount').text();
+                $.ajax({
+                    url : "{:U("Goodsnew/chuhuo_edit_set")}",
+                    type : "post",
+                    dataType : "json",
+                    data: {goodsinfo:param,unit:unit_str,sumje:sumje_str,bz:bz_str,token:token_str},
+                success : function(data)
+                {
+                    if(data.status=="1")
+                    {
+                        $("#btn_save").addClass("hide");
+                        myalertsuccess('出货成功');
+
+                    }
+                    else if(data.status =="-1")
+                    {
+
+                        myalertdanger('出货失败,请重新操作');
+                    }else if(data.status =="-2")
+                    {
+                        myalertdanger('数据重复提交,出货失败');
+
+
+                    }
+                },//success完成
+            });
+
+            }
+        });
+
+
+
+</script>
+
+
+<script>
+	$(function() {
+	
+	var projects={$goodslist};
+	
+		$( "#project" ).autocomplete({
+			minLength: 0,
+			source: projects,
+			focus: function( event, ui ) 
+			{			    
+				$( "#project" ).val( ui.item.goods_name );
+				return false;
+			},
+			select: function( event, ui ) 
+			{			
+			   var newgoods_id_list='';
+			   var a_goods_id=ui.item.goods_id;
+			   
+			   var storage=window.localStorage;
+			   var goods_id_str  =  storage.getItem("goods_id");
+			   var bFind=0;
+			   if(goods_id_str)
+			   {
+			       var goods_id_list=goods_id_str.split(",");  		   
+				 
+				   for(var i=0;i<goods_id_list.length;i++)
+				   {
+					  if(goods_id_list[i]==a_goods_id)
+					  {
+						bFind=1;   //已存在该商品
+					  }			  
+				   }
+			   }
+			   else
+			   {
+			     bFind=0;
+			   }
+			   
+
+			   
+			   
+			   
+			   if(bFind==0)
+			   {
+			     
+				 
+				 	if(goods_id_str==null)
+					{
+					   goods_id_str=a_goods_id;
+					}
+					else
+					{
+					   goods_id_str=goods_id_str+','+a_goods_id;
+					   
+					}
+				
+				  storage.setItem("goods_id",goods_id_str);
+				 
+				 
+				 	var jsonlist={$goodslist};						     
+					var data=jsonlist; 	
+					var tip= $('#chuhuo_text tr').hasClass('nothing');
+					 if(tip==true)
+					 {
+						$('.nothing').remove()
+					 }					
+					var html="";					
+					for (var i = 0; i <data.length; i++) 
+					{
+					  
+					  if(data[i]['goods_id']==a_goods_id)
+					  {
+							html+="<tr>";   
+							html+='<td><i class="fa fa-times-circle fa-2x text-danger qx" onclick="return del('+a_goods_id+')" id=del'+a_goods_id+'></i></td>';		
+							html+='<td>'+data[i].goods_name+'</td>';
+							html+='<td><input type="text" name="onejian_num"  onkeyup="return one_shuliang('+a_goods_id+')" onchange="sum()" value="" id=jian_'+a_goods_id+'>个/件</td>';
+							html+='<td><input type="text" name="jian" onkeyup="return num('+a_goods_id+')" onchange="sum()" value="" id=jian'+a_goods_id+'></td>';
+							html+='<td class="hide"><input  type="text" value='+data[i].one_ge_jin_price+' onkeyup="return price1('+a_goods_id+')" onchange="sum()" id=geprice'+a_goods_id+'><span class="pdl5">元</span></td>';
+							html+='<td><input name="price"  type="text" value='+data[i].one_jian_jin_price+' onkeyup="return price('+a_goods_id+')" onchange="sum()" id=jianprice'+a_goods_id+'><span class="pdl5">元</span></td>';
+							html+='<td><input  name="shuliang"  type="text" value="" onkeyup="return shuliang('+a_goods_id+')" onchange="sum()" id=shuliang'+a_goods_id+'><span class="pdl5">个</span></td>';
+							html+='<td class="hide" id=goods_id'+a_goods_id+'>'+data[i].goods_id+'</td>'; 
+							html+='<td><span id=ck_num_ght'+a_goods_id+'>'+data[i].ck_num+'</span>个</td>'; 
+                                html+='<td><span id=hj_num_ght'+a_goods_id+'>'+data[i].kc_num+'</span>个</td>';
+							
+							html+="</tr>"	
+                         	$("#chuhuo_text").append(html);		
+							 change();	
+                            issubmit();							
+						break;
+					  }	
+		
+					}; 
+				 
+				 
+				
+					
+				 
+				 				 
+			   }
+			   else  if(bFind==1)
+			   {
+			   
+			   }			 			   										  												
+			
+				return false;
+			}
+		})
+		.data( "ui-autocomplete" )._renderItem = function( ul, item ) 
+		{
+			return $( "<li>" )
+				.append( "<a>" + item.goods_name +  "</a>" )
+				.appendTo( ul );
+		};
+	});
+	</script>
+
+
+</block>

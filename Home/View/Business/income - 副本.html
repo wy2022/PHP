@@ -1,0 +1,213 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+     <js href="__PUBLIC__/layer/layer.js" />
+     <script type="text/javascript" src="__PUBLIC__/highcharts/highcharts.js"></script>
+
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+	</style>
+</block>
+
+<block name="content">
+
+
+
+            <div class="page-content">
+   
+                <div class="row">
+                    <div class="col-xs-12">
+
+              <!-- content---start -->
+  <div id="search" class="clearfix">
+  <form onsubmit="return checkform()" class="mgb15">
+     <span>开卡时间 <input type="text" class="daterange" id="daterange" style="width:300px;" value=""/></span>
+     <span><button class="btn btn-primary btn-sm" type="button"onclick="go()">查询</button></span>
+   </form>
+  </div>
+    <div id="income_chart"></div>
+    <div class="tip">现金收入共计：<span id="xianjin">0</span></div>
+    <div class="tip">营业额共计：<span id="yingye">0</span></div>
+    <div class="tip">注：现金收入=会员收入+临时卡收入+现金商品销售收入；营业额=计费会员上机消费+临时卡上机消费+现金购买商品消费</div>
+              <!-- content---end -->
+                    </div>
+                </div>
+            </div>
+       
+
+</block>
+
+
+
+
+<block name="script">
+
+  <script>
+       // var day = new Date();
+       // day.setDate(day.getDate()-29);
+        var income_chart = {
+            title:{
+                text:null
+            },
+            credits:{
+                enabled:false
+            },
+            xAxis:{
+               // type:'datetime',
+                //labels:{
+                    //format:'{value:%m/%d}'
+                //}
+        categories: [],
+                labels: {
+                  step:1,
+                  staggerLines: 1
+              }
+            },
+            yAxis:{
+                title:{
+                    text:'金额'
+                }
+            },
+            tooltip:{
+                shared: true,
+         xDateFormat: '%Y-%m-%d',
+                 valueSuffix: '元'
+        
+            },
+            plotOptions:{
+          line:{
+              dataLabels: {
+                        enabled: true
+                    }
+          },
+              //  series:{
+                    //pointStart:Date.UTC(day.getUTCFullYear(),day.getUTCMonth(),day.getUTCDate()),
+                    //pointInterval:24*3600000
+                //}
+            },
+            legend: {
+                align:'',
+                verticalAlign: 'top'
+            },
+            series:[{
+                name:'现金收入',
+                data:[]
+            },{
+                name:'营业额',
+                data:[]
+            }]
+        };
+    
+
+   
+        var chart;
+
+        $('#daterange').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+  $('.daterange').daterangepicker({
+    format:'YYYY-MM-DD hh:mm:ss',
+    timePicker: true,
+    timePickerIncrement: 1,
+    timePickerSeconds:true,
+    startDate:moment().startOf('day'),  
+    endDate: moment(),
+    timePicker12Hour:false,     
+    ranges: {  
+           '今天': [moment().startOf('day'), moment().endOf('day')],  
+           '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+           '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+           '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+           '本月': [moment().startOf('month'), moment().endOf('month')],  
+           '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+        },        
+    locale:{
+      applyLabel:'确定',
+      cancelLabel:'取消',
+      fromLabel:'从',
+      toLabel:'至',
+      daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+      monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+      customRangeLabel: '自定义',
+      firstDay : 1
+    }
+
+  },function(start,end,label){
+  $('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+  }).next().click(function(){$(this).prev().focus();});
+
+
+
+    
+    function go()
+   {   
+        $.ajax(
+        {
+          url:'{:U("getIncomeData")}',
+          type:"post",
+          dataType:"text",
+          data:{daterange:$("#daterange").val()},
+          success:function(data)
+          { 
+              var aa=data.indexOf("flower123");
+            if(aa!=(-1))
+            {
+              window.location.href="/mq/login.html" ;
+            }
+            else
+            {
+              var json=eval("("+data+")"); 
+      
+
+             if(json.xAxis.length>47)
+             {
+                 income_chart.xAxis.labels.step=4;
+             }
+             else if(json.xAxis.length>20)
+             {
+                income_chart.xAxis.labels.step=2;
+             }
+
+               income_chart.series[0].data=json.money[0].data;
+               income_chart.series[1].data=json.money[1].data;
+               income_chart.xAxis.categories=json.xAxis;
+              // $("#xianjin").html(json.xianjin);
+               $("#yingye").html(json.yingye);
+               $('#income_chart').highcharts(income_chart);
+               chart= $('#income_chart').highcharts();
+           }
+         },
+       })
+   }
+   go(); 
+</script>
+<script>
+ function checkform(){
+    var daterange=$("#daterange").val();
+  if(daterange==""||daterange=="请选择日期")
+  {
+     // alert("请选择日期");
+        layer.msg('请选择日期', {
+                    offset: 0,
+                    shift: 6
+                  });
+     return false;
+  }
+  return true;
+ }
+
+</script>
+    
+</block>

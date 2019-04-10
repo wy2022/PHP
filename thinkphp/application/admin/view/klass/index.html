@@ -1,0 +1,46 @@
+
+{extend name="teacher/base" /}
+{block name="body"}
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <hr />
+        <div class="row">
+            <div class="col-md-8">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label class="sr-only" for="name">名称</label>
+                        <input name="name" type="text" class="form-control" placeholder="名称..." value="{:input('get.name')}">
+                    </div>
+                    <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>&nbsp;查询</button>
+                </form>
+            </div>
+            <div class="col-md-4 text-right">
+                <a href="{:url('add')}" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i>&nbsp;增加</a>
+            </div>
+        </div>
+        <hr />
+        <table class="table table-hover table-bordered">
+            <tr class="info">
+                <th>序号</th>
+                <th>名称</th>
+                <th>辅导员</th>
+                <th>操作</th>
+            </tr>
+            {volist name="klasses" id="klass" key="key"}
+            <tr>
+                <td>{$key}</td>
+                <td>{$klass.name}</td>
+<!--                <td>{$klass.teacher_id}</td>-->
+                <td>{$klass.teacher_id}:{$klass.Teacher.name}</td>
+                <td><a class="btn btn-danger btn-sm" href="{:url('klass/delete')}?id={$klass.id}"><i class="glyphicon glyphicon-trash"></i>&nbsp;删除</a>&nbsp;
+                    <a class="btn btn-sm btn-primary" href="{:url('klass/edit')}?id={$klass.id}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</a></td>
+            </tr>
+            {/volist}
+        </table>
+        {$klasses->render()}
+    </div>
+</div>
+{/block}

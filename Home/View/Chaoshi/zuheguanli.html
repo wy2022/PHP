@@ -1,0 +1,315 @@
+<block name="head">
+<include file="Public/head" />
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+	<css href="__PUBLIC__/assets/css/ace.min.css" />
+    <css href="__PUBLIC__/assets/css/ace-skins.min.css" />
+    <js href="__PUBLIC__/layer/layer.js" />
+	<style>
+	  body{background:#fff;min-height:200px;}
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+     .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+		 .fontsize12{font-size:12px;}
+		 .pd15{padding:15px;}
+	.search-bar input,.search-bar select{
+		display:inline-block;
+		height:30px;
+		font-size:14px;
+		line-height:
+		color:#555555;
+		vertical-align:middle;
+		-webkit-border-radius:4px !important;
+		-moz-border-radius:4px !important;
+		border-radius:4px !important;
+		border-color:#a4bed4;
+		text-align:left;
+		padding:4px 6px;
+	 }
+	 .search-bar #zuhe_name{width:150px;}
+	  .search-bar #zuhe_price{width:70px;}
+	 .search-bar select{width:120px;}
+	 .btn1{
+		    font-size:12px;	
+			height:30px;
+			 width:90px;
+			-webkit-border-radius:2px;
+			-moz-border-radius:2px;
+			border-radius:2px;
+			border:0;
+			text-shadow:none;
+			background-image:none;
+			vertical-align:middle;
+			color:#ffffff;
+		 }
+	</style>
+</block>
+
+<block name="content">
+<div class="pd15" >
+<div class="tabbable">
+	
+    <div class="tab-content" >
+	  
+		<div class="row search-bar" >
+					
+					
+			<form >
+				<span class="mgb15 biaodan">组合名称
+					<input class="form-control" name="goods_name" id="zuhe_name" type="text"/>
+				</span>
+
+				<span class="mgb15 biaodan">组合价格
+					<input type='text' id='zuhe_price'>
+				</span>
+				<span class="mgb15 biaodan">组合类型
+					<select id='zuhe_type'>
+						<option value='0'>请选择组合类型</option>
+						<option value='1'>饮料</option>
+						<option value='2'>零食</option>
+						<option value='3'>快餐</option>
+						<option value='3'>其他</option>
+					</select>
+				</span>
+				<span class="mgb15 biaodan"> <button type="button" class="btn1 btn-purple btn-sm" onclick="zuhe_add()">添加</button></span>
+
+			</form>
+		</div>
+
+		<div id="jqgrid">
+			<table id="grid-table"></table>
+			<div id="grid-pager"></div>
+		</div>
+	  
+	</div><!-- //.tab-content -->
+ </div><!-- //.tabbable -->
+</div>
+</block>
+
+
+
+	
+
+<block name="script">
+      <script>
+
+    <!-- //#grid-table开始 -->			
+        $(function(){
+            $('#grid-table').jqGrid({
+                url: '{:U("getallzuhelist")}',
+                datatype: "json",
+                type:"get",
+                height:"auto",
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[
+				    {label:'id',name:'编号',hidden:true,},
+                    {label:'wbid',name:'网吧id',hidden:true,},						
+					{label:'组合id',name:'zuhe_id',editable:true,},					
+					{label:'组合名称',name:'zuhe_name',width:150,},
+					{label:'组合价格',name:'zuhe_price',width:150,},
+					{label:'操作',name:'operate',width:150,}, 					
+
+                ],
+                styleUI : 'Bootstrap',
+                rowNum:10,
+                pager:'#grid-pager',
+                viewrecords: true,
+				gridComplete: function()
+				{
+                    var ids = $("#grid-table").jqGrid('getDataIDs');
+                    var add,edit,save,del,edit2,wbid = '';
+
+                    var end_str,sta_str,position_str; 
+                        for(var i=0;i < ids.length;i++)
+                        {
+                            var getRow = $('#grid-table').getRowData(ids[i]);//获取当前的数据行  
+                            var colVal = getRow.wbid;             
+                            var rownum = ids[i];
+							edit2= ' <a  onclick=\"zuhe_edit('+rownum+' );\">修改</a>&nbsp;|&nbsp;<a  onclick=\"zuhe_delete('+rownum+' );\">删除</a>';
+							$("#grid-table").jqGrid('setRowData',ids[i],{operate:edit2});		
+                        }
+                    
+                }
+            });
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+
+    function zuhe_edit(row)
+	{    
+        var rowData = $('#grid-table').jqGrid('getRowData',row);
+		var zuhe_id=rowData['zuhe_id'];		
+		  layer.open({
+		  type: 2,
+		  offset: '150px',
+		  title: '修改组合',
+		  skin: 'layui-layer-lan',
+		  maxmin: true,
+		  shadeClose: true, //点击遮罩关闭层
+		  area : ['300px' , '200px'],
+		  content: '{:U("zuhe_edit")}?zuhe_id='+zuhe_id,
+		  });
+	}	
+	
+	   function zuhe_delete(row)
+	   {
+			  
+			var rowData = $('#grid-table').jqGrid('getRowData',row);
+			if(confirm('确定要删除组合“'+rowData['zuhe_name']+'”吗？'))
+			{
+				
+				$.post("{:U('zuhe_delete_set')}",{zuhe_id:rowData['zuhe_id']},function(data)
+				{   
+
+					if(data.result==1)
+					{
+					   layer.msg('删除成功', 
+								{
+								  offset: 0,
+								  shift: 6,
+								  icon:1,
+								  time:1000,
+								  
+								},function()
+								{ 	
+									$('#grid-table').trigger('reloadGrid');	
+								});
+						
+					}
+					else if(data.result==-1)
+					{
+						layer.msg('删除失败', 
+								{
+								  offset: 0,
+								  shift: 6,
+								  icon:2,
+								  time:2000,
+								  
+								});
+					}
+					else if(data.result==-2)
+					{
+						
+						layer.msg('该组合里已有子商品，需拆分后才可删除，删除失败', 
+								{
+								  offset: 0,
+								  shift: 6,
+								  icon:2,
+								  time:3000,
+								  
+								});
+					}
+					else if(data.result==-3)
+					{
+						
+						layer.msg('提交数据非法，删除失败', 
+								{
+								  offset: 0,
+								  shift: 6,
+								  icon:2,
+								  time:2000,
+								  
+								});
+					}
+				});
+			}
+		}	
+	
+	
+	
+		function zuhe_add()
+		{
+			var zuhe_name_str=$('#zuhe_name').val();
+			var zuhe_price=$('#zuhe_price').val();
+			var zuhe_type=$('#zuhe_type').val();
+			if( zuhe_price !='' && zuhe_name_str!='' && zuhe_type !=0)
+			{
+			$.ajax({
+			  url : "{:U("zuhe_add_set")}",
+			  type : "get",
+			  dataType : "json",
+			  data: {'zuhe_name':zuhe_name_str,'zuhe_price':zuhe_price,'zuhe_type':zuhe_type},
+			  success : function(data) 
+			  {
+				if(data.result==1)
+				{
+					layer.msg('添加成功', 
+					 {
+					  offset: 0,
+					  shift: 6,
+					  icon:1,
+					  time:1000,
+					  
+					  },function()
+					  { 		
+						$('#grid-table').trigger('reloadGrid');		
+					  });
+				}
+				else if(data.result==-1)
+				{
+					layer.msg('添加失败', 
+				 {
+				  offset: 0,
+				  shift: 6,
+				  icon:1,
+				  time:1000,
+				  
+				  },function()
+				  { 		
+					//parent.layer.closeAll();		
+				  });
+				}
+				else if(data.result==-2)
+				{
+					layer.msg('组合名称重复，添加失败', 
+					 {
+					  offset: 0,
+					  shift: 6,
+					  icon:1,
+					  time:1000,
+					  
+					  },function()
+					  { 		
+						//parent.layer.closeAll();		
+					  });
+				}
+			
+			  }
+		   })
+			
+			}else{
+				layer.msg('商品和价格不能为空！', 
+				 {
+				  offset: 0,
+				  shift: 6,
+				  icon:2,
+				  time:1000,
+				  
+				  },function()
+				  { 		
+						
+				  });
+			}
+			
+		}
+
+	
+	 document.onkeydown = function(e){
+        if(e.keyCode==13)
+        zuhe_add();
+      };
+
+    </script>
+</block>

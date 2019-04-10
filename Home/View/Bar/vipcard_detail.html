@@ -1,0 +1,490 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+	<js href="__PUBLIC__/layer/layer.js" />
+	
+
+	
+	
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+
+
+  #td_detail tr td {
+      width: auto;
+      font-size: 14px;
+      padding: 10px 30px 20px 0px;
+  }
+
+
+
+	</style>
+</block>
+
+<block name="content">
+
+
+      <input type="hidden" id="wbid" name="wbid" value="{$wbid}"/>
+      <input type="hidden" id="zjNo" name="zjNo" value="{$zjNo}"/>
+<div class="row">
+   <div class="col-sm-5">
+        <div class="profile-user-info profile-user-info-striped">
+          <div class="profile-info-row">
+            <div class="profile-info-name">会员姓名</div>
+
+            <div class="profile-info-value">
+            <span class="editable" >{$hyinfo.hyname}</span>
+            </div>
+          </div>
+       
+
+          <div class="profile-info-row">
+          <div class="profile-info-name">剩余本金金额</div>
+            
+          <div class="profile-info-value">
+          <span class="editable">{$hyinfo.surplus}</span>
+          </div>
+          </div>
+
+          <div class="profile-info-row">
+          <div class="profile-info-name">剩余奖励金额</div>
+
+          <div class="profile-info-value">
+          <span class="editable">{$hyinfo.Jlje}</span>
+          </div>
+          </div>
+
+          <div class="profile-info-row">
+          <div class="profile-info-name">会员类型</div>
+
+          <div class="profile-info-value">
+          <span class="editable">{$hyinfo.hylx}</span>
+          </div>
+          </div>
+
+          <div class="profile-info-row">
+          <div class="profile-info-name">证件类型</div>
+
+          <div class="profile-info-value">
+          <span class="editable">{$hyinfo.zjlx}</span>
+          </div>
+          </div>
+
+          <div class="profile-info-row">
+          <div class="profile-info-name">证件号码</div>
+
+          <div class="profile-info-value">
+          <span class="editable">{$zjNo}</span>
+          </div>
+          </div>
+          <div class="profile-info-row">
+          <div class="profile-info-name">卡状态</div>
+
+          <div class="profile-info-value">
+          <span class="editable">{$hyinfo.State}</span>
+          </div>
+          </div>
+          <div class="profile-info-row">
+          <div class="profile-info-name">收费类型</div>
+
+          <div class="profile-info-value">
+          <span class="editable">{$hyinfo.SFlx}</span>
+          </div>
+          </div>
+  <!--         <div class="profile-info-row">
+          <div class="profile-info-name">这个不要</div>
+
+          <div class="profile-info-value">
+          <span class="editable">{$hyinfo.integral}</span>
+          </div>
+          </div> -->
+        </div>
+
+</div>
+
+<div class="col-sm-5">
+        <div class="profile-user-info profile-user-info-striped">
+          <div class="profile-info-row">
+            <div class="profile-info-name">会员总积分</div>
+
+            <div class="profile-info-value">
+            <span class="editable" >{$hyinfo.integral}</span>
+            </div>
+          </div>
+       
+
+          <div class="profile-info-row">
+          <div class="profile-info-name">可用积分</div>
+            
+          <div class="profile-info-value">
+          <span class="editable">{$hyinfo.DhIntegral}</span>
+          </div>
+          </div>
+
+          <div class="profile-info-row">
+          <div class="profile-info-name">开卡时间</div>
+
+          <div class="profile-info-value">
+          <span class="editable">{$hyinfo.NewTime}</span>
+          </div>
+          </div>
+
+          <div class="profile-info-row">
+          <div class="profile-info-name">最后上机时间</div>
+
+          <div class="profile-info-value">
+          <span class="editable">{$hyinfo.LastSjTime}</span>
+          </div>
+          </div>
+
+          <div class="profile-info-row">
+          <div class="profile-info-name">到期时间</div>
+
+          <div class="profile-info-value">
+          <span class="editable">{$hyinfo.CancelTime}</span>
+          </div>
+          </div>
+
+          <div class="profile-info-row">
+          <div class="profile-info-name">经办人</div>
+
+          <div class="profile-info-value">
+          <span class="editable">{$hyinfo.operation}</span>
+          </div>
+          </div>
+          <div class="profile-info-row">
+          <div class="profile-info-name">手机号码</div>
+
+          <div class="profile-info-value">
+          <span class="editable">{$hyinfo.Tel}</span>
+          </div>
+          </div>
+          <div class="profile-info-row">
+          <div class="profile-info-name">备注信息</div>
+
+          <div class="profile-info-value">
+          <span class="editable" >{$hyinfo.bz}</span>
+          </div>
+          </div>
+        </div>
+
+</div>
+</div>
+
+<!--        <table id="td_detail">
+       <tr>
+          <td>会员姓名： <span id="hyname">{$hyinfo.hyname}</span></td>
+           <td>会员类型：<span id="KCardLx">{$hyinfo.KCardLx}</span></td>
+           <td>证件类型：<span id="zjlx">{$hyinfo.zjlx}</span></td>
+           <td>证件号码：<span id="zjNo">{$hyinfo.zjNo}</span></td>
+           <td>卡状态：  <span id="State">{$hyinfo.State}</span></td>
+           <td>收费类型：<span id="SFlx">{$hyinfo.SFlx}</span></td>           
+       </tr>
+           <tr>
+           <td>剩余金额：<span id="surplus">{$hyinfo.surplus}</span></td>
+          <td>奖励金额：<span id="JlJe">{$hyinfo.Jlje}</span></td>
+           <td>会员积分：<span id="integral">{$hyinfo.integral}</span></td>
+           <td>开卡时间：<span id="NewTime">{$hyinfo.NewTime}</span></td>
+           <td>最后上机时间：<span id="LastSjTime">{$hyinfo.LastSjTime}</span></td>
+           <td>到期时间：<span id="CancelTime">{$hyinfo.CancelTime}</span></td>
+       </tr>
+        </table> -->
+<br/>
+
+
+        <div class="tabbable">
+            <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4" style="font-size:12px;">
+                <li class="active">
+                    <a data-toggle="tab" href="#sale" >会员消费明细</a>
+
+
+            
+                </li>
+
+                <li>
+                    <a data-toggle="tab" href="#add" >会员加钱明细</a>
+                </li>
+            </ul>
+
+            <div class="tab-content" >
+
+
+                <div id="sale" class="tab-pane in active">
+                     <div class="row search-bar" >
+                      <div class="col-xs-6 col-sm-3 mgb15">时间
+                          <input type="text" name="daterange" id="daterange" class="daterange" style="width:300px;"  placeholder="请选择日期" required/>
+                      </div> 
+
+                      <div class="col-xs-6 col-sm-3 mgb15">
+                           <button type="button" class="btn btn-purple btn-sm" onclick="doSearch()">搜索<i class="fa fa-search"></i></button>
+                      </div> 
+                  </div>   
+
+
+
+                      <div id="jqgrid">
+                        <table id="grid-table"></table>
+                        <div id="grid-pager"></div>
+                      </div> 
+                </div>
+
+                <div id="add" class="tab-pane">
+
+                    <div class="row search-bar" >
+                      <div class="col-xs-6 col-sm-3 mgb15">时间
+                          <input type="text" name="daterange1" id="daterange1" class="daterange" style="width:300px;"  placeholder="请选择日期" required/>
+                      </div> 
+
+                      <div class="col-xs-6 col-sm-3 mgb15">
+                           <button type="button" class="btn btn-purple btn-sm" onclick="doSearch1()">搜索<i class="fa fa-search"></i></button>
+                      </div> 
+                  </div> 
+
+                   <div id="jqgrid1">
+                       <table id="grid-table1"></table>
+                       <div id="grid-pager1"></div>
+                   </div>        
+                </div>
+          </div>  
+    </div>
+
+
+</block>
+
+
+
+
+<block name="script">
+
+
+
+ <script>
+        $(function()
+        {
+            $('#grid-table').jqGrid({
+                url:'{:U("getHysaledetail")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colNames:['收银端','上机时间','下机时间','机器编号','上机时长','消费方式','消费金额','余额','经办人'],
+                colModel:[
+                    {name:'SyId',width:60},
+                    {name:'SjTime',width:160},
+                    {name:'XjTime',width:160},    
+                    {name:'cpName',width:60},      
+                    {name:'TimeSize',width:60},
+                    // {name:'sjLx',width:60},  
+                    // {name:'foregift',width:60},                                                               
+                    {name:'sjLx',width:160},
+                    {name:'je',width:60},              
+                    {name:'ye',width:60},
+					
+                    {name:'EndOperate',width:100},
+                    
+                ],
+                rowNum:10,
+                viewrecords: true,
+                sortorder: "desc",
+                pager:'#grid-pager',
+
+
+                gridComplete: function()
+                {
+                   // var ids = $("#grid-table").jqGrid('getDataIDs');
+                   
+                }
+            }).jqGrid('navGrid','#grid-pager',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+            },{},{},{},{
+                multipleSearch:true
+            });
+
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+    
+    $('#daterange').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+            $('.daterange').daterangepicker({
+                format:'YYYY/MM/DD hh:mm:ss',
+                timePicker: true,
+                timePickerIncrement: 1,
+                timePickerSeconds:true,
+                startDate:moment().startOf('day'),  
+                endDate: moment(),
+                timePicker12Hour:false,     
+                ranges: {  
+                           '今天': [moment().startOf('day'), moment().endOf('day')],  
+                           '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+                           '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+                           '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+                           '本月': [moment().startOf('month'), moment().endOf('month')],  
+                           '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+                        },        
+                locale:{
+                    applyLabel:'确定',
+                    cancelLabel:'取消',
+                    fromLabel:'从',
+                    toLabel:'至',
+                    daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+                    monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+          customRangeLabel: '自定义',
+          firstDay : 1
+                }
+
+            },function(start,end,label){
+      $('.daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+      });
+
+
+    function doSearch()
+    {
+    $('#grid-table').jqGrid('setGridParam',{
+        postData:{                 
+            daterange:$('#daterange').val()            
+        }
+    }).trigger('reloadGrid');
+   }
+
+   doSearch();
+   </script>
+
+
+
+ <script>
+        $(function(){
+            $('#grid-table1').jqGrid({
+                url:'{:U("getHyaddmoneydetail")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colNames:['收银端','加钱类型','充值金额','奖励金额','分期金额','分期期数','操作时间','操作人'],
+                colModel:[
+                    {name:'SyId',width:80},
+					{name:'type',width:60},
+                    {name:'je',width:60},  
+                    {name:'jlJe',width:60},    
+                    {name:'fqje',width:60}, 
+                    {name:'FqCount',width:60},     
+                    {name:'cTime',width:220},
+					
+                    {name:'Operation',width:60},  
+                ],
+                rowNum:10,
+                viewrecords: true,
+                sortorder: "desc",
+                pager:'#grid-pager1',
+
+
+                gridComplete: function()
+                {
+                    var ids = $("#grid-table1").jqGrid('getDataIDs');
+					var  col_enddays='';
+					
+                    
+                        for(var i=0;i < ids.length;i++)
+                        {
+                            var getRow = $('#grid-table1').getRowData(ids[i]);//获取当前的数据行             																
+						    var col_type=   getRow.type;	
+                           							
+							 // alert(col_type);        			                 						            							  							   							   
+							if(col_type==1)
+							{
+								col_enddays='<span style="color:green">微信</span>'; 				            
+							}
+							else if(col_type==2)
+							{			 
+								col_enddays='<span style="color:green">支付宝</span>';  
+							}
+							else if(col_type==3)
+                            {
+							     col_enddays='<span style="color:green">现金</span>';
+							}							
+			        						   										   
+							$("#grid-table1").jqGrid('setRowData',ids[i],{type:col_enddays});											   										   																										 				                         						  			              						   							                  						   												
+                        }
+                }
+            }).jqGrid('navGrid','#grid-pager1',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+         
+            $('#grid-table1').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+        });
+        
+    $('#daterange1').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+    $('#daterange1').daterangepicker({
+        format:'YYYY/MM/DD hh:mm:ss',
+        timePicker: true,
+        timePickerIncrement: 1,
+        timePickerSeconds:true,
+        startDate:moment().startOf('day'),  
+        endDate: moment(),
+        timePicker12Hour:false,         
+        ranges: {  
+                   '今天': [moment().startOf('day'), moment().endOf('day')],  
+                   '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+                   '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+                   '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+                   '本月': [moment().startOf('month'), moment().endOf('month')],  
+                   '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+                },              
+        locale:{
+            applyLabel:'确定',
+            cancelLabel:'取消',
+            fromLabel:'从',
+            toLabel:'至',
+            daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+            monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+            customRangeLabel: '自定义',
+            firstDay : 1
+        }
+
+    },function(start,end,label){
+    $('#daterange1').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+    }).next().click(function(){$(this).prev().focus();});
+
+    function doSearch1(){
+    $('#grid-table1').jqGrid('setGridParam',{
+        postData:{                 
+            daterange:$('#daterange1').val(),
+            zjNo:$('#zjNo').val(),
+
+            
+           
+                  
+        }
+    }).trigger('reloadGrid');
+   }
+
+   doSearch1();
+   </script>
+
+
+
+
+
+</block>

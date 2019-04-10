@@ -1,0 +1,600 @@
+<extend name="Public/base" />
+<block name="head">
+    <css href="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.min.css" />
+    <js href="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.min.js" />
+    <js href="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.zh-CN.js" />
+    <js href="__PUBLIC__/layer/layer.js" />
+    <js href="__PUBLIC__/layer/myalert.js" />
+  <css href="__PUBLIC__/layer/myalert.css"/>
+</block>
+
+<block name="content">
+    <div class="tabbable">
+        <include file="nav" />
+        <div class="tab-content">
+            <div class="tab-pane active">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="tabbable">
+                            <ul class="nav nav-tabs" id="type-list">
+								<volist name="viptypelist" id="viptype">
+								   <li id="type-{$viptype.id}"><a href="javascript:getCredits({$viptype.id})" >{$viptype.Name}</a></li>
+								</volist>
+                            </ul>
+                            <div class="tab-content">
+                                <div  class="tab-pane active">
+                                    <h4 class="header">兑换金额 <button class="btn btn-success btn-xs" data-toggle="modal" data-target="#addexchangemoney" onclick="addExchangeMoney();">添加</button></h4>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>需要的积分</th>
+                                                <th>兑换的金额（元）</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="money">
+                                        </tbody>
+                                    </table>
+                                    <h4 class="header">兑换奖品 <button class="btn btn-success btn-xs" data-toggle="modal" data-target="#addexchangegoods" onclick="addExchangeGoods();">添加</button></h4>
+                                    <table id="jiangpin" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>需要的积分</th>
+                                                <th>奖品名称</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody  id="goods">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addexchangemoney" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title">添加会员积分兑换</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <input type="text" class="hidden" name="type"/>
+						<input type="text" class="hidden" name="Lx" value="0"/>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">会员等级：</label>
+                            <label class="col-sm-4 type-label"></label>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">会员积分：</label>
+                            <input class="col-sm-4" type="text" name="points" id="points_id" onkeyup="return integerValidate('points_id','会员积分不能为空！','会员积分只能输入数字！')"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">兑换金额：</label>
+                            <input class="col-sm-4" type="text" name="money" id="money_id"  onkeyup="return priceValidate('money_id','兑换金额不能为空！','兑换金额输入格式不正确！')"/> 元
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align:center;">
+                    <button type="button" onclick="submitAddExchangeMoney();" class="btn btn-primary">添加</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editexchangemoney" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title">修改会员积分兑换</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                     
+						<input type="text" class="hidden" name="id"/>
+			            <input type="text" class="hidden" name="type"/>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">会员等级：</label>
+                            <label class="col-sm-4 type-label"></label>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">会员积分：</label>
+                            <input class="col-sm-4" type="text" name="points" id="points_id1" onkeyup="return integerValidate('points_id1','会员积分不能为空！','会员积分只能输入数字！')" required/>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">兑换金额：</label>
+                            <input class="col-sm-4" type="text" name="money" id="money_id1" onkeyup="return priceValidate('money_id1','兑换金额不能为空！','兑换金额输入格式不正确！')" required/> 元
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align:center;">
+                    <button type="button" onclick="submitEditExchangeMoney();" class="btn btn-primary">修改</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addexchangegoods" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title">添加会员积分兑换</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <input type="text" class="hidden" name="type"/>
+						  <input type="text" class="hidden" name="Lx" value="1"/>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">会员等级：</label>
+                            <label class="col-sm-4 type-label"></label>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">会员积分：</label>
+                            <input class="col-sm-4" type="text" name="points" id="points_goods_id" onkeyup="return integerValidate('points_goods_id','会员积分不能为空！','会员积分只能输入数字！')"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">兑换奖品：</label>
+                            <input class="col-sm-4" type="text" name="goods" id="goods_goods_id" />
+                            <!-- <select name="goods" id="">
+								 <volist name="spinfolist" id="spname">
+								   <option value="{$spname.name}">{$spname.name}</option> 
+								 </volist>
+                            </select>
+                            <input type="text" name="goods" style="display:none;" disabled/>
+                            <label><input type="checkbox" name="isgoods" id="isgoods" value="1" checked/> 奖品是库存商品</label> -->
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align:center;">
+                    <button type="button" onclick="submitAddExchangeGoods();" class="btn btn-primary">添加</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editexchangegoods" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title">修改会员积分兑换</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+					<input type="text" class="hidden" name="id"/>
+					<input type="text" class="hidden" name="type"/>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">会员等级：</label>
+                            <label class="col-sm-4 type-label"></label>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">会员积分：</label>
+                            <input class="col-sm-4" type="text" name="points" id="points_goods_id1" onkeyup="return integerValidate('points_goods_id1','会员积分不能为空！','会员积分只能输入数字！')" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">兑换奖品：</label>
+                            <input class="col-sm-4" type="text" name="goods" id="goods_goods_id1"/>
+                            <!-- <select name="goods" id="">
+								 <volist name="spinfolist" id="spname">
+								   <option value="{$spname.name}">{$spname.name}</option> 
+								 </volist>
+                            </select>
+                            <input type="text" name="goods" style="display:none;" disabled/>
+                            <label><input type="checkbox" name="isgoods" id="isgoods" value="1" checked/> 奖品是库存商品</label> -->
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align:center;">
+                    <button type="button" onclick="submitEditExchangeGoods();" class="btn btn-primary">添加</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script>
+        $(function(){
+            $('.datetime-picker').datetimepicker({
+                format:'yyyy-mm-dd hh:ii:ss',
+                autoclose:true,
+                todayBtn:true,
+                todayHighlight:true,
+                language:'zh-CN'
+            });
+            $('#isgoods').change(function(){
+                if($('#isgoods').prop('checked')){
+                    $('#addexchangegoods select[name="goods"]').show().prop('disabled',false);
+                    $('#addexchangegoods input[name="goods"]').hide().prop('disabled',true);
+                }else{
+                    $('#addexchangegoods select[name="goods"]').hide().prop('disabled',true);
+                    $('#addexchangegoods input[name="goods"]').show().prop('disabled',false);
+                }
+            });
+            $('#isstartend').change(function(){
+                if($('#isstartend').prop('checked')){
+                    $('#addexchangegoods input[name="start"]').prop('disabled',false);
+                    $('#addexchangegoods input[name="end"]').prop('disabled',false);
+                }else{
+                    $('#addexchangegoods input[name="start"]').prop('disabled',true);
+                    $('#addexchangegoods input[name="end"]').prop('disabled',true);
+                }
+            })
+        })
+        function addExchangeMoney()
+        {
+            $('#money_id').val('');
+            $('#points_id').val('');
+
+            //会员类型
+            var len=$('#type-list .active a').attr('href').length;
+            $('#addexchangemoney input[name="type"]').val($('#type-list .active a').attr('href').substr(22,len-22-1));
+            $('label.type-label').text($('#type-list>.active>a').text());
+        }
+        function editExchangeMoney(id){
+		 var tr = $('#c'+id);
+		   //会员类型
+		    var len=$('#type-list .active a').attr('href').length;
+            $('#editexchangemoney input[name="type"]').val($('#type-list .active a').attr('href').substr(22,len-22-1));
+			 $('label.type-label').text($('#type-list>.active>a').text());
+            $('#editexchangemoney input[name="id"]').val(id);
+            $('#editexchangemoney input[name="points"]').val(tr.find('td:eq(0)').text());
+            $('#editexchangemoney input[name="money"]').val(tr.find('td:eq(1)').text());
+            $('#editexchangemoney').modal('show');
+           
+        }
+
+      //判断文本框是否为空
+        function checktext(id){
+            if(document.getElementById(id).value.length==0){
+              document.getElementById(id).focus();
+              return false;
+            }else{
+              return true;
+            }
+        }
+
+    //判断输入是否为数字
+    function isNum(id){
+      var val=document.getElementById(id).value;
+       var a=/^\d*$/;
+      if(!a.test(val))
+      {
+        document.getElementById(id).focus();
+        return false;
+      }else{
+        return true;
+      }
+    }
+    //判断输入是否为金额格式
+    function isMoney(id){
+      var val=document.getElementById(id).value;
+       var a=/^([1-9][0-9]{0,7}|0)(\.[0-9]{0,2})?$/;
+      if(!a.test(val))
+      {
+        document.getElementById(id).focus();
+        return false;
+      }else{
+        return true;
+      }
+    }
+	
+	function priceValidate(id,msg1,msg2)
+{ 
+   var num=/^([1-9][0-9]{0,7}|0)(\.[0-9]{0,2})?$/;
+	var value=$('#'+id).val();
+	if(value.length==0){
+	 layer.tips(msg1, '#'+id);
+	  
+	}else if(!(num.test(value)))
+	{
+	  $('#'+id).val("");
+	  $('#'+id).focus();
+      layer.tips(msg2, '#'+id);
+	}				
+}
+
+function integerValidate(id,msg1,msg2)
+{ 
+    var num=/^\d*$/;
+	var value=$('#'+id).val();
+	if(value.length==0){
+	 layer.tips(msg1, '#'+id);
+	  
+	}else if(!(num.test(value)))
+	{
+	  $('#'+id).val("");
+	  $('#'+id).focus();
+      layer.tips(msg2, '#'+id);
+	}				
+}
+
+        function submitAddExchangeMoney()
+		{
+         var points_money=checktext('points_id');
+          if(points_money==false)
+           {
+              layer.tips('会员积分不能为空！', '#points_id');
+              return false;
+           }
+           var points_money1=isNum('points_id');
+          if(points_money1==false)
+           {
+              layer.tips('会员积分只能输入数字！', '#points_id');
+              return false;
+           }
+         var money_money=checktext('money_id');
+          if(money_money==false)
+           {
+              layer.tips('兑换金额不能为空！', '#money_id');
+              return false;
+           }
+        var money_money1=isMoney('money_id');
+          if(money_money1==false)
+           {
+              layer.tips('兑换金额输入格式不正确！', '#money_id');
+              return false;
+           }
+
+		  var type=$('#addexchangemoney input[name="type"]').val();
+		  
+            $.post("{:U('setExchangeMoney')}",$('#addexchangemoney form').serialize(),function(data){
+                    if(data.status=="1")
+                    {
+		
+                  $('#addexchangemoney').modal('hide');   
+                    myalertsuccess_norefresh('添加成功，请点击右侧 "更新重启网吧服务端"。');
+                    getCredits(type);
+
+					
+                }else
+                {
+                    myalertdanger('添加失败,请重新操作');
+
+
+                }
+            });
+        }
+        function submitEditExchangeMoney(){
+
+          var points_money=checktext('points_id1');
+          if(points_money==false)
+           {
+              layer.tips('会员积分不能为空！', '#points_id1');
+              return false;
+           }
+           var points_money1=isNum('points_id1');
+          if(points_money1==false)
+           {
+              layer.tips('会员积分只能输入数字！', '#points_id1');
+              return false;
+           }
+         var money_money=checktext('money_id1');
+          if(money_money==false)
+           {
+              layer.tips('兑换金额不能为空！', '#money_id1');
+              return false;
+           }
+        var money_money1=isMoney('money_id1');
+          if(money_money1==false)
+           {
+              layer.tips('兑换金额输入格式不正确！', '#money_id1');
+              return false;
+           }
+
+
+	       var type=$('#editexchangemoney input[name="type"]').val();
+            $.post("{:U('editExchangeMoney')}",$('#editexchangemoney form').serialize(),function(data){
+                    if(data.status=="1"){
+				    $('#editexchangemoney').modal('hide');
+					myalertsuccess_norefresh('修改成功，请点击右侧 "更新重启网吧服务端"。');
+					 getCredits(type);
+					
+                }else{
+                    myalertdanger('修改失败,请重新操作');
+
+                }
+            });
+        }
+        function addExchangeGoods(){
+            //会员类型
+         
+            $('#goods_goods_id').val('');
+            $('#points_goods_id').val('');
+
+            var len=$('#type-list .active a').attr('href').length;
+            $('#addexchangegoods input[name="type"]').val($('#type-list .active a').attr('href').substr(22,len-22-1));
+            $('label.type-label').text($('#type-list>.active>a').text());
+        }
+        function editExchangeGoods(id){
+		 var tr = $('#c'+id);
+		             //会员类型
+			 var len=$('#type-list .active a').attr('href').length;
+            $('#editexchangegoods input[name="type"]').val($('#type-list .active a').attr('href').substr(22,len-22-1));
+            $('label.type-label').text($('#type-list>.active>a').text());
+            $('#editexchangegoods input[name="id"]').val(id);
+            $('#editexchangegoods input[name="points"]').val(tr.find('td:eq(0)').text());
+            $('#editexchangegoods input[name="goods"]').val(tr.find('td:eq(1)').text());
+// <!-- 			$('#editexchangegoods input[name="name"]').val(tr.find('td:eq(2)').text()); -->
+            $('#editexchangegoods').modal('show');
+			
+
+        }
+        function submitAddExchangeGoods()
+		{
+            var points_money=checktext('points_goods_id');
+          if(points_money==false)
+           {
+              layer.tips('会员积分不能为空！', '#points_goods_id');
+              return false;
+           }
+           var points_money1=isNum('points_goods_id');
+          if(points_money1==false)
+           {
+              layer.tips('会员积分只能输入数字！', '#points_goods_id');
+              return false;
+           }
+         var goods_name=checktext('goods_goods_id');
+          if(goods_name==false)
+           {
+              layer.tips('兑换奖品名称不能为空！', '#goods_goods_id');
+              return false;
+           }
+
+
+		   var type=$('#addexchangegoods input[name="type"]').val();
+            $.post("{:U('setExchangeGoods')}",$('#addexchangegoods form').serialize(),function(data){
+
+                if(data.status=="1"){
+				
+                    $('#addexchangegoods').modal('hide');
+					myalertsuccess_norefresh('新增成功，请点击右侧 "更新重启网吧服务端"。');
+					 getCredits(type);
+                }else{
+                     myalertdanger('新增失败,请重新操作');
+                }
+            });
+        }
+        function submitEditExchangeGoods()
+		{
+
+             var points_money=checktext('points_goods_id1');
+          if(points_money==false)
+           {
+              layer.tips('会员积分不能为空！', '#points_goods_id1');
+              return false;
+           }
+           var points_money1=isNum('points_goods_id1');
+          if(points_money1==false)
+           {
+              layer.tips('会员积分只能输入数字！', '#points_goods_id1');
+              return false;
+           }
+         var goods_name=checktext('goods_goods_id1');
+          if(goods_name==false)
+           {
+              layer.tips('兑换奖品名称不能为空！', '#goods_goods_id1');
+              return false;
+           }
+
+		    
+            $.post("{:U('editExchangeGoods')}",$('#editexchangegoods form').serialize(),function(data){
+
+                if(data.status=="1"){
+					 $(editexchangegoods).modal('hide');
+                     myalertsuccess_norefresh('修改成功，请点击右侧 "更新重启网吧服务端"。');
+					
+					 getCredits(type);
+                }else{
+                    myalertdanger('修改失败,请重新操作');
+                }
+            });
+        }
+        function submitExchangeAccess(){
+            $('#exchangeaccess input[name="type"]').val($('#type-list .active a').attr('href').substr(-2,1));
+            $.post("{:U('setExchangeAccess')}",$('#exchangeaccess').serialize(),function(data){
+                if(data.status=="1"){
+				
+                    myalertsuccess('新增成功，请点击右侧 "更新重启网吧服务端"。');
+                }else{
+                    myalertdanger('新增失败,请重新操作');
+                }
+            })
+        }
+	  $(function(){
+	     getCredits({$viptypelist.0.id});
+	  })
+	  function getCredits(){
+	     type=arguments[0]!==undefined?arguments[0]:0;
+		 $.get("{:U('getCredits')}",{type:type},function(jsondata){
+		    var data=jsondata;
+			
+			
+			if(data.result=='1')
+			{			  						
+		     $("#money").empty();
+			  $("#goods").empty();   
+			  var str='';
+			  var str1='';
+		
+			  for(var i=0;i<data.count;i++)
+			  {
+			   if(data['list'][i]['Lx']==0)
+			   {
+			      
+				  str+='<tr id=\"c'+data['list'][i]['id']+'\">'+
+				           <!-- '<td style="display:none">'+data['list'][i]['id']+'</td>'+  -->
+						   '<td>'+data['list'][i]['Integral']+'</td>'+  
+						   '<td>'+data['list'][i]['Je']+'</td>'+ 
+						   
+						   '<td><a href=\"javascript:editExchangeMoney('+data['list'][i]['id']+')\" ;>修改</a>&nbsp;|&nbsp;<a href=\"javascript:deleteCredits('+data['list'][i]['id']+');\" >删除</a></td>'+
+						'</tr>';
+				  
+				  
+			   }
+			   else if(data['list'][i]['Lx']==1)
+			   {
+			      
+				  str1+='<tr id=\"c'+data['list'][i]['id']+'\">'+
+						   '<td>'+data['list'][i]['Integral']+'</td>'+  
+						   '<td>'+data['list'][i]['SpName']+'</td>'+ 
+						   '<td><a href=\"javascript:editExchangeGoods('+data['list'][i]['id']+')\" ;>修改</a>&nbsp;|&nbsp;<a href=\"javascript:deleteCredits('+data['list'][i]['id']+');\" >删除</a></td>'+
+						'</tr>';
+
+			   }			
+			  }
+			   
+			   $("#money").append(str);
+			   $("#goods").append(str1);
+
+
+			}
+			else
+			{
+                myalertdanger('数据加载错误');
+			}
+		 });
+		    $('#type-list li').removeClass('active');
+            $('#type-'+type).addClass('active');
+		 
+	  }
+		 function deleteCredits(id)
+		 {	
+		 
+		   var tr = $('#c'+id);
+           var name=tr.find('td:eq(0)').text();
+			
+
+
+      layer.confirm('确定要删除需要积分"'+name+'"的兑换活动么？',{icon:3,title:'提示'},function(index){
+          $.post("{:U('deleteCredits')}",{oper:'del',id:id},function(data)
+         {
+                        if(data.result==1){
+                          myalertsuccess('删除成功，请点击右侧 "更新重启网吧服务端"。');
+                           
+                        }else{
+                          myalertdanger('删除失败,请重新操作');
+                        }
+                    });
+           layer.close(index);
+        }) 
+
+        }
+    </script>
+</block>

@@ -1,0 +1,284 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>查看网吧收入详情</title>
+		
+		
+	
+        <link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet" /> 
+		<link href="__PUBLIC__/assets/css/font-awesome.min.css" rel="stylesheet" /> 
+		<script src="__PUBLIC__/js/jquery-1.11.2.js"></script>	
+        <script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
+		<script src="__PUBLIC__/assets/js/ace-extra.min.js"></script>
+				
+		
+		<link href="__PUBLIC__/assets/css/ui.jqgrid.css" rel="stylesheet" /> 
+        <script src="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js"></script>		
+		<script src="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js"></script>
+
+		
+		<link href="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.min.css" rel="stylesheet" /> 		
+		<script src="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.min.js"></script>
+		<script src="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.zh-CN.js"></script>
+		
+		
+		 <link href="__PUBLIC__/assets/css/ace.min.css" rel="stylesheet" /> 
+		 <link href="__PUBLIC__/assets/css/ace-skins.min.css" rel="stylesheet" /> 		  			 
+		<link href="__PUBLIC__/css/common.css" rel="stylesheet" /> 		
+		
+			
+		<script src="__PUBLIC__/assets/js/ace-elements.min.js"></script>
+		<script src="__PUBLIC__/assets/js/ace.min.js"></script>
+		<script src="__PUBLIC__/js/common.js"></script>
+		
+	
+
+		
+		
+		
+
+		
+	
+		
+</head>
+
+
+
+
+
+
+
+<body>
+    <div class="container">
+	    <div class="row">
+		<h3 style="margin-left:20px">{$wbname}</h3>
+		<div class="col-xs-12">
+		 
+				<div class="alert alert-warning bolder" id="zong1">当前月总收入<span class="orange" id="Sum_Je_month">0.00</span> 元&nbsp;&nbsp;&nbsp;当前月现金收入<span class="orange" id="Xj_je_month">0.00</span>元&nbsp;&nbsp;&nbsp;当前月其他收入<span class="orange" id="qt_Je_month">0.00</span>元</div>  
+				<div class="alert alert-warning bolder" id="zong2">当前年总收入<span class="orange" id="Sum_Je_year">0.00</span> 元&nbsp;&nbsp;&nbsp;当前年现金收入<span class="orange" id="Xj_je_year">0.00</span>元&nbsp;&nbsp;&nbsp;当前年其他收入<span class="orange" id="qt_Je_year">0.00</span>元</div>  
+			
+
+				<div class="btn-group" role="group" aria-label="...">
+				  <button type="button" class="btn btn-primary" id="part1">日汇总</button>
+				  <button type="button" class="btn btn-default" id="part2">月汇总</button>
+				</div>
+				
+				<div class="part1">
+					<div class="form-group" style="position:absolute;top:75px;left:200px;">
+						<div class="input-group date form_month col-md-2" data-date="" data-date-format="yyyy-mm" data-link-field="dtp_input4" data-link-format="yyyy-mm">
+							<input class="form-control" size="16" type="text" value="{$moren_month}" readonly id="month" style="width:200px;" >
+							<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+							<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+						</div>
+						<input type="hidden" id="dtp_input4" value="" /><br/>
+					</div>
+					<div id="jqgrid" style="margin-top:15px;">
+						<table id="grid-table"></table>
+					</div>
+				
+				</div>
+				
+				
+				<div class="part2">
+					<div class="form-group" style="position:absolute;top:75px;left:200px;">
+						<div class="input-group date form_year col-md-2" data-date="" data-date-format="yyyy" data-link-field="dtp_input5" data-link-format="yyyy">
+							<input class="form-control" size="16" type="text" value="{$moren_year}" readonly id="year" style="width:200px;">
+							<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+							<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+						</div>
+						<input type="hidden" id="dtp_input5" value="" /><br/>
+					</div>
+					<div id="jqgrid1" style="margin-top:15px;">
+						<table id="grid-table1"></table>
+					</div>
+					
+				</div>
+				
+
+
+		</div><!-- /.col -->
+	</div><!-- /.row -->
+	
+	</div>
+
+</body>
+
+
+
+
+
+    <script>
+        $(function(){
+            $('#grid-table').jqGrid({
+                url:'{:U("getalipayinfo_day")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colNames:['网吧id','交易时间','总收入（元）','现金收入（元）','其他收入（元）'],
+                colModel:[
+				    {name:'wb_id',hidden:true,},
+                    {name:'cTime',editable:true,},               
+                    {name:'Sum_Je',editable:true},
+                    {name:'Xj_je',editable:true},
+                    {name:'qt_Je',editable:true},
+                ],
+                rowNum:31,
+                viewrecords: true,
+			    sortorder: "desc",
+                loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+                    $("#Sum_Je_month").html(data['Sum_Je']);
+                    $("#Xj_je_month").html(data['Xj_je']);
+					$("#qt_Je_month").html(data['qt_Je']);
+                 }, 
+
+  
+
+                gridComplete: function()
+                {
+
+
+                }
+            }).jqGrid('navGrid','#grid-pager',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+		
+	
+
+
+   
+  $(function(){
+            $('#grid-table1').jqGrid({
+                url:'{:U("getalipayinfo_yue")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colNames:['网吧id','交易时间','总收入（元）','现金收入（元）','其他收入（元）'],
+                colModel:[
+				    {name:'wb_id',hidden:true,},
+                    {name:'Tm',editable:true,},               
+                    {name:'Sum_Je',editable:true},
+                    {name:'Xj_je',editable:true},
+                    {name:'qt_Je',editable:true},
+                ],
+                rowNum:15,
+                viewrecords: true,
+			    sortorder: "desc",
+                loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+				
+
+                    $("#Sum_Je_year").html(data['Sum_Je']);
+                    $("#Xj_je_year").html(data['Xj_je']);
+					$("#qt_Je_year").html(data['qt_Je']);
+                   
+                 }, 
+
+		
+  
+
+                gridComplete: function()
+                {
+
+                }
+            }).jqGrid('navGrid','#grid-pager1',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+           $('#grid-table1').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+			 $(window).resize(function(){
+					$('#grid-table1').jqGrid('setGridWidth', $(window).width()*0.8, true);
+			  });
+        });
+		
+	
+
+
+   $('.form_month').datetimepicker({
+        language:  'zh-CN',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 3,
+		minView: 3,
+		maxView: 3,
+		forceParse: 0
+    });
+	
+	 $('.form_year').datetimepicker({
+        language:  'zh-CN',
+        weekStart: 1,
+       <!--  todayBtn:  1, -->
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 4,
+		minView: 4,
+		maxView: 4,
+		forceParse: 0
+    });
+	$('#month').change(function(){
+	    $('#grid-table').jqGrid('setGridParam',{
+        postData:{                 
+            month:$('#month').val(),          
+        }
+       }).trigger('reloadGrid');
+	
+	})
+	
+	$('#year').change(function(){
+	    $('#grid-table1').jqGrid('setGridParam',{
+        postData:{                 
+            year:$('#year').val(),             
+        }
+       }).trigger('reloadGrid');
+	})
+ 
+   $('.part2').hide();
+   $('#zong2').hide();
+    $("#part1").click(function(){
+	   $('.part2').hide();
+	   $('.part1').show();
+	   $('#zong2').hide();
+	   $('#zong1').show();
+	   if(!$(this).hasClass('btn-primary')){
+	      $(this).removeClass('btn-default');
+		  $(this).addClass('btn-primary');
+		  $("#part2").removeClass('btn-primary');
+		  $("#part2").addClass('btn-default');
+	   }
+	})
+	$("#part2").click(function(){
+	   $('.part1').hide();
+	   $('.part2').show();
+	   $('#zong1').hide();
+	   $('#zong2').show();
+	   if(!$(this).hasClass('btn-primary')){
+	      $(this).removeClass('btn-default');
+		  $(this).addClass('btn-primary');
+		  $("#part1").removeClass('btn-primary');
+		  $("#part1").addClass('btn-default');
+	   }
+	})
+	
+
+   </script>

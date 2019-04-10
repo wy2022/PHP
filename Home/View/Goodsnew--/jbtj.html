@@ -1,0 +1,220 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+    <js href="__PUBLIC__/layer/layer.js" />
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+     .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+	</style>
+</block>
+
+<block name="content">
+<div class="row search-bar" >
+	<form >
+
+            <span class="mgb15 biaodan" style="width:380px;">
+                        <span class="input-group" >
+                          <input class="form-control daterange" name="daterange" id="daterange" type="text" placeholder="请选择日期"  value="" />
+                          <span class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                          </span>
+                        </span>
+               </span>
+			   
+    
+                <div class="col-xs-6 col-sm-3 mgb15">当班人
+                <select id="operate_db" name="operate_db">
+                  <option value="">全部</option>
+                  <volist name="yglist" id="yginfo">
+                    <option value="{$yginfo.id}">{$yginfo.name}</option>
+                  </volist>
+                </select>
+                </div>
+				
+				<div class="col-xs-6 col-sm-3 mgb15">接班人
+                <select id="operate_jb" name="operate_jb">
+                  <option value="">全部</option>
+                   <volist name="yglist" id="yginfo">
+                    <option value="{$yginfo.id}">{$yginfo.name}</option>
+                  </volist>
+                </select>
+                </div>
+				
+				           <span class="mgb15 biaodan">
+			   <input class="form-control" name="sContent" id="sContent" type="text"  placeholder="备注"  />
+               </span>
+
+				
+              <span class="mgb15 biaodan"> <button type="button" class="btn btn-purple btn-sm" onclick="doSearch()">搜索<i class="fa fa-search"></i></button></span>
+	</form>
+</div>
+
+    <div id="jqgrid">
+        <table id="grid-table"></table>
+        <div id="grid-pager"></div>
+    </div>
+
+
+</block>
+
+
+
+
+
+
+<block name="script">
+      <script>
+        $(function(){
+            $('#grid-table').jqGrid({
+                url: '{:U("getjblog")}',
+                datatype: "json",
+                type:"post",
+                height:"100%",
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[
+                    {label:'编号',name:'id',width:50,},
+                    {label:'接班时间',name:'dtBegTime',width:100},
+                    {label:'交班时间',name:'dtEndTime',width:100},
+                    <!-- {label:'进货数量',name:'count',width:70},  -->
+                    {label:'总收入',name:'sumje',width:50},
+					{label:'现金',name:'sum_cash_je',width:50},
+                    {label:'非现金',name:'sum_nocash_je',width:50},
+					{label:'其他',name:'sum_other_je',width:50},					
+					{label:'当班人',name:'operate_db',width:50},
+					{label:'接班人',name:'operate_jb',width:50},
+					{label:'查看详情',name:'opera',hidden:true},					
+					{label:'备注',name:'bz',width:100},
+                ],
+                styleUI : 'Bootstrap',
+                rowNum:15,
+                pager:'#grid-pager',
+				sortorder: "desc",
+                viewrecords: true,
+				gridComplete: function()
+				{
+                    var ids = $("#grid-table").jqGrid('getDataIDs');
+                    var add,edit,save,del,bangding,info_edit,edit2,wbid = '';
+
+                    var end_str,sta_str,jch_type_caption,ordertype;                                             										
+                
+                        for(var i=0;i < ids.length;i++)
+                        {
+                            var getRow = $('#grid-table').getRowData(ids[i]);//获取当前的数据行  
+                            var colVal = getRow.wbid;             
+                            var rownum = ids[i];
+							//var ordertype_str= getRow.ordertype;  
+							//var paytype_str= getRow.paytype; 
+																										   
+						
+							var edit2= '<a href="#" onclick="ckjiaobanmx('+rownum+')">查看详情</a>';                     							   							
+						  
+	                           														 
+							$("#grid-table").jqGrid('setRowData',ids[i],{opera:edit2});													   								
+								
+                        }
+                    
+                    
+                    
+                },
+            });
+
+
+
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+
+       $('#daterange').val(moment().subtract('days', 7).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+            $('.daterange').daterangepicker({
+                format:'YYYY-MM-DD hh:mm:ss',
+                timePicker: true,
+                timePickerIncrement: 1,
+                timePickerSeconds:true,
+                startDate:moment().startOf('day'),  
+                endDate: moment(),
+                timePicker12Hour:false,     
+                ranges: {  
+                           '今天': [moment().startOf('day'), moment().endOf('day')],  
+                           '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+                           '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+                           '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+                           '本月': [moment().startOf('month'), moment().endOf('month')],  
+                           '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+                        },        
+                locale:{
+                    applyLabel:'确定',
+                    cancelLabel:'取消',
+                    fromLabel:'从',
+                    toLabel:'至',
+                    daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+                    monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+          customRangeLabel: '自定义',
+          firstDay : 1
+                }
+
+            },function(start,end,label){
+      $('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+      });
+
+        function doSearch(){
+            $('#grid-table').jqGrid('setGridParam',{
+                postData:{
+                    daterange:$('#daterange').val(),
+                    sContent:$('#sContent').val(),
+                    operate_db:$('#operate_db').val(),
+					operate_jb:$('#operate_jb').val(),
+                }
+            }).trigger('reloadGrid');
+        }
+
+		
+   function ckjiaobanmx(rowNum)
+   {
+      var rowData = $('#grid-table').jqGrid('getRowData',rowNum);
+	  var id_str= rowData['id'];
+      layer.open({
+	  type: 2,
+	  offset: '100px',
+	  title: '交班统计详细',
+	  skin: 'layui-layer-lan',
+	  maxmin: true,
+	  shadeClose: true, //点击遮罩关闭层
+	  area :['930px' , '560px'],
+	  content: '{:U("jiaobanmx")}?id='+id_str,
+	  });
+   } 	
+    </script>
+  
+<script>
+ function checkform(){
+    var daterange=$("#daterange").val();
+  if(daterange==""||daterange=="请选择日期")
+  {
+     // alert("请选择日期");
+       layer.msg('请选择日期', {
+                  offset: 0,
+                  shift: 6
+                });
+
+     return false;
+  }
+  return true;
+ }
+
+</script>
+</block>

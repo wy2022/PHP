@@ -1,0 +1,483 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+    <js href="__PUBLIC__/layer/layer.js" />
+    <css href="__PUBLIC__/jQueryHdPaging/paging.css" />
+    <js href="__PUBLIC__/jQueryHdPaging/jquery-1.11.1.min.js" />
+    <js href="__PUBLIC__/jQueryHdPaging/paging.js" />
+  <style>
+     .mgb15{margin-bottom:15px;}
+     .labelbold{font-weight:bold;
+     }
+     .biaodan{float:left;padding-left:15px;}
+     .fr{float:right;padding-right:15px;}
+     @media (min-width: 992px) {
+      .modal-lg {
+      width: 700px;
+      }
+      }
+     .fontsize12{font-size:12px;}
+     table a{cursor:pointer;text-decoration:none;}
+     table a:hover{text-decoration:none;}
+     
+   body .search-bar input,body .search-bar select{
+    display:inline-block;
+    height:30px;
+    font-size:14px;
+    line-height:
+    color:#555555;
+    vertical-align:middle;
+    -webkit-border-radius:4px !important;
+    -moz-border-radius:4px !important;
+    border-radius:4px !important;
+    border-color:#a4bed4;
+    text-align:left;
+    padding:4px 6px;
+   }
+   body .search-bar input{width:200px;}
+   body .search-bar select{width:100px;}
+   .btn1{
+        font-size:12px; 
+      height:30px;
+       width:90px;
+      -webkit-border-radius:2px;
+      -moz-border-radius:2px;
+      border-radius:2px;
+      border:0;
+      text-shadow:none;
+      background-image:none;
+      vertical-align:middle;
+      color:#ffffff;
+     }
+  </style>
+  <style>
+      
+      .zuhe,.shangpin_edit{
+        color: green;
+      }
+      .chaifen,.shangpin_delete,.zuhe_nam,.zuhe_kcsl{
+        color: red;
+      }
+      input{
+        width: 60px;
+        text-align: center;
+      }
+      
+      .shangpin_edit,.shangpin_delete{
+        padding-left:10px;
+        padding-right:10px;
+      }
+      .table_box{
+        height: 550px;
+        overflow-y: auto;
+      }
+      .red{
+        color: red;
+      }
+    </style>
+</block>
+
+<block name="content">
+
+<div class="row search-bar" >
+   
+   <input type="hidden"  id="ght_goodslist" value="{$goods_list}"> 
+   <!-- <span   id="ght_goodslist1" style='display:none'>{$goods_list}</span> -->
+  <form >
+            <span class="biaodan mgb15">商品类型            
+             <select id="goods_type" name="goods_type">
+              <option value="0">全部</option>
+            <volist name="typelist" id="typeinfo">
+              <option value="{$typeinfo.type_id}">{$typeinfo.type_name}</option>
+            </volist>
+             </select>
+      </span>
+      
+         
+      
+    <span class="mgb15 biaodan"><input class="form-control" name="goods_name" id="goods_name" type="text"   placeholder="请输入商品名称"  />
+      </span>
+      
+    <!-- <span class="mgb15 biaodan"><input class="form-control" name="goods_barcode" id="goods_barcode" type="text"  placeholder="请输入条形码"  />
+      </span> -->
+    
+      
+
+
+    <span class="mgb15 biaodan"> <button type="button" class="btn1 btn-purple btn-sm" onclick="doSearch()" id="sousuo">搜索<i class="fa fa-search"></i></button></span>
+        <span class="mgb15 fr"> <button type="button" class="btn1 btn-success btn-sm" onclick="shangpin_add()">新增商品</button></span>
+    
+  </form>
+   <span class="mgb15 fr"><button class="btn1 btn-info btn-sm" onclick="zuheguanli()">组合管理</button></span>
+   
+   
+   
+   
+</div>
+    <div class="table_box">
+         <table class="table table-striped" id="data_data">
+        <!-- <thead>
+          <tr>
+            <th>
+              分类
+            </th>
+            <th>
+              商品名称
+            </th>
+            <th>
+              单价（元）
+            </th>
+            <th>
+              规格
+            </th>
+            
+            <th>
+              组合货架
+            </th>
+            <th>
+              操作
+            </th>
+            <th>
+              货架库存
+            </th>   
+            <th>
+              仓库库存
+            </th>
+                  
+          </tr>
+        </thead> 
+        <tbody> -->
+        <!-- <tr>
+           <td colspan="8">
+               <table class="table table-striped" id="data_shuju" style="margin-top: -20px;">
+
+            </table>
+           </td>
+        </tr> 
+        </tbody>-->
+     </table>
+<!-- <div class="data_shuju_box"> 
+            
+            <table class="table table-striped" id="data_shuju" style="margin-top: -20px;">
+
+            </table>
+      </div>-->
+ </div>
+  <div class="box" id="data_pager"></div>
+</block>
+
+
+
+  
+
+<block name="script">
+    <script>
+  var setTotalCount = "{$sumnum}";//总条数
+    var setTotalpage = Math.ceil(setTotalCount/10);
+    //alert(setTotalCount)
+    $('#data_pager').paging({
+        initPageNo: 1, // 初始页码
+        totalPages: setTotalpage, //总页数
+        totalCount: '合计' + setTotalCount + '条数据', // 条目总数
+        slideSpeed: 600, // 缓动速度。单位毫秒
+        jump: true, //是否支持跳转
+        callback: function(page) { // 回调函数
+            $.ajax({
+              type: "GET",
+                url: "{:U('Goodsnew/getallshangpinlist')}",
+                data: {page:page, count:10},
+                dataType: "json",
+                success: function(data){
+                    $("#data_data").empty();
+                    showallgoodslist(page,10);
+                }   
+            })
+        }
+    });
+         
+
+
+   
+
+    function  showallgoodslist(pagenum,countnum)
+    {
+     $.ajax({
+         type: "GET",
+         url: "{:U('Goodsnew/getallshangpinlist')}",
+         data: {page:pagenum, count:countnum},
+         dataType: "json",
+         success: function(data){
+        var data1 = JSON.stringify(data);
+        //console.log(data1)
+        var data2=eval("("+data1+")");
+        var data=data2.list;
+          var html="";
+          html+='<thead>';
+          html+=' <tr>';
+          html+='   <td><span>分类</span></td>';
+          html+='   <td><span>商品名称</span></td>';
+          html+='   <td><span>单价（元）</span></td>';
+          html+='   <td><span>规格</span></td>';
+          html+='   <td><span>组合货架</span></td>';
+          html+='   <td><span>操作</span></td>';
+          html+='   <td><span>货架库存</span></td>';
+          html+='   <td><span>仓库库存</span></td>';
+          html+=' </tr>';
+          html+='</thead>';
+            for (var i = 0; i <data.length; i++) 
+        { 
+          if(data[i].is_zuhe==0)
+          {
+          //console.log("'"+data[i].goods_name+"'");
+            var goods_name="'"+data[i].goods_name+"'";
+            html+='<tbody id=tb'+data[i].goods_id+'>';
+            html+=' <tr>';
+            html+='   <td>'+data[i].type_name+'</td>';
+            html+='   <td><span>'+data[i].goods_name+'</span></td>';
+            html+='   <td><span>'+data[i].shou_price+'</span></td>';          
+            html+='   <td><span>1个/件</span></td>';    
+            html+='   <td>';
+            html+='       <span class="zuhecaozuo">';
+            html+='       <span class="zuhe" onclick="zuhe('+data[i].goods_id+','+data[i].shou_price+')">组合</span>';
+            html+='     </span>';
+            html+='   </td>';
+            html+='   <td>';
+            html+='       <span class="shangpin_edit" onclick="shangpin_edit('+data[i].goods_id+')">修改</span>||';
+            html+='     <span class="shangpin_delete" onclick="shangpin_delete('+data[i].goods_id+','+goods_name+')">删除</span>';  
+            html+='   </td>';
+            html+='   <td><span>'+data[i].kc_num+'</span></td>';
+            html+='   <td><span>'+data[i].ck_num+'</span></td>';
+            html+=' </tr>';
+            html+='</tbody>';
+         }
+         else  if(data[i].is_zuhe==2)  //显示组合商品
+               {
+             //有实际的组合商品
+           // console.log(1)
+             var zuhedata=data[i].zuhelist;
+           var disabl=0;
+           if(zuhedata.length==1){
+            disabl=1;
+           }
+           //console.log(zuhedata)
+            if(zuhedata.length>0)
+            {
+            html+='<tbody id=tb'+data[i].goods_id+'>';
+          html+=' <tr>';
+          html+='    <td class="red">'+data[i].type_name+'</td>';
+          html+='   <td><span class="red">'+data[i].goods_name+'</span></td>';
+          html+='   <td><span class="red">'+data[i].shou_price+'</span></td>';  
+          html+='   <td><label></td>';
+          html+='   <td><label></td>';
+          html+='   <td><label></td>';
+          html+='   <td><span class="red">'+data[i].kc_num+'</span></td>';   
+          // html+='   <td><span class="zuhe_kcsl">'+data[i].ck_num+'</span></td>';
+          html+='   <td></td>';     
+          html+=' </tr>';
+          
+          
+             for(var j=0;j<zuhedata.length;j++)
+           {
+            html+=' <tr>';
+            html+='    <td></td>';
+            html+='   <td><span>'+zuhedata[j].goods_name+'</span></td>';
+            html+='   <td></td>';         
+            html+='   <td><label>1个/件</label></td>';
+                
+            html+='   <td>';
+            html+='       <span class="zuhecaozuo">';
+            html+='       <span class="chaifen" onclick="chaifen('+zuhedata[j].goods_id+','+zuhedata[j].zuhe_id+','+disabl+')">拆分</span>';
+            html+='     </span>';
+            html+='   </td>';
+            html+='   <td>';
+            html+='       <span class="shangpin_edit" onclick="shangpin_edit('+zuhedata[j].goods_id+')">修改</span>';
+            //html+='     <span class="shangpin_delete" onclick="shangpin_delete('+zuhedata[j].goods_id+','+zuhedata[j].goods_name+')">|| 删除</span>';
+            html+='   </td>';
+            html+='   <td></td>';
+            html+='   <td><span>'+zuhedata[j].ck_num+'</span></td>';
+            html+=' </tr>';
+            
+           }
+           html+='</tbody>';
+         }else
+         {       }         
+      }   
+        }; 
+        //$(" #data_shuju").append(html); 
+       
+        $(" #data_data").append(html);
+        /*var divHeight=$(" #data_data").height();
+        if(divHeight>300){
+          alert(1)
+          $(" #table_box").css('overflow-y','auto')
+        }*/
+        }
+      });
+    }
+
+
+      function zuheguanli()
+      {
+          layer.open({
+          type: 2,
+          offset: '100px',
+          title: '组合管理',
+          skin: 'layui-layer-lan',
+          maxmin: true,
+          shadeClose: true, //点击遮罩关闭层
+          area : ['700px' , '600px'],
+          content: '{:U('Goodsnew/zuheguanli')}',
+        });
+      }
+
+      function zuhe(goods_id,shou_price)
+      {
+          layer.open({
+          type: 2,
+          offset: '100px',
+          title: '商品组合',
+          skin: 'layui-layer-lan',
+          maxmin: true,
+          shadeClose: true, //点击遮罩关闭层
+          area : ['400px' , '210px'],
+          content: '{:U('Goodsnew/zuhe')}?goods_id='+goods_id+'&shou_price='+shou_price,
+        });
+      }
+      
+      
+      function chaifen(goods_id,zuhe_id,disabl)
+      {
+        //console.log(zh_name)
+          layer.open({
+          type: 2,
+          offset: '100px',
+          title: '商品拆分',
+          skin: 'layui-layer-lan',
+          maxmin: true,
+          shadeClose: true, //点击遮罩关闭层
+          area : ['400px' , '210px'],
+          content: '{:U('Goodsnew/chaifen')}?goods_id='+goods_id+'&zuhe_id='+zuhe_id+'&disabl='+disabl,
+        });
+      }
+       
+       
+  
+    
+  
+    function shangpin_edit(goods_id_str)
+  {    
+    layer.open({
+    type: 2,
+    title: '修改商品',
+    skin: 'layui-layer-lan',
+    maxmin: true,
+    shadeClose: true, //点击遮罩关闭层
+    area : ['800px' , '500px'],
+    content: '{:U("Goodsnew/shangpin_edit")}?&goods_id='+goods_id_str,
+    });
+  } 
+  
+  function shangpin_add()
+  {    
+
+    layer.open({
+    type: 2,
+    title: '添加商品',
+    skin: 'layui-layer-lan',
+    maxmin: true,
+    shadeClose: true, //点击遮罩关闭层
+    area : ['800px' , '500px'],
+    content: '{:U("Goodsnew/shangpin_add")}',
+    });
+  }
+
+   function shangpin_delete(goods_id,goods_name)
+   {
+         // console.log(goods_id);
+      
+            // console.log(goods_name);
+            if(confirm('确定要删除商品“'+goods_name+'”吗？'))
+            {
+          
+                $.post("{:U('Goodsnew/shangpin_delete_set')}",{goods_id:goods_id},function(data)
+                {   
+
+                    if(data.status==1)
+                    {
+                       layer.msg('删除成功', 
+                {
+                  offset: 0,
+                  shift: 6,
+                  icon:1,
+                  time:1000,
+                  
+                },function()
+                {   
+                  window.location.reload();
+                    
+                });
+            
+                    }
+                    else if(data.status==-1)
+                    {
+                        alert('删除失败');
+            layer.msg('删除失败', 
+                {
+                  offset: 0,
+                  shift: 6,
+                  icon:2,
+                  time:1000,
+                  
+                });
+                    }
+          else if(data.status==-2)
+                    {
+                        
+                        
+            layer.msg('该商品仓库或者货架数量不为空，删除失败', 
+                {
+                  offset: 0,
+                  shift: 6,
+                  icon:2,
+                  time:1000,
+                  
+                });
+                    }
+            else if(data.status==-3)
+                    {
+                        
+            layer.msg('本班该商品有销售，删除失败', 
+                {
+                  offset: 0,
+                  shift: 6,
+                  icon:2,
+                  time:1000,
+                  
+                });
+                    }
+          
+                });
+            }
+    } 
+    
+   function doSearch()
+   {
+    var sp_type=$('#goods_type option:selected').val()
+    //alert(sp_type)
+    
+   }
+    </script>
+ 
+<script>
+ document.onkeydown = function(e){
+        if(e.keyCode==13)
+        $("#sousuo").click();
+      };
+</script>
+</block>

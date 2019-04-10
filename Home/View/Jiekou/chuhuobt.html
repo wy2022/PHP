@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<css href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+<css href="__PUBLIC__/assets/css/font-awesome.min.css" />
+<js href="__PUBLIC__/js/jquery-1.11.2.js" />
+<css href="__PUBLIC__/assets/css/ace.min.css" />
+ <js href="__PUBLIC__/layer/layer.js" />
+   <js href="__PUBLIC__/layer/myalert.js" />
+     <css href="__PUBLIC__/layer/myalert.css"/>
+<style>
+	   .mgb15{margin-bottom:6px;}
+		 .text-right{text-align:right;}
+         #tableid td{vertical-align:middle;}
+		 #tableid tr td input[type="text"],#bz{
+		    display:inline-block;
+			height:22px;
+			font-size:14px;
+			line-height:22px;
+			color:#555555;
+			vertical-align:middle;
+			-webkit-border-radius:4px !important;
+			-moz-border-radius:4px !important;
+			border-radius:4px !important;
+			border-color:#a4bed4;
+			text-align:center;
+			padding:0;
+			width:65px;
+		 }
+		 .pdl5{padding-left:5px;}
+         body{
+				background-color: #FFF;
+				font-size:14px;
+			}
+			.tab-content{
+				padding: 0 6px;
+			}
+	</style>
+</head>
+<body>
+
+
+<div class="tabbable">
+  <div class="tab-content">
+
+   <div class="mgb15">
+
+        <div class="fr text-right">
+            <span  id="ght_goodslist" style="display:none">{$goodsinfo}</span>
+            <span id="wb_flag" style="display:none">{$wbaccount}</span>   	
+            <span id="guid_flag" style="display:none">{$loginguid}</span>
+            <input type="hidden" name="TOKEN" id="TOKEN" value="{:session('TOKEN')}">			
+        </div>
+    </div>
+<div class="page_body">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover" id="tableid" style="overflow-x: hidden;">
+            <thead>
+            <tr id="theadid">
+                <th>商品名称</th>
+                <th>出货数量</th>
+                <th>原仓库库存</th>
+				<th>原货架库存</th>
+            </tr>
+            </thead>
+            <tbody id="shangjia_text">
+            
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="foot-container" id="js-foot-container">
+
+            <!-- <div class="text-left mgb15">
+                备注&nbsp;&nbsp;<input type="text" name="bz" id="bz" maxlength="200" >
+            </div> -->
+			<input id="flag" value="" type="hidden"/>
+            <div class="text-center tip" >
+                <span style="padding:14px 0px;cursor:pointer;"><button class="btn btn-primary js-btn-save" id="btn_save" type="button">保存</button></span>
+
+            </div>
+      </div>
+
+  
+</div>
+  </div>
+</div>
+</body>
+<script>
+var data=JSON.parse($('#ght_goodslist').html());
+
+$(function() {
+        var html='';
+		if(data.is_zuhe==0){
+	        html+='<tr class="one_tr">'; 
+	        html+='<td>'+data.goods_name+'</td>';
+	        html+='<td class="hide" id=goods_id'+data.goods_id+'>'+data.goods_id+'</td>';			
+			html+='<td><input  name="shuliang"  type="text" value="0" onkeyup="shuliang('+data.goods_id+')" id=shuliang'+data.goods_id+'><span class="pdl5">个</span></td>';
+			html+='<td><span id=ck'+data.goods_id+'>'+data.ck_num+'</span><span class="pdl5" >个</span></td>';
+			html+='<td ><span id=hj'+data.goods_id+'>'+data.kc_num+'</span><span class="pdl5" >个</span></td>';	 
+			html+='</tr>';	
+
+		}else if(data.is_zuhe==2){
+			html+='	<tr class="zuhe_tr">';
+			html+='		<td  colspan=4><span>'+data.goods_name+'</span></td>';															
+			/*html+='		<td>';
+			html+='		    <span id="zuhe_num">'+data.kc_num+'</span><span class="pdl5" >个</span>';
+			html+='		</t>';*/
+
+			html+='		<td class="hide" id=goods_id'+data.goods_id+'>'+data.goods_id+'</td>'; 
+			html+='     <td class="hide" id=ck1'+data.goods_id+'>'+data.ck_num+'</td>'; 
+			html+='     <td class="hide" id=hj1'+data.goods_id+'>'+data.kc_num+'</td>'; 
+			html+='	</tr>';
+
+			var onezuhelist=data.zuhegoods_list;
+			for(var i=0;i<onezuhelist.length;i++)
+			{
+				html+='	<tr class="zuhexia_good">';                 								
+				html+='		<td><span>'+onezuhelist[i].goods_name+'</span></td>';
+				html+='  	<td class="hide" id=goods_id'+onezuhelist[i].goods_id+'>'+onezuhelist[i].goods_id+'</td>'; 
+				html+='		<td><label><input  name="shuliang"  type="text" value="0" onkeyup="shuliang_zuhe('+onezuhelist[i].goods_id+')" id=shuliang'+onezuhelist[i].goods_id+'><span class="pdl5">个</label></td>';
+				html+='		<td><span id=ck'+onezuhelist[i].goods_id+'>'+onezuhelist[i].ck_num+'</span><span class="pdl5" >个</span></td>';									
+				html+='		<td><span id=hj'+onezuhelist[i].goods_id+'>'+onezuhelist[i].kc_num+'</span><span class="pdl5" >个</span></td>';
+		
+				html+='		<td class="hide" id=one_ck1'+onezuhelist[i].goods_id+'>'+onezuhelist[i].ck_num+'</td>'; 
+				html+='		<td class="hide" id=one_hj1'+onezuhelist[i].goods_id+'>'+onezuhelist[i].kc_num+'</td>'; 
+				html+='	</tr>';			
+			}
+		}
+
+     $('#shangjia_text').append(html)
+})
+
+function shuliang(id){
+   var num=/^[0-9]\d*$/;
+   var ck=data.ck_num;
+   var hj=data.kc_num;
+
+   var shuliang=Number($('#shuliang'+id).val());
+   if(!(num.test(shuliang)))
+	{
+	  myalertdanger("出货数量只能输入不小于0的整数");
+	  shuliang=Math.floor(shuliang);
+	  $('#shuliang'+id).val(shuliang);
+	}else if(shuliang>ck){
+	  myalertdanger("出货数量输入大于仓库库存，请重新输入！");
+	  shuliang=ck;
+	   $('#shuliang'+id).val(shuliang);   
+	}else{
+
+	}
+}
+
+
+function shuliang_zuhe(id){
+   var num=/^[0-9]\d*$/;
+   var ck=$('#one_ck1'+id).text();
+   var shuliang=Number($('#shuliang'+id).val());
+   if(!(num.test(shuliang)))
+	{
+	  myalertdanger("出货数量只能输入不小于0的整数");
+	  shuliang=Math.floor(shuliang);
+	  $('#shuliang'+id).val(shuliang);
+	}else if(shuliang>ck){
+	  myalertdanger("出货数量输入大于仓库库存，请重新输入！");
+	  shuliang=ck;
+	   $('#shuliang'+id).val(shuliang);   
+	}else{
+
+	}
+}
+
+
+
+
+
+
+
+
+
+$("#btn_save").click(function(){
+    //======处理单个商品=======
+    var row={}
+    var json_data = [] ; 
+    if(data.is_zuhe==0){
+    	row.goods_id=$('.one_tr').find('td:eq(1)').text();
+		//row.now_ck=$('.one_tr').find('td:eq(3)').find('span:eq(0)').text();
+		row.num=$('.one_tr').find('td:eq(2) input').val();
+		row.sumnum=$('.one_tr').find('td:eq(2) input').val();
+		//row.now_kc=$('.one_tr').find('td:eq(4)').find('span:eq(0)').text();
+		
+		if(row.num==0){
+            myalertdanger("商品出货数量不能为空！");
+	        return;
+		}
+        json_data.push(row);
+    }else if(data.is_zuhe==2){
+        var flag=0;
+        var zuhe_tr=$('.zuhexia_good');
+		for(var i=0;i<zuhe_tr.length;i++){
+			var row1={};
+			var one_tr=$(zuhe_tr[i]);
+			row1.goods_id=one_tr.find('td:eq(1)').text();
+			row1.num=one_tr.find('td:eq(2) input').val();
+			row1.sumnum=one_tr.find('td:eq(2) input').val();
+			if(row1.num==0){
+				flag+=1;
+				one_tr.find('td:eq(2) input').val('0');
+				if(flag==3){
+                    myalertdanger("商品出货数量不能全为空！");
+	                return;
+		        }
+			}
+			if(row1.num!=0){
+				json_data.push(row1);
+			}
+		}
+		
+      
+    }
+	//console.log(JSON.stringify(json_data))
+	var token_str=$('#TOKEN').val();
+    var param = JSON.stringify(json_data);	 
+     $.ajax({
+      url : "{:U("Jiekou/chuhuo_edit_set")}",
+      type : "post",
+      dataType : "json",
+      data: {goodsinfo:param,wbaccount:$('#wb_flag').text(),loginguid:$('#guid_flag').text(),token:token_str},
+      success : function(data) 
+      {
+      if(data.status=="1")
+      {
+	    $("#btn_save").addClass("hide");
+		 myalertsuccess("出货成功"); 
+		 window.parent.$("#buhuo").click();
+		 setTimeout(function(){
+		   var suoyin = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+           parent.layer.close(suoyin);	
+	    }
+		, 2000);
+    }
+	else if(data.status =="-1")
+    {
+	   myalertdanger("出货失败");
+    }
+	else if(data.status =="-2")
+	{
+	   myalertdanger('数据重复提交,交班失败');	   
+	}
+	else if(data.status =="-3")
+	{
+	   myalertdanger('账号登陆超时，请重新登录');	   
+	}
+    },//success完成
+ });
+
+}); 
+
+</script>
+</html>

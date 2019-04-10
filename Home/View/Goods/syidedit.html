@@ -1,0 +1,142 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+	</style>
+</block>
+
+<block name="content">
+<div class="row search-bar" >
+
+
+
+      <div class="alert alert-success" style="display:none" id="success">
+        <i class="fa fa-hand-o-right"></i>
+          保存成功！
+      </div>
+      <div class="alert alert-warning" style="display:none" id="error">
+        <i class="fa fa-hand-o-right"></i>
+          保存失败！
+      </div>
+            
+            <!-- content---start -->
+            
+            <form class="form-horizontal" role="form" id="form_edit" method="post" >
+            <input type="hidden" name="id" value="{$txinfo.id}"/>
+
+
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="wbname">网吧id</label>
+                <div class="col-sm-9">
+                <input type="text" id="wbid" name="wbid" class="col-xs-10 col-sm-5" value="{$syinfo.Wb_id}" readonly/>         
+                  <span class="help-inline col-xs-12 col-sm-7 tips_color"></span> </span> </div>
+              </div>
+              
+              <div class="space-4"></div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="sqj"> 收银员Id</label>
+                <div class="col-sm-9">
+                  <input type="text" id="syid" name="syid" value="{$syinfo.Syid}" class="col-xs-10 col-sm-5" readonly/>
+                  <span class="help-inline col-xs-12 col-sm-7 tips_color"> </span> </div>
+              </div>
+
+              <div class="space-4"></div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="sqj1"> 收银员名称 </label>
+                <div class="col-sm-9">
+                  <input type="text" id="syname" name="syname" value="{$syinfo.syname}" class="col-xs-10 col-sm-5" />
+                  <span class="label label-success arrowed hidden" style="margin-left:20px;"><i class="fa fa-check"></i></span>
+                  <span class="label label-danger arrowed hidden" style="margin-left:20px;"></span></div>
+              </div>
+
+  
+
+              <div class="space-4"></div>
+              <div class="form-group">
+                
+                <div class="col-sm-9">
+                  
+                  <span class="help-inline col-xs-12 col-sm-7 tips_color"> </span> </div>
+              </div>
+
+              <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                  <button class="btn btn-info" type="button" id="submit"> <i class="icon-ok bigger-110"></i>保存</button>
+                  &nbsp; &nbsp; &nbsp;
+                  <button class="btn" type="reset" id="submit_cancel"> <i class="icon-undo bigger-110"></i>取消</button>
+                </div>
+              </div>
+            </form>
+
+
+
+</div>
+
+</block>
+
+
+
+
+<block name="script">
+ 
+
+  
+<script>
+$("#submit").click(function(){
+
+      $('#syname').change(function()
+    {
+      if($(this).val().length > 0)
+      {
+        $('#syname').nextAll('span').addClass('hidden');
+      }
+    });
+
+    if( $('#syname').val()==0)
+    {
+     
+      $('#syname').next().next().removeClass('hidden');
+      $('#syname').next().next().text('收银员名称不能为空');
+    return false; 
+    } 
+
+     var param = $("#form_edit").serialize();
+     $.ajax({
+      url : "{:U("setsyinfo")}",
+      type : "post",
+      dataType : "json",
+      data: param,
+      success : function(data) {
+      if(data.data=="1"){
+       $("#success").show(1000,function(){
+       setTimeout(' $("#success").hide(1000)',2000)
+       window.location.href= "<?php echo U('Home/Goods/set'); ?>"; 
+          
+       });
+  
+    }else if(data.data =="-1"){
+        $("#error").show(1000,function(){
+       setTimeout(' $("#error").hide(1000)',2000)
+       });
+    }
+    },//success完成
+ });
+
+}); 
+
+</script>
+</block>

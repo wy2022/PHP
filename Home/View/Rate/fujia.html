@@ -1,0 +1,545 @@
+<extend name="Public/base" />
+<block name="head">
+<js href="__PUBLIC__/layer/layer.js" />
+    <js href="__PUBLIC__/layer/myalert.js" />
+  <css href="__PUBLIC__/layer/myalert.css"/>
+  
+  <js href="__PUBLIC__/js/html2canvas.js" />
+  <style>
+      .chooseSurpermarket input[type=checkbox].ace.ace-switch.ace-switch-4+.lbl::before,
+	  input[type=checkbox].ace.ace-switch+.lbl::before
+	  {
+	     content:"新\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0旧"
+	  }
+  </style>
+</block>
+
+<block name="content">
+
+<form class="form-horizontal" id="form_gongneng">
+               <input type="hidden" id="show_tip_flag" name="show_tip_flag" value="{$show_tip_flag}">
+               <input type="hidden" id="wxcode_url_val" name="wxcode_url_val" value="{$wxcode_url}">
+			   
+			   <input type="hidden" id="barname" name="barname" value="{$barname}">
+			   
+			   
+			   <input type="hidden" id="zfbcode_url_val" name="zfbcode_url_val" value="{$zfbcode_url}">
+			   <input type="hidden" id="barcode" name="barcode" value="{$barcode}">
+			   
+<!--                 <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="chosecard">是否开启公众号</label>
+                <div class="col-sm-9" id="bank">
+                 <div class="row" style="margin-left:0;">
+                  <div class="radio col-xs-10 col-sm-5" >                        
+                  <label>
+                  <input name="gzh_isvalid" type="radio" class="ace" value="1" <?php if($wbinfo['isValid']==1) echo 'checked'; ?>/>
+                   <span class="lbl">开启</span>     
+                   </label>
+                    <label>
+                  <input name="gzh_isvalid" type="radio" class="ace" value="0" <?php if($wbinfo['isValid']==0) echo 'checked'; ?> />
+                   <span class="lbl">不开启</span>
+                   </label>
+    
+                  </div>
+                 </div>
+                    <span class="help-inline col-xs-12 col-sm-7 tips_color"></span>
+                   </div>
+              </div> -->
+			  
+			  <div class="row">
+			   <div class="col-sm-4"  >
+	<!-- 			  <div class="form-group">
+					<label class="col-sm-7 control-label no-padding-right" for="chosecard">是否开启公众号</label>
+						<div class="col-sm-5" id="bank">
+								<label>
+									<input name="gzh_isvalid" class="ace ace-switch ace-switch-4" type="checkbox"  value="1" <?php if($wbinfo['isValid']==1) echo 'checked'; ?>/>
+									<span class="lbl"></span>
+								</label>
+
+					   </div>
+				  </div> -->
+				  
+				  <div class="form-group">
+					<label class="col-sm-7 control-label no-padding-right" for="chosecard">允许微信公众号在线充值</label>
+						<div class="col-sm-5" id="bank">
+								<label>
+									<input name="gzh_isvalid" class="ace ace-switch ace-switch-4" type="checkbox"  value="1" <?php if($wbinfo['isValid']==1) echo 'checked'; ?>/>
+									<span class="lbl"></span>
+								</label>
+
+					   </div>
+				  </div>
+				  
+				  <div class="form-group">
+					<label class="col-sm-7 control-label no-padding-right" for="chosecard">允许客户端在线充值</label>
+						<div class="col-sm-5" id="bank">
+								<label>
+									<input name="FAllowClientAddMoney" class="ace ace-switch ace-switch-4" type="checkbox"  value="1"  <if condition="$FAllowClientAddMoney eq 1"> checked="checked" </if> />
+									<span class="lbl"></span>
+								</label>
+
+					   </div>
+				  </div>
+				  
+				  <div class="form-group">
+					<label class="col-sm-7 control-label no-padding-right" for="chosecard">允许客户端自助上机</label>
+						<div class="col-sm-5" id="bank">
+								<label>
+									<input name="khd_shangji_qx" class="ace ace-switch ace-switch-4" type="checkbox"  value="1"  <if condition="$khd_shangji_qx eq 1"> checked="checked" </if> />
+									<span class="lbl"></span>
+								</label>
+
+					   </div>
+				  </div>
+				  
+				  
+				<div class="form-group">
+					<label class="col-sm-7 control-label no-padding-right" for="chosecard">允许吧台购买商品</label>
+						<div class="col-sm-5" id="bank">
+								<label>
+									<input name="bt_sp_buy" class="ace ace-switch ace-switch-4" type="checkbox"  value="1" <if condition="$bt_sp_buy eq 1"> checked="checked" </if>  />
+									<span class="lbl"></span>
+								</label>
+
+					   </div>
+				</div>
+				
+               			
+				<div class="form-group">
+					<label class="col-sm-7 control-label no-padding-right" for="chosecard">允许吧台支付</label>
+						<div class="col-sm-5" id="bank">
+								<label>
+									<input name="bt_chongzhi_qx" class="ace ace-switch ace-switch-4" type="checkbox"  value="1" <if condition="$bt_chongzhi_qx eq 1"> checked="checked" </if>  />
+									<span class="lbl"></span>
+								</label>
+
+					   </div>
+				</div> 
+				
+				  
+				  <div class="form-group">
+					<label class="col-sm-7 control-label no-padding-right" for="chosecard">允许客户端购买商品</label>
+						<div class="col-sm-5" id="bank">
+								<label>
+									<input name="khd_sp_buy" class="ace ace-switch ace-switch-4" type="checkbox"  value="1" <if condition="$khd_sp_buy eq 1"> checked="checked" </if>  />
+									<span class="lbl"></span>
+								</label>
+
+					   </div>
+				  </div>
+				  
+				  <div class="form-group">
+					<label class="col-sm-7 control-label no-padding-right" for="chosecard">允许客户端微信支付宝购买商品</label>
+						<div class="col-sm-5" id="bank">
+								<label>
+									<input name="khd_wxzfb_buy" class="ace ace-switch ace-switch-4" type="checkbox"  value="1" <if condition="$khd_wxzfb_buy eq 1"> checked="checked" </if>/>
+									<span class="lbl"></span>
+								</label>
+
+					   </div>
+				  </div>
+				  
+				 <div class="form-group">
+					<label class="col-sm-7 control-label no-padding-right" for="chosecard">允许收银端播放声音</label>
+						<div class="col-sm-5" id="bank">
+								<label>
+									<input name="syd_play_song" class="ace ace-switch ace-switch-4" type="checkbox"  value="1" <if condition="$syd_play_song eq 1"> checked="checked" </if>/>
+									<span class="lbl"></span>
+								</label>
+
+					   </div>
+				  </div>
+				  
+				  <div class="form-group">
+					<label class="col-sm-7 control-label no-padding-right" for="chosecard">允许网吧超市销售打印小票</label>
+						<div class="col-sm-5" id="bank">
+								<label>
+									<input name="FAllowXiaoshouPrint" class="ace ace-switch ace-switch-4" type="checkbox"  value="1"  <if condition="$FAllowXiaoshouPrint eq 1"> checked="checked" </if> />
+									<span class="lbl"></span>
+								</label>
+
+					   </div>
+				  </div>
+				  
+				 
+				 
+				 <div class="form-group chooseSurpermarket" >
+					<label class="col-sm-7 control-label no-padding-right" for="chosecard">是否选择打开新网吧超市</label>
+						<div class="col-sm-5" id="bank">
+								<label>
+									<input name="exe_sp_version" class="ace ace-switch ace-switch-4" type="checkbox" id="newOldcs"  value="1"  <if condition="$exe_sp_version eq 1"> checked="checked" </if> />
+									<span class="lbl"></span>
+								</label>
+
+					   </div>
+				  </div>
+				  
+				  
+				<div class="form-group" style="display:none">
+					<label class="col-sm-7 control-label no-padding-right" for="chosecard">允许使用新网吧超市仓库</label>
+						<div class="col-sm-5" id="bank">
+								<label>
+									<input name="FAllowNewproductCk" class="ace ace-switch ace-switch-4" type="checkbox"  value="1"  <if condition="$FAllowNewproductCk eq 1"> checked="checked" </if> />
+									<span class="lbl"></span>
+								</label>
+
+					   </div>
+				</div>
+				  
+				  
+				<div class="form-group " >
+					<label class="col-sm-8 control-label no-padding-right">
+					   <p class= class="col-sm-12" style="color:red;">( 修改完毕，请点击提交按钮生效 )</p>
+					</label>
+				</div>
+				<!-- 
+				<div class="form-group">
+					<label class="col-sm-7 control-label no-padding-right" for="chosecard">使用老版本商品销售</label>
+						<div class="col-sm-5" id="bank">
+								<label>
+									<input name="bt_sp_buy" class="ace ace-switch ace-switch-4" type="checkbox"  value="1" <if condition="$bt_sp_buy eq 1"> checked="checked" </if>  />
+									<span class="lbl"></span>
+								</label>
+
+					   </div>
+				</div>
+				
+				-->
+				
+				
+	
+				  
+				  
+				  
+<!-- 				  <div class="form-group">
+					<label class="col-sm-7 control-label no-padding-right" for="chosecard">允许网吧超市交班打印小票</label>
+						<div class="col-sm-5" id="bank">
+								<label>
+									<input name="FAllowXiaoshouPrint" class="ace ace-switch ace-switch-4" type="checkbox"  value="1"  <if condition="$FAllowXiaoshouPrint eq 1"> checked="checked" </if> />
+									<span class="lbl"></span>
+								</label>
+
+					   </div>
+				  </div>
+ -->
+			  </div>								
+			  									
+			  <div class="col-sm-8" style="border-left:1px solid #ddd;">								
+			  <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="chosecard">下载微信支付宝二维码</label>
+                <div class="col-sm-9" id="bank">
+                 <div class="row" style="margin-left:-15px;">
+				   <div class="col-xs-5">
+                    <select name="syid" class="form-control" id="syid">
+				
+					   <volist name="syidlist" id="info">
+							<option value="{$info.Syid}">{$info.syname}</option>
+						</volist>
+					   
+					</select>	
+                  </div>					
+                 </div>
+                  
+                   </div>
+              </div>
+			  <div class="form-group">
+                <!-- <label class="col-sm-3 control-label no-padding-right" for="chosecard">下载微信支付宝二维码</label> -->
+                <div class="col-sm-9" id="bank">
+                 <div class="row" style="margin-left:0px;border:1px dashed #ddd;">
+                   
+                     <div class=" col-sm-12 col-xs-12"  style="">
+		               <div id="ewm-down" style="padding:20px 0">
+						   <h2 class="text-center" style="color:#129fce"><strong>百果树网吧在线支付系统</strong></h2>
+						   <h4 class="text-center" id="bartitle"></h4>
+						   <br/>
+						   <div style="margin:0 auto;text-align:center;width:500px;">
+						   <div class="thumbnail" style="width:240px;float:left;padding-bottom:15px">
+						     <div class="caption" style="padding:0px;">
+						       <h3 class="text-center" style="height:42px;"><img src="__PUBLIC__/image/wx.png" /></h3>
+							   
+							 </div>
+							
+							  <img src="" crossorigin="anonymous" alt="..." width="200" id="wxcode_image" height="200" > 
+						  </div>
+						  <div class="thumbnail" style="width:240px;float:left;margin-left:20px;padding-bottom:15px">
+						   <div class="caption" style="padding:0px;">
+						       <h3 class="text-center" style="height:42px;"><img src="__PUBLIC__/image/zfb.png"/></h3>
+							   
+							 </div>
+						 <img src="{$zfbcode_url}" alt="..." id="zfbcode_image" width="200" height="200" > 
+						  </div>
+					    </div>
+						
+						 <h4 class="text-center" style="clear:both;font-size:14px;color:#666">扫描上面二维码完成付款</h4>
+						 
+						 </div>
+				     </div>
+					  
+                 </div>
+                  
+                   </div>
+              </div>
+			  
+			  <div class="clearfix">
+			   <div class="col-md-9">
+					<div style="margin:0 auto;text-align:center;width:500px;">
+				   <button class="btn btn-primary" id="down-btn">下载微信支付宝二维码</button>
+				   </div>
+			   </div>
+			  </div>
+			  
+			  
+			  </div>
+			  </div>
+
+			  
+              <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                  <button class="btn btn-info" type="button" id="submit1"> <i class="icon-ok bigger-110"></i> 提交 </button>
+                  &nbsp; &nbsp; &nbsp;
+                  <button class="btn" type="reset" id="submit_cancel"> <i class="icon-undo bigger-110"></i> 取消 </button>
+                </div>
+              </div> 
+
+            </form>
+
+
+</block>
+<block name="script">
+
+
+<script>
+
+$('#newOldcs').change(function(){
+    var show_tip_flag=$('#show_tip_flag').val();
+	//alert(show_tip_flag)
+	if(show_tip_flag==1){
+	    if(confirm('是否将旧超市数据导入到新超市！')){
+	        $.ajax({
+				url : "{:U("ProductAPI/fnImportOldGoodsData")}",
+				data:'{a:1}',
+				type:'post',
+				dataType:'json',
+				success:function(data){
+				    if(data.status==1)
+					{
+						layer.msg('导入成功', {
+                          offset: 0,
+                          shift: 6,
+						  time:1000,
+                          icon: 1,
+                        },function(){ 
+                         //  parent.location.reload();
+						   //location.href="{:U('rate/index')}";	
+                      });
+									  
+					}
+					else
+					{
+					   myalertdanger('导入失败');
+					}
+				},
+				error:function(){
+				    
+				}
+			})
+	    }
+	}
+})
+
+
+
+
+$("#submit1").click(function(){
+
+     var param = $("#form_gongneng").serialize();
+     $.ajax({
+      url : "{:U("fujia_set")}",
+      type : "post",
+      dataType : "json",
+      data: param,
+      success : function(data) 
+      {
+      if(data.data=="1")
+      {
+
+         myalertsuccess('设置成功');
+        // location.href="{:U('rate/index')}";
+  
+    }else if(data.data =="-1"){
+
+       myalertdanger('设置失败');
+    }
+    },//success完成
+ });
+
+}); 
+
+moren();
+function  moren()
+{
+  <!-- var wxcode_url_str=$('#wxcode_url_val').val(); -->
+  <!-- var  syid_str =$('#syid').val();  -->
+  <!-- wxcode_url_str=wxcode_url_str+'_syid@'+syid_str; -->
+  <!-- $("#wxcode_image").attr("src",wxcode_url_str); -->
+  
+  <!-- $barname_str= $('#barname').val(); -->
+  <!-- var bartitle_str=$barname_str+'           收银端'+syid_str; -->
+  <!-- $('#bartitle').html(bartitle_str); -->
+  
+
+   
+  <!-- var zfbcode_url_str=$('#zfbcode_url_val').val(); -->
+
+  <!-- zfbcode_url_str=zfbcode_url_str+'_syid@'+syid_str; -->
+  <!-- $("#zfbcode_image").attr("src",zfbcode_url_str); -->
+  
+  
+  
+  
+    
+  var  barname_str='';
+  var  barcode_str=	$('#barcode').val();
+  var wxcode_url_str=$('#wxcode_url_val').val();
+  var  syid_str =$('#syid').val(); 
+  
+  if(syid_str!='')
+  {
+     wxcode_url_str=wxcode_url_str+'&syid='+syid_str;
+	   wxcode_url_str= escape(wxcode_url_str);
+	   wxcode_url_str=barcode_str +wxcode_url_str;
+	  $("#wxcode_image").attr("src",wxcode_url_str);
+	  
+	   
+	  var zfbcode_url_str=$('#zfbcode_url_val').val();
+	   zfbcode_url_str=zfbcode_url_str+'&syid='+syid_str;
+	   zfbcode_url_str= escape(zfbcode_url_str);
+	   zfbcode_url_str=barcode_str +zfbcode_url_str;
+	  $("#zfbcode_image").attr("src",zfbcode_url_str);
+	  
+	  
+	  $barname_str= $('#barname').val();
+	  var bartitle_str=$barname_str+'           收银端'+syid_str;
+	  $('#bartitle').html(bartitle_str);
+  }
+
+ 
+
+  
+  
+}
+
+
+$("#syid").change(function()
+{
+  <!-- var  syid_str =$('#syid').val(); -->
+  <!-- var wxcode_url_str=$('#wxcode_url_val').val(); -->
+  <!-- wxcode_url_str=wxcode_url_str+'_syid@'+syid_str; -->
+  <!-- $("#wxcode_image").attr("src",wxcode_url_str); -->
+  
+
+  
+  <!-- var zfbcode_url_str=$('#zfbcode_url_val').val(); -->
+  <!-- zfbcode_url_str=zfbcode_url_str+'_syid@'+syid_str; -->
+  
+     
+  <!-- $("#zfbcode_image").attr("src",zfbcode_url_str); -->
+  
+    <!-- $barname_str= $('#barname').val(); -->
+  <!-- var bartitle_str=$barname_str+'              收银端'+syid_str; -->
+  <!-- $('#bartitle').html(bartitle_str); -->
+  
+ var  barname_str='';
+  var  barcode_str=	$('#barcode').val();
+  var wxcode_url_str=$('#wxcode_url_val').val();
+  var  syid_str =$('#syid').val(); 
+
+ 
+  if(syid_str!='')
+  {
+      wxcode_url_str=wxcode_url_str+'&syid='+syid_str;
+	  wxcode_url_str= escape(wxcode_url_str);
+	  wxcode_url_str=barcode_str +wxcode_url_str;
+	  $("#wxcode_image").attr("src",wxcode_url_str);
+	  
+	  
+	  var zfbcode_url_str=$('#zfbcode_url_val').val();
+	   zfbcode_url_str=zfbcode_url_str+'&syid='+syid_str;
+	   zfbcode_url_str= escape(zfbcode_url_str);
+	   zfbcode_url_str=barcode_str +zfbcode_url_str;
+	  $("#zfbcode_image").attr("src",zfbcode_url_str);
+	  
+	  
+	  $barname_str= $('#barname').val();
+	  var bartitle_str=$barname_str+'           收银端'+syid_str;
+	  $('#bartitle').html(bartitle_str);
+  }
+
+  
+ 
+})
+
+</script>
+
+        <script  type="text/javascript" >  
+        $(document).ready( function(){  
+		
+			 
+				$("#down-btn").on("click", function () 
+				{    
+                     
+					 
+		
+					 
+                      event.preventDefault();  
+                        html2canvas(document.getElementById("ewm-down"), {  
+						
+                        allowTaint: true,  
+                        taintTest: false,  
+						height: $("#ewm-down").outerHeight() + 20,
+						background:"#ffffff",
+                        onrendered: function(canvas) {  
+                            canvas.id = "mycanvas";  
+                          
+                            var dataUrl = canvas.toDataURL();  
+							
+							
+                            var newImg = document.createElement("img");  
+							
+                            newImg.src =  dataUrl;  
+							
+                           // document.body.appendChild(newImg);  
+							
+						 //以下代码为下载此图片功能	
+						 
+					
+                        var triggerDownload = $("<a>").attr("href", dataUrl).attr("download", "支付二维码.png").appendTo("body");
+                        triggerDownload[0].click();
+                        triggerDownload.remove();
+					
+						
+                        }  
+                    });
+
+
+							
+              /*  html2canvas($("#ewm-down"), {
+                    height: $("#ewm-down").outerHeight() + 20,
+                    onrendered: function (canvas) {
+                        var url = canvas.toDataURL();
+                        //以下代码为下载此图片功能
+                        var triggerDownload = $("<a>").attr("href", url).attr("download", "支付二维码.png").appendTo("body");
+                        triggerDownload[0].click();
+                        triggerDownload.remove();
+                    }
+                });*/
+				
+				
+				
+            });
+               
+        });  
+           
+        </script>  
+
+</block>

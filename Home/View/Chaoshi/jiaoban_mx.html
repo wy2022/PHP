@@ -1,0 +1,201 @@
+<block name="head">
+<include file="Public/head" />
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+	<css href="__PUBLIC__/assets/css/ace.min.css" />
+    <css href="__PUBLIC__/assets/css/ace-skins.min.css" />
+    <js href="__PUBLIC__/layer/layer.js" />
+	<css href="__PUBLIC__/jquery-ui-1.10.3/demos/demos.css" /> 
+	<style>
+	    body{background:#fff;min-height:0;font-size:13px;}
+		.mgb15{margin-bottom:15px;}
+		.row{
+			margin-left:0;
+			margin-right:0;
+			margin-top:10px;
+			margin-bottom:20px
+		}
+		.btn{
+		    font-size:12px;	
+			height:30px;
+			 width:90px;
+			-webkit-border-radius:2px;
+			-moz-border-radius:2px;
+			border-radius:2px;
+			border:0;
+			text-shadow:none;
+			background-image:none;
+			vertical-align:middle;
+			color:#ffffff;
+		 }
+		.left_div{
+			background:rgb(242,242,242);
+		}
+		.col-xs-6{
+			height:450px;
+			padding-left:0;
+			padding-right:0;
+		}
+		img{
+			height:16px;
+		}
+		.left_bt{
+			font-size:18px;
+			font-weight:bold;
+			color:rgb(0,102,204);
+		}
+		li{
+			padding:5px;
+			overflow:hidden;
+		}
+		.left_hx{
+			display:inline-block;
+			height:10px;
+			width:150px;
+			border-bottom:2px solid rgb(0,102,204);
+		}
+		.left_je{
+			float:right;
+			margin-right:10px;
+		}
+		.left_jes{
+			margin-right:10px;
+			font-weight:bold;
+		}
+		.right_bt{
+			font-size:15px;
+			font-weight:bold;
+			color:rgb(0,102,204);
+		}
+		.suojin{
+			margin-left:23px;
+		}
+	</style>
+</block>
+
+<block name="content">
+
+	<div class="row" >
+		<div class="col-xs-6 left_div" >
+			<ul>
+				<li>
+					<span class='left_bt'>本班交班明细</span>
+					<img src='__PUBLIC__/image/bangzhu.png'>
+					<span class='left_hx'></span>
+				</li>
+				<li>
+					<img src='__PUBLIC__/image/bangzhu.png'>
+					现金收入
+					<span class='left_je'>
+						<span class='left_jes'>0.00</span>元
+					</span>
+				</li>
+				<li>
+					<img src='__PUBLIC__/image/bangzhu.png'>
+					非现金收入
+					<span class='left_je'>
+						<span class='left_jes'>0.00</span>元
+					</span>
+				</li>
+				<li>
+					<span class='suojin'></span>
+					客户端微信
+					<span class='left_je'>
+						<span class='left_jes'>0.00</span>元
+					</span>
+				</li>
+				<li>
+					<span class='suojin'></span>
+					客户端支付宝
+					<span class='left_je'>
+						<span class='left_jes'>0.00</span>元
+					</span>
+				</li>
+				<li>
+					<span class='suojin'></span>
+					吧台微信
+					<span class='left_je'>
+						<span class='left_jes'>0.00</span>元
+					</span>
+				</li>
+				<li>
+					<span class='suojin'></span>
+					吧台支付宝
+					<span class='left_je'>
+						<span class='left_jes'>0.00</span>元
+					</span>
+				</li>
+				<li>
+					<img src='__PUBLIC__/image/bangzhu.png'>
+					收入汇总
+					<span class='left_je'>
+						<span class='left_jes'>0.00</span>元
+					</span>
+				</li>
+			</ul>
+		</div>
+		<div class="col-xs-6" >
+			<ul>
+				<li>
+					<span class='right_bt'>销售详情</span>
+					<img src='__PUBLIC__/image/bangzhu.png'>
+					<span class='left_hx'></span>
+				</li>
+				<li>
+					<img src='__PUBLIC__/image/bangzhu.png'>
+					现金销售
+					<span class='left_je'>
+						<span class='left_jes'>0.00</span>元
+					</span>
+				</li>
+				<li>
+					<span class='suojin'></span>
+					现金退货
+					<span class='left_je'>
+						<span class='left_jes'>0.00</span>元
+					</span>
+				</li>
+				<li>
+					<img src='__PUBLIC__/image/bangzhu.png'>
+					交班销售
+					<span class='left_je'>
+						<span class='left_jes'>0.00</span>元
+					</span>
+				</li>
+				<li>
+					<span class='suojin'></span>
+					|—现金
+					<span class='left_je'>
+						<span class='left_jes'>0.00</span>元
+					</span>
+				</li>
+				
+			</ul>
+		</div>
+		
+	</div>
+	<div class='text-center'>
+		<button class='btn btn-success'>确定</button>
+	</div>
+
+
+</block>
+
+
+
+	
+
+<block name="script">
+    <script>
+		$('.btn').click(function(){
+			parent.layer.closeAll();	
+		})
+    </script>
+  
+
+</block>

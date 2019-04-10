@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<css href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+<js href="__PUBLIC__/js/jquery-1.11.2.js" />
+<css href="__PUBLIC__/assets/css/ace.min.css" />
+ <js href="__PUBLIC__/layer/layer.js" />
+<style>
+	   .mgb15{margin-bottom:6px;}
+		 .text-right{text-align:right;}
+         #tableid td{vertical-align:middle;}
+		 #tableid tr td input[type="text"],#bz{
+		    display:inline-block;
+			height:22px;
+			font-size:14px;
+			line-height:22px;
+			color:#555555;
+			vertical-align:middle;
+			-webkit-border-radius:4px !important;
+			-moz-border-radius:4px !important;
+			border-radius:4px !important;
+			border-color:#a4bed4;
+			text-align:center;
+			padding:0;
+			width:65px;
+		 }
+		 .pdl5{padding-left:5px;}
+         body{
+			background-color: #FFF;
+			font-size:14px;
+		}
+		.tab-content{
+			padding: 0 6px;
+		}
+	</style>
+</head>
+
+<body>
+<div class="tabbable">
+  <div class="tab-content">
+
+   <div class="mgb15">
+
+        <div class="fr text-right">
+            <span  id="ght_goodslist" style="display:none">{$goodsinfo}</span> 
+            <span id="wb_flag" style="display:none">{$wbaccount}</span>   	
+            <span id="guid_flag" style="display:none">{$loginguid}</span>   	
+        </div>
+    </div>
+<div class="page_body">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover" id="tableid" style="overflow-x: hidden;">
+            <thead>
+            <tr id="theadid">
+                <th>商品名称</th>
+                <th>仓库库存</th>
+				 <th>货架库存</th>
+            </tr>
+            </thead>
+            <tbody id="shangjia_text">
+            
+            </tbody>
+        </table>
+    </div>
+
+
+  
+</div>
+  </div>
+</div>
+</body>
+<script>
+
+var data=JSON.parse($('#ght_goodslist').html());
+$(function() {
+        var html='';
+		if(data.is_zuhe==0){
+	        html+='<tr class="one_tr">'; 			
+			html+='   <td>'+data.goods_name+'</td>';
+			html+='   <td><span id=ck'+data.goods_id+'>'+data.ck_num+'</span><span class="pdl5" >个</span></td>';
+			html+='   <td><span id=hj'+data.goods_id+'>'+data.kc_num+'</span><span class="pdl5" >个</span></td>';	
+			html+='   <td class="hide" id=goods_id'+data.goods_id+'>'+data.goods_id+'</td>'; 
+			html+='</tr>';	
+
+		}else if(data.is_zuhe==2){
+			html+='	<tr class="zuhe_tr">';
+			html+='		<td><span>'+data.goods_name+'</span></td>';
+			html+='		<td colspan=2></td>';															
+			html+='		<td ><span id="zuhe_num">'+data.kc_num+'</span><span class="pdl5" >个</span></td>';
+			html+='		<td class="hide" id=goods_id'+data.goods_id+'>'+data.goods_id+'</td>'; 
+			html+='	</tr>';
+            var onezuhelist=data.zuhegoods_list;	
+			for(var i=0;i<onezuhelist.length;i++)
+			{
+				html+='	<tr class="zuhexia_good">';                 								
+				html+='		<td><span>'+onezuhelist[i].goods_name+'</span></td>';
+				html+='		<td><span id=ck'+onezuhelist[i].goods_id+'>'+onezuhelist[i].ck_num+'</span><span class="pdl5" >个</span></td>';									
+				html+='		<td class="hide"><span id=hj'+onezuhelist[i].goods_id+'>'+onezuhelist[i].kc_num+'</span><span class="pdl5" >个</span></td>';
+				html+='	</tr>';			
+			}
+		}
+
+     $('#shangjia_text').append(html)
+});
+	
+</script>
+</html>

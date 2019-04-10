@@ -1,0 +1,538 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+	<js href="__PUBLIC__/layer/layer.js" />
+	
+	
+	<js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.src.js" />
+	<js href="__PUBLIC__/js/Blob.js" />
+	<js href="__PUBLIC__/js/FileSaver.js" />
+	<js href="__PUBLIC__/js/tableExport.js" />
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+       .biaodan{float:left;padding-left:15px;}
+
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+	</style>
+</block>
+
+<block name="content">
+<div class="row">
+  <div class="col-xs-12 col-sm-12">
+   <div class="alert alert-warning bolder"id="ceshi">充值金额 <span class="orange" >0.00</span> 元</div>  
+  </div>
+</div>
+<div class="tabbable">
+            <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4" style="font-size:12px;">
+                <li class="active" onclick="doSearch()">
+                    <a data-toggle="tab" href="#hy" >会员卡加钱明细</a>
+            
+                </li>
+
+                <li onclick="doSearch1()">
+                    <a data-toggle="tab" href="#ls" >临时卡加钱明细</a>
+                </li>
+
+                <li onclick="doSearch2()">
+                    <a data-toggle="tab" href="#lszl" >临时卡找零明细</a>
+                </li>
+            </ul>
+
+            <div class="tab-content" >
+
+
+                <div id="hy" class="tab-pane in active">
+                     <div class="row search-bar" >
+                        <form >
+                            <span class="mgb15 biaodan">
+                                开卡时间<input type="text" name="daterange" id="daterange" class="daterange" style="width:300px;"  placeholder="请选择日期" required /> 
+                            </span>
+
+                             <span class="biaodan mgb15">
+                                <span>卡号 <input type="text" name="cardno" id="cardno" style="width:150px;" placeholder="请输入卡号"/></span>
+                            </span>
+                            <span class="biaodan mgb15"  ><button type="button" class="btn btn-purple btn-sm" id="button1"  onclick="doSearch()">搜索<i class="fa fa-search"></i></button></span>
+							<!-- <span class="mgb15 biaodan" ><a class="btn btn-sm btn-primary" id="print" onclick="doPrint()" href="" >导出<i class="fa fa-print" style="font-size:16px;"></i></a></span>
+							<script>
+
+							function doPrint(){
+							var daterange=$('#daterange').val();
+							var cardno=$('#cardno').val();
+							$("#print").attr('href',"{:U('Api/exphykaddmoney_detail')}?daterange="+daterange+"&cardno="+cardno);
+							}
+
+							</script> -->
+							<div id="export" class="biaodan mgb15" >
+								<a data-type="xls" href="" class="btn btn-sm btn-primary">导出<i class="fa fa-print" style="font-size:16px;"></i></a>
+							</div>
+							<script>
+							var $exportLink = document.getElementById('export');
+							$exportLink.addEventListener('click', function(e){
+								e.preventDefault();
+								if(e.target.nodeName === "A"){
+									tableExport('grid-table', '会员卡加钱明细表单', e.target.getAttribute('data-type'));
+								}
+							}, false);
+							</script>
+                      </form>
+                  </div>   
+
+
+
+                      <div id="jqgrid">
+                        <table id="grid-table"></table>
+                        <div id="grid-pager"></div>
+                      </div> 
+                </div>
+
+                <div id="ls" class="tab-pane">
+
+                    <div class="row search-bar" >
+                        <form >
+                        <span class="mgb15 biaodan">
+                            开卡时间<input type="text" name="daterange1" id="daterange1" class="daterange" style="width:300px;"  placeholder="请选择日期" required /> 
+                        </span>
+
+                         <span class="biaodan mgb15">
+                            <span>卡号 <input type="text" name="cardno1" id="cardno1" style="width:150px;" placeholder="请输入卡号"/></span>
+                        </span>
+                        <span class="biaodan mgb15"><button type="button" class="btn btn-purple btn-sm" onclick="doSearch1()">搜索<i class="fa fa-search"></i></button></span>
+                        <div id="export1" class="biaodan mgb15" >
+								<a data-type="xls" href="" class="btn btn-sm btn-primary">导出<i class="fa fa-print" style="font-size:16px;"></i></a>
+							</div>
+							<script>
+							var $exportLink = document.getElementById('export1');
+							$exportLink.addEventListener('click', function(e){
+								e.preventDefault();
+								if(e.target.nodeName === "A"){
+									tableExport('grid-table1', '临时卡加钱明细表单', e.target.getAttribute('data-type'));
+								}
+							}, false);
+							</script>
+                        </form>
+                  </div> 
+
+                   <div id="jqgrid1">
+                       <table id="grid-table1"></table>
+                       <div id="grid-pager1"></div>
+                   </div>        
+                </div>
+
+
+                <div id="lszl" class="tab-pane">
+
+                    <div class="row search-bar" >
+                        <form >
+                        <span class="mgb15 biaodan">
+                            开卡时间<input type="text" name="daterange2" id="daterange2" class="daterange" style="width:300px;"  placeholder="请选择日期" required /> 
+                        </span>
+
+                         <span class="biaodan mgb15">
+                            <span>卡号 <input type="text" name="cardno2" id="cardno2" style="width:150px;" placeholder="请输入卡号"/></span>
+                        </span>
+                        <span class="biaodan mgb15"><button type="button" class="btn btn-purple btn-sm" onclick="doSearch2()">搜索<i class="fa fa-search"></i></button></span>
+						<div id="export2" class="biaodan mgb15" >
+								<a data-type="xls" href="" class="btn btn-sm btn-primary">导出<i class="fa fa-print" style="font-size:16px;"></i></a>
+							</div>
+							<script>
+							var $exportLink = document.getElementById('export2');
+							$exportLink.addEventListener('click', function(e){
+								e.preventDefault();
+								if(e.target.nodeName === "A"){
+									tableExport('grid-table2', '临时卡找零明细表单', e.target.getAttribute('data-type'));
+								}
+							}, false);
+							</script>
+                        </form>
+                  </div> 
+
+                   <div id="jqgrid2">
+                       <table id="grid-table2"></table>
+                       <div id="grid-pager2"></div>
+                   </div>        
+                </div>
+
+
+
+          </div>  
+    </div>
+
+
+</block>
+
+
+
+
+
+
+<block name="script">
+    <script>
+
+	  $(function(){ 
+        	doSearch();
+	    $("#button1").trigger("click");
+	}); 
+
+	
+
+        $(function(){
+            $('#grid-table').jqGrid({
+                url:'{:U("get_hykaddmoney_detail_bytime")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colModel:[
+                    {label:'收银端',name:'SyId'},
+					
+					{label:'充值类型',name:'type'},
+                    {label:'卡号',name:'cardNo'},
+                    {label:'会员等级',name:'hylevel'},
+                    {label:'姓名',name:'hyname'},
+                    {label:'充值金额',name:'je'},
+                    {label:'奖励金额',name:'jlJe'},
+                    {label:'分期金额',name:'fqje'},
+                    {label:'分期期数',name:'FqCount'},
+                    {label:'时间',name:'cTime'},
+                   
+                    {label:'操作员',name:'Operation'}
+                ],
+				loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+
+                   $("#ceshi").html('');
+                   var text='';       
+                        <!-- 充值金额 <span class="orange" >0.00</span> 元 -->
+                        text='会员加钱<span class=\"orange\" >'+data['sum_hyk_jq_money']+"</span>&nbsp;";
+						text+='会员奖励<span class=\"orange\" >'+data['sum_hyk_jl_money']+"</span>&nbsp;";
+						text+='临时卡加钱<span class=\"orange\" >'+data['sum_lsk_jq_money']+"</span>&nbsp;";
+						text+='临时卡找零<span class=\"orange\" >'+data['sum_lsk_zlje']+"</span>&nbsp;";
+                        
+                        $("#ceshi").append(text);
+
+                 },
+				
+                rowNum:30,
+				rowList:[30,100,500,1000],
+                viewrecords: true,
+				sortorder: "desc",
+                pager:'#grid-pager',
+
+
+                gridComplete: function()
+                {
+                    var ids = $("#grid-table").jqGrid('getDataIDs');                            
+
+                    for(var i=0;i < ids.length;i++)                   	
+                    {
+                    	var rownum = ids[i];
+                        var getRow = $('#grid-table').getRowData(ids[i]);//获取当前的数据行  
+                
+                        var nType = getRow.nType;  
+						var col_type=   getRow.type;	
+
+                        if(nType==3)
+                        {
+                                                                                     
+                            // var jecaption = getRow.je;
+                            // var jlJecaption = getRow.jlJe;        
+
+                           $('#grid-table').jqGrid('setLabel', "je", '押金'); 
+                           $('#grid-table').jqGrid('setLabel', "jlJe", '找零金额');  
+                        }  
+
+                        if(col_type==1)
+						{
+							col_enddays='<span style="color:#87b87f">微信<i class="fa fa-weixin"></i></span>'; 				            
+						}
+						else if(col_type==2)
+						{			 
+							col_enddays='<span style="color:#428bca;">支付宝<img src="__PUBLIC__/image/支.png" style="margin-left:5px;margin-top:-2px;"/></span>';  
+						}
+						else if(col_type==3)
+						{
+							 col_enddays='<span style="color:#ffb752">现金<i class="fa fa-money"></i></span>';
+						}							
+																				   
+						$("#grid-table").jqGrid('setRowData',ids[i],{type:col_enddays});						
+                                                          			                       	    				                         
+
+                    }
+
+                }
+            }).jqGrid('navGrid','#grid-pager',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+		
+	$('#daterange').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+
+	
+	
+		$('.daterange').daterangepicker({
+		format:'YYYY-MM-DD hh:mm:ss',
+		timePicker: true,
+		timePickerIncrement: 1,
+		timePickerSeconds:true,
+		startDate:moment().startOf('day'),  
+		endDate: moment(),
+		timePicker12Hour:false,			
+		ranges: {  
+				   '今天': [moment().startOf('day'), moment().endOf('day')],  
+				   '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+				   '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+				   '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+				   '本月': [moment().startOf('month'), moment().endOf('month')],  
+				   '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+				},				
+		locale:{
+			applyLabel:'确定',
+			cancelLabel:'取消',
+			fromLabel:'从',
+			toLabel:'至',
+			daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+			monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+			customRangeLabel: '自定义',
+			firstDay : 1
+		}
+
+	},function(start,end,label){
+	$('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+	$('#daterange1').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+	$('#daterange2').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+	}).next().click(function(){$(this).prev().focus();});
+
+	
+
+    function doSearch(){
+    $('#grid-table').jqGrid('setGridParam',{
+        postData:{                 
+            daterange:$('#daterange').val(),
+            cardno:$('#cardno').val(),               
+        }
+    }).trigger('reloadGrid');
+   }
+
+   
+
+          $(function(){
+            $('#grid-table1').jqGrid({
+                url: '{:U("get_lskaddmoney_detail_bytime")}',
+                datatype: "json",
+                mtype: "GET",
+                height:"100%",
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[
+                    {label:'收银端',name:'SyId',width:200},
+					{label:'充值类型',name:'type',width:100},
+                    {label:'卡号',name:'cardNo',width:200},
+                    {label:'金额',name:'je',width:200},
+                    {label:'日期',name:'cTime',width:200},
+                    {label:'收银员',name:'Operation',width:200}
+                ],
+				loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+
+                   $("#ceshi").html('');
+                   var text='';
+        
+                        <!-- 充值金额 <span class="orange" >0.00</span> 元 -->
+						
+    
+		   
+                        text='会员加钱<span class=\"orange\" >'+data['sum_hyk_jq_money']+"</span>&nbsp;";
+						text+='会员奖励<span class=\"orange\" >'+data['sum_hyk_jl_money']+"</span>&nbsp;";
+						text+='临时卡加钱<span class=\"orange\" >'+data['sum_lsk_jq_money']+"</span>&nbsp;";
+						text+='临时卡找零<span class=\"orange\" >'+data['sum_lsk_zlje']+"</span>&nbsp;";
+                        
+                        $("#ceshi").append(text);
+
+                },
+				
+				gridComplete: function()
+                {
+                    var ids = $("#grid-table1").jqGrid('getDataIDs');                            
+                    for(var i=0;i < ids.length;i++)                   	
+                    {
+                    	var rownum = ids[i];
+                        var getRow = $('#grid-table1').getRowData(ids[i]);//获取当前的数据行  
+                
+						var col_type=   getRow.type;	
+
+                        if(col_type==1)
+						{
+							col_enddays='<span style="color:#87b87f">微信<i class="fa fa-weixin"></i></span>'; 				            
+						}
+						else if(col_type==2)
+						{			 
+							col_enddays='<span style="color:#428bca">支付宝</span>';  
+						}
+						else if(col_type==3)
+						{
+							 col_enddays='<span style="color:#d15b47">现金<i class="fa fa-money"></i></span>';
+						}							
+																				   
+						$("#grid-table1").jqGrid('setRowData',ids[i],{type:col_enddays});						                                                     			                       	    				                        
+                    }
+
+                },
+				
+                styleUI : 'Bootstrap',
+                 rowNum:30,
+				rowList:[30,100,500,1000],
+                viewrecords: true,
+                pager:'#grid-pager1',
+                loadError:function(xhr,status,error){  
+                      }, 
+        
+            });
+      
+       $('#grid-table1').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+         $(window).resize(function(){
+                $('#grid-table1').jqGrid('setGridWidth', $(window).width()*0.8, true);
+          });
+       
+  });  
+  $('#daterange1').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+
+
+    function doSearch1(){
+    $('#grid-table1').jqGrid('setGridParam',{
+        postData:{                 
+            daterange1:$('#daterange1').val(),
+            cardno1:$('#cardno1').val(),   
+        }
+    }).trigger('reloadGrid');
+   }
+
+   doSearch1();
+
+
+
+   $(function(){
+            $('#grid-table2').jqGrid({
+                url:'{:U("get_lskzhaoling_detail_bytime")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colNames:['收银端','卡号','实找金额','日期','收银员'],
+                colModel:[
+                    {name:'SyId',editable:true,},               
+                    {name:'cardNo',editable:true},
+                    {name:'je',editable:true},
+                    {name:'cTime',editable:true},
+                    {name:'Operation',editable:true},           
+                  
+                ],
+
+                rowNum:30,
+				rowList:[30,100,500,1000],
+                viewrecords: true,
+                sortorder: "desc",
+                pager:'#grid-pager2',
+
+				loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+
+                   $("#ceshi").html('');
+                   var text='';
+        
+                        <!-- 充值金额 <span class="orange" >0.00</span> 元 -->
+						
+    
+		   
+                        text='会员加钱<span class=\"orange\" >'+data['sum_hyk_jq_money']+"</span>&nbsp;";
+						text+='会员奖励<span class=\"orange\" >'+data['sum_hyk_jl_money']+"</span>&nbsp;";
+						text+='临时卡加钱<span class=\"orange\" >'+data['sum_lsk_jq_money']+"</span>&nbsp;";
+						text+='临时卡找零<span class=\"orange\" >'+data['sum_lsk_zlje']+"</span>&nbsp;";
+                        
+                        $("#ceshi").append(text);
+
+                 },
+
+
+
+                gridComplete: function()
+                {
+
+                    // var ids = $("#grid-table3").jqGrid('getDataIDs');
+                    // var aa;
+                    // for(var i=0;i < ids.length;i++)
+                    // {
+
+                    //   var getRow = $('#grid-table3').getRowData(ids[i]);//获取当前的数据行  
+                    //   var zlje = getRow.zlje;
+
+           
+                    //  if(zlje==0)
+                    //   {
+                                  
+                    //   }
+                    //   else 
+                    //   {
+                    //     aa='<span class="label label-sm label-pink arrowed-in">是</span>';
+                    //   }
+                          
+                    //   $("#grid-table3").jqGrid('setRowData',ids[i],{zlje:aa});  
+                     
+                       
+
+                    // }
+                }
+            }).jqGrid('navGrid','#grid-pager2',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+          $('#grid-table2').jqGrid('setGridWidth',$('#jqgrid').width(), true);
+         $(window).resize(function(){
+                $('#grid-table2').jqGrid('setGridWidth',$(window).width()*0.8, true);
+          });
+        });
+     $('#daterange2').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+    function doSearch2(){
+    $('#grid-table2').jqGrid('setGridParam',{
+        postData:{                 
+            daterange2:$('#daterange2').val(),
+            cardno2:$('#cardno2').val(),
+
+            
+           
+                  
+        }
+    }).trigger('reloadGrid');
+   }
+
+   doSearch2();
+
+
+
+   </script>
+</block>

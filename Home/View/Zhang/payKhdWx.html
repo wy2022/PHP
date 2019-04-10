@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>百果树网吧管理平台</title>
+		<css href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+		<css href="__PUBLIC__/assets/css/font-awesome.min.css" />
+		<!--[if IE 7]>
+		<css href="__PUBLIC__/assets/css/font-awesome-ie7.min.css" />
+		<![endif]-->
+		<!--[if lt IE 9]>
+		<js href="__PUBLIC__/js/html5shiv.min.js" />
+		<js href="__PUBLIC__/js/respond.min.js" />
+		<![endif]-->
+		<js href="__PUBLIC__/js/jquery-1.11.2.js" />
+		<js href="__PUBLIC__/bootstrap/js/bootstrap.min.js" />
+		<js href="__PUBLIC__/assets/js/ace-extra.min.js" />
+		<js href="__PUBLIC__/assets/js/ace.min.js" />
+		
+		<css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+		<js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+		<js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+		<css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+		<js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+		<js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+		<js href="__PUBLIC__/layer/layer.js" />
+		
+		<css href="__PUBLIC__/assets/css/ace.min.css" />
+		<css href="__PUBLIC__/assets/css/ace-skins.min.css" />
+		<!--[if lt IE 9]>
+		<css href="__PUBLIC__/assets/css/ace-ie.min.css" />
+		<![endif]-->
+		<css href="__PUBLIC__/css/common.css" />
+		<js href="__PUBLIC__/assets/js/ace-elements.min.js" />
+
+		<js href="__PUBLIC__/js/common.js" />
+		
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+       .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+	</style>
+	</head>
+
+	<body>
+		<div class="navbar navbar-default" id="navbar">
+			<div class="navbar-container" id="navbar-container">
+				<div class="navbar-header pull-left">
+					<a href="{:U('Index/index')}" class="navbar-brand" style="height:auto;">
+						<small> <i class="fa fa-leaf"></i> 百果树网吧管理平台
+						</small>
+					</a>		
+				</div>		
+				
+				 <audio src="{$shengyinurl}" controls="controls" id="audio" style="display:none;">
+				</audio>
+				<div class="navbar-header pull-right" role="navigation">
+					<ul class="nav ace-nav">
+					<li class="white" style="padding-right:20px;">
+							 代理商:{$agent_realname} 授权到期时间：{:session('endtime')}
+							</li>
+					 <li class="purple">
+							 <a  href="{:U('chaoshi/kehuduan')}"> 
+
+								<i class="fa fa-bell icon-animated-bell" style="font-size:16px;width:20px;"></i>
+								<span class="badge badge-important" id="dailing_count">{$dai_lingqu_num}</span>
+							</a>
+
+						</li>
+						
+						<script>
+						/*
+						   setInterval(get_dailing_count,30000);
+						   function get_dailing_count()
+						   {
+							  						 
+											 
+								$.post("{:U('Common/get_neworder_list')}",'',function(data)
+								{
+									if(data.status==1)
+									{   
+										var dailing_count_str = data['count'];
+										$('#dailing_count').html(dailing_count_str);
+										var audioEle = document.getElementById("audio");
+										audioEle.play();    //播放							
+									}else(data.status==2)
+									{
+										  var dailing_count_str = data['count'];
+										$('#dailing_count').html(dailing_count_str);
+									}
+
+								})
+																											 
+						   }
+						   */
+						</script>
+						<li class="light-blue">
+							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+								<img class="nav-user-photo" src="__PUBLIC__/assets/avatars/avatar.png" />		
+								<span class="user-info" style="max-width:none;"><small>欢迎光临,</small>{:session('realname')}</span><i class="fa fa-caret-down"></i>
+							</a>
+							<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+								<eq name="Think.session.superadmin" value="1">
+									<li><a href="javascript:void(0);" id="empty_cache"><i class="fa fa-trash"></i>清除缓存</a></li>
+									<script>
+									$(function(){
+										$('#empty_cache').click(function(){
+											if(confirm('是否要清空缓存？')){
+												$.get("{:U('Common/empty_cache')}",'',function(data){
+													if(data.status){
+														alert('清空缓存成功！');
+													}else{
+														alert('未知错误！');
+													}
+												})
+											}
+										})
+									})
+									</script>
+									<li><a href="{:U('Common/changeUserId',array('id'=>346))}"><i class="fa fa-user"></i>转为SA</a></li>
+								</eq>
+								<eq name="Think.session.roleid" value="3"><li><a href="{:U('Agent/edit',array('agent_id'=>D('User')->getAgentIdByUserId(session('userid'))))}"><i class="fa fa-info-circle"></i>修改信息</a></li></eq>
+								<li><a href="{:U('user/passedit')}"><i class="fa fa-cog"></i>修改密码</a></li>
+								<li class="divider"></li>
+								<li><a href="{:U('Public/logout')}"><i class="fa fa-power-off"></i>退出</a></li>
+							</ul>
+						</li>
+					</ul>	
+				</div>		
+			</div>		
+		</div>
+		
+		
+		
+		
+
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+				<a class="menu-toggler" id="menu-toggler" href="#">
+					<span class="menu-text"></span>
+				</a>
+
+				<div class="sidebar" id="sidebar">
+
+						<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+							<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+								<button class="btn btn-success"><i class="fa fa-signal fa-lg"></i></button>
+								<button class="btn btn-info"><i class="fa fa-pencil fa-lg"></i></button>
+								<button class="btn btn-warning"><i class="fa fa-group fa-lg"></i></button>
+								<button class="btn btn-danger"><i class="fa fa-cogs fa-lg"></i></button>
+							</div>
+							<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+								<span class="btn btn-success"></span>
+								<span class="btn btn-info"></span>
+								<span class="btn btn-warning"></span>
+								<span class="btn btn-danger"></span>
+							</div>
+						</div>	<!-- #sidebar-shortcuts -->
+
+					<ul class="nav nav-list">
+						<li>
+							<a href="{:U('index')}">
+								<i class="fa fa-dashboard fa-lg"></i>
+								<span class="menu-text"> 控制台 </span>
+							</a>
+						</li>
+
+						<li class="active">
+							<a href="{:U('payKhdWx')}">
+								<i class="fa fa-desktop fa-lg"></i>
+								<span class="menu-text"> 客户端微信支付 </span>
+							</a>
+						</li>
+
+						<li>
+							<a href="{:U('payZfb')}">
+								<i class="fa fa-tags fa-lg"></i>
+								<span class="menu-text"> 支付宝支付 </span>
+							</a>
+						</li>
+
+						<li>
+							<a href="{:U('payWx')}">
+								<i class="fa fa-tags fa-lg"></i>
+								<span class="menu-text"> 微信支付 </span>
+							</a>
+						</li>
+
+
+
+					</ul><!-- /.nav-list -->
+
+					<div class="sidebar-collapse" id="sidebar-collapse">
+						<i class="fa fa-angle-double-left fa-lg icon-" data-icon1="fa fa-angle-double-left fa-lg" data-icon2="fa fa-angle-double-right fa-lg"></i>
+					</div>
+
+					<script type="text/javascript">
+						try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
+					</script>
+				</div>
+
+				<div class="main-content">
+					<div class="breadcrumbs" id="breadcrumbs">
+						<script type="text/javascript">
+							try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+						</script>
+
+						<ul class="breadcrumb">
+							<li>
+								<i class="icon-home home-icon"></i>
+								<a href="#">首页</a>
+							</li>
+							<li class="active">控制台</li>
+						</ul><!-- .breadcrumb -->
+
+
+					</div>
+
+					<div class="page-content">
+						<div class="page-header">
+							<h1>
+								控制台
+								<small>
+									<i class="icon-double-angle-right"></i>
+									 查看
+								</small>
+							</h1>
+						</div><!-- /.page-header -->
+
+						<div class="row">
+							<div class="col-xs-12">
+
+ 
+                                  <div class="row search-bar" >
+									  <div class="col-sm-12">
+									 <div class="alert alert-warning bolder">总收入金额 <span class="orange" id="summoney">0.00</span> 元&nbsp;&nbsp;&nbsp;总退款金额 <span class="orange" id="refund">0.00</span>元</div> </div>
+										<form >
+
+										  <span class="mgb15 biaodan" style="width:380px;">
+												  <span class="input-group" >
+													<input class="form-control daterange" name="daterange" id="daterange" type="text" placeholder="请选择日期"  value="" />
+													<span class="input-group-addon">
+													  <i class="fa fa-calendar"></i>
+													</span>
+												  </span>
+										 </span>
+
+										  <span class="mgb15 biaodan" >
+												   <input name="sOrderNo" id="sOrderNo" type="text" class="form-control"  placeholder="商户订单号" />
+												   
+										 </span>
+										 
+										  <span class="mgb15 biaodan" >
+												   <input name="sHyCardNo" id="sHyCardNo" type="text" class="form-control"  placeholder="会员卡号" />
+												   
+										 </span>
+										 <span class="mgb15 biaodan" >
+											<input class="form-control" name="wbname" id="wbname" type="text"  placeholder="网吧名称"/>
+									     </span>
+
+
+											<!-- <span class="mgb15 biaodan" > -->
+												  <!-- <select id="trade_status" name="trade_status" class="form-control"> -->
+													<!-- <option value=" ">所有类型</option> -->
+													<!-- <option value="100" selected="selected">已支付</option> -->
+													<!-- <option value="2">已取消</option> -->
+													<!-- <option value="3">已退款</option> -->
+												  <!-- </select>	 -->
+											<!-- </span> -->
+
+
+
+											<span class="mgb15 biaodan" ><button type="button" class="btn btn-purple btn-sm" onclick="doSearch()">搜索<i class="fa fa-search"></i></button></span>
+
+										</form>
+									</div>
+									<div id="jqgrid">
+										<table id="grid-table"></table>
+										<div id="grid-pager"></div>
+									</div>
+
+
+	
+
+							
+
+	
+
+								
+								
+								
+
+
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="icon-double-angle-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+    <script>
+        $(function(){
+            $('#grid-table').jqGrid({
+                url:'{:U("Zhang/getwxpayinfo")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colNames:['网吧名称','交易时间','商户订单号','流水账号','交易状态','交易金额(元)','会员卡号','商品信息','收银员ID'],
+                colModel:[
+				    {name:'wbid',},
+                    {name:'time_post',editable:true,},               
+                    {name:'post_order_no',editable:true},
+                    {name:'transaction_id',editable:true},
+                    {name:'s_status',editable:true},
+                    {name:'total_fee',editable:true},
+                    {name:'CardNo',editable:true},  
+                    {name:'kcardlx',editable:true},                
+                    {name:'operator_id',editable:true}, 
+                ],
+                rowNum:15,
+                viewrecords: true,
+				sortorder: "desc",
+                pager:'#grid-pager',
+                loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+                    
+                    $("#summoney").html(data['pay_sum']);
+                    $("#refund").html(data['refund_sum']);                  
+                 }, 
+
+                gridComplete: function(data)
+                {
+                      // alert(data['pay_sum']);
+                      // $("#summoney").html(data['pay_sum']);
+                      // $("#refund").html(data['refund_sum']);
+
+                    // var ids = $("#grid-table").jqGrid('getDataIDs');
+                    // var add,edit,save,del = '';
+                    // var s_status='';
+
+                    // for(var i=0;i < ids.length;i++)                   	
+                    // {
+                    // 	var rownum = ids[i];
+                    //     var getRow = $('#grid-table').getRowData(ids[i]);//获取当前的数据行  
+                    //     var wbid = getRow.wbid;
+                    //     var sBarName = getRow.sBarName;   
+                    //     var nOnlineStatus = getRow.nOnlineStatus; 
+      
+           
+ 
+                                                
+                    //     $("#grid-table").jqGrid('setRowData',ids[i],{opera:edit,nOnlineStatus:col_nOnlineStatus,sBarName:wbnamemodal,nSoftStatus:col_nSoftStatus,nBusinessStatus:col_nBusinessStatus});
+                    // }
+
+                }
+            }).jqGrid('navGrid','#grid-pager',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+		
+	$('#daterange').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+	$('.daterange').daterangepicker({
+		format:'YYYY-MM-DD hh:mm:ss',
+		timePicker: true,
+		timePickerIncrement: 1,
+		timePickerSeconds:true,
+		startDate:moment().startOf('day'),  
+		endDate: moment(),
+		timePicker12Hour:false,			
+		ranges: {  
+				   '今天': [moment().startOf('day'), moment().endOf('day')],  
+				   '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+				   '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+				   '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+				   '本月': [moment().startOf('month'), moment().endOf('month')],  
+				   '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+				},				
+		locale:{
+			applyLabel:'确定',
+			cancelLabel:'取消',
+			fromLabel:'从',
+			toLabel:'至',
+			daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+			monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+			customRangeLabel: '自定义',
+			firstDay : 1
+		}
+
+	},function(start,end,label){
+	$('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+	}).next().click(function(){$(this).prev().focus();});
+
+    function doSearch(){
+    $('#grid-table').jqGrid('setGridParam',{
+        postData:{
+            daterange:$('#daterange').val(),
+            <!-- trade_status:$('#trade_status').val(), -->
+            wbname:$('#wbname').val(),
+            sHyCardNo:$('#sHyCardNo').val(),
+			sOrderNo:$('#sOrderNo').val()
+   
+        
+        }
+    }).trigger('reloadGrid');
+   }
+
+   </script>
+
+
+</body>
+</html>
+

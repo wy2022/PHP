@@ -1,0 +1,209 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+<style>
+.widget-main p{
+   line-height: 25px;
+   text-indent: 1em;
+}
+.mgb15{
+	margin-bottom: 15px;
+}
+</style>
+</block>
+
+<block name="content">
+<div id="count"  class="mgb15">
+
+<!-- href={:U('bar_edit')}?wbid='+wbid+'> -->
+		<div class="infobox infobox-blue" onclick="location.href='{:U('Bar/tingye')}';" style="cursor:pointer;">
+			<div class="fa-stack  fa-2x infobox-icon">
+			  <i class="fa fa-circle fa-stack-2x"></i>
+			  <i class="fa fa-home fa-stack-1x fa-inverse"></i>
+			</div>
+			<div class="infobox-data">
+				<span class="infobox-data-number">{$count_tingye}</span>
+				<div class="infobox-content">营业场所停业待审核</div>
+			</div>
+		</div>
+	<present name="yestoday_online_count">
+	</present>
+	
+		<div class="infobox infobox-green" onclick="location.href='{:U('Content/game')}';" style="cursor:pointer;">
+			<div class="fa-stack  fa-2x infobox-icon">
+			  <i class="fa fa-circle fa-stack-2x"></i>
+			  <i class="fa fa-gamepad fa-stack-1x fa-inverse"></i>
+			</div>
+			<div class="infobox-data">
+				<span class="infobox-data-number">{$count_game}</span>
+				<div class="infobox-content">游戏备案待审核</div>
+			</div>
+		</div>
+	<present name="today_online_count">
+	</present>
+	
+		<div class="infobox infobox-pink" onclick="location.href='{:U('Content/web',array('regdate'=>date('Y-m-d')))}';" style="cursor:pointer;">
+			<div class="fa-stack  fa-2x infobox-icon">
+			  <i class="fa fa-circle fa-stack-2x"></i>
+			  <i class="fa fa-desktop fa-stack-1x fa-inverse"></i>
+			</div>
+			<div class="infobox-data">
+				<span class="infobox-data-number">{$count_web}</span>
+				<div class="infobox-content">网站备案待审核</div>
+			</div>
+		</div>
+	<present name="today_reg_bar_count">
+	</present>
+	
+		<div class="infobox infobox-orange2" onclick="location.href='{:U('Message/tongzhi',array('type'=>1))}';" style="cursor:pointer;">
+			<div class="fa-stack  fa-2x infobox-icon">
+			  <i class="fa fa-circle fa-stack-2x"></i>
+			  <i class="fa fa-comments fa-stack-1x fa-inverse"></i>
+			</div>
+			<div class="infobox-data">
+				<span class="infobox-data-number">{$count_tongzhi}</span>
+				<div class="infobox-content">通知待处理</div>
+			</div>
+		</div>
+	<present name="today_lost_bar_count">
+	</present>
+	
+		<div class="infobox infobox-red" onclick="location.href='{:U('Message/chufa',array('enddate'=>date('Y-m-d',strtotime('-30 days'))))}';" style="cursor:pointer;">
+			<div class="fa-stack  fa-2x infobox-icon">
+			  <i class="fa fa-circle fa-stack-2x"></i>
+			  <i class="fa fa-exclamation-triangle fa-stack-1x fa-inverse"></i>
+			</div>
+			<div class="infobox-data">
+				<span class="infobox-data-number">{$count_chufa}</span>
+				<div class="infobox-content">处罚待处理</div>
+			</div>
+		</div>
+	<present name="month_lost_bar_count">
+	</present>
+	
+<!-- 	<div class="infobox infobox-orange2" onclick="location.href='';" style="cursor:pointer;">
+			<div class="fa-stack  fa-2x infobox-icon">
+			  <i class="fa fa-circle fa-stack-2x"></i>
+			  <i class="fa fa-camera fa-stack-1x fa-inverse"></i>
+			</div>
+			<div class="infobox-data">
+				<span class="infobox-text">视频监控</span>
+				 <div class="infobox-content">查看视频</div> 
+			</div>
+		</div>
+	<present name="month_lost_bar_count">
+	</present>  -->
+</div>
+  <div class="row">
+     <div class="col-sm-4 ">
+		<div class="widget-box">
+			<div class="widget-header widget-header-flat widget-header-small">
+				<h5>
+					<i class="fa fa-signal"></i>
+					服务端在线统计
+				</h5>
+			</div>
+
+			<div class="widget-body">
+				<div class="widget-main">
+					<p>服务端总数量：{$server.sumcount}台</p>
+					<p>服务端实时在线数量：{$server.onlinecount}台</p>
+					<p>服务端离线数量：{$server.lixiancount}台</p>
+					<p>服务端异常在线数量：{$server.yconlinecount}台</p>
+					<p>服务端在线率：{$server.zaixianlv}</p>
+
+				</div><!-- /widget-main -->
+			</div><!-- /widget-body -->
+		</div><!-- /widget-box -->
+	</div><!-- /div -->
+	<div class="col-sm-4 ">
+		<div class="widget-box">
+			<div class="widget-header widget-header-flat widget-header-small">
+				<h5>
+					<i class="fa fa-signal"></i>
+					客户端安装统计
+				</h5>
+			</div>
+
+			<div class="widget-body">
+				<div class="widget-main">
+					<p>客户端总数量：{$client.sumcount}台</p>
+					<p>实时在线数量：{$client.onlinecount}台</p>
+					<p>客户端在线率：{$client.zaixianlv}</p>
+					
+				</div><!-- /widget-main -->
+			</div><!-- /widget-body -->
+		</div><!-- /widget-box -->
+	</div><!-- /div -->
+  </div>
+<div class="hr hr32 hr-dotted"></div>
+<div class="row">
+   <div class="col-sm-8">
+	<div id="jqgrid">
+	    <table id="grid-table"></table>
+	</div>
+   </div>
+</div>
+</block>
+
+<block name="script">
+<script type="text/javascript">
+
+        $(function(){
+            $('#grid-table').jqGrid({
+                url:'{:U("bar/getareaserveronlineinfo")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colNames:['序号','区域','服务端总数量','在线服务端数量','在线率'],
+                colModel:[
+                    {name:'id',hidden:true},
+                    {name:'area_name',},                   
+                    {name:'sumareacount'},  
+                    {name:'onlineareacount'},                  
+                    {name:'zaixianlv'}, 
+                ],
+                rowNum:20,
+                viewrecords: true,
+				sortorder: "desc",
+				caption:"网吧服务器平均在线率统计对照表",
+               
+
+               gridComplete: function()
+               {  
+                    var ids = $("#grid-table").jqGrid('getDataIDs');
+                    for(var i=0;i < ids.length;i++)                     
+                    {                      
+                        var getRow = $('#grid-table').getRowData(ids[i]);//获取当前的数据行  
+                        var thismonthcaption = getRow.thismonth;
+                        var othermonthcaption = getRow.othermonth;
+                    }
+
+                   $('#grid-table').jqGrid('setLabel', "othermonthcount", othermonthcaption); 
+                   $('#grid-table').jqGrid('setLabel', "thismonthcount", thismonthcaption);             
+                }
+
+
+            }).jqGrid('navGrid','#grid-pager',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+			
+
+            $(window).resize(function()
+            {
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+</script>
+
+</block>

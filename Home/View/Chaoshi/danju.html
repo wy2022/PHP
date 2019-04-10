@@ -1,0 +1,1409 @@
+<extend name="Public/base" />
+
+<block name="head">
+	<css href="__PUBLIC__/jquery-ui-1.10.3/themes/base/jquery.ui.core.css" />
+	<js href="__PUBLIC__/jquery-ui-1.10.3/jquery-1.9.1.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.core.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.widget.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.position.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.menu.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.autocomplete.js" />
+	
+	
+
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+	<js href="__PUBLIC__/layer/layer.js" />
+	
+	<js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.src.js" />
+	<js href="__PUBLIC__/js/Blob.js" />
+	<js href="__PUBLIC__/js/FileSaver.js" />
+	<js href="__PUBLIC__/js/tableExport.js" />
+	
+	
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+       .biaodan{float:left;padding-left:15px;}
+
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+	 	 body .search-bar input,body .search-bar select{
+		display:inline-block;
+		height:30px;
+		font-size:14px;
+		line-height:
+		color:#555555;
+		vertical-align:middle;
+		-webkit-border-radius:4px !important;
+		-moz-border-radius:4px !important;
+		border-radius:4px !important;
+		border-color:#a4bed4;
+		text-align:left;
+		padding:4px 6px;
+	 }
+	 body .search-bar input{width:220px;}
+	 body .search-bar select{width:100px;}
+	 .btn1{
+		    font-size:12px;	
+			height:30px;
+			 width:90px;
+			-webkit-border-radius:2px;
+			-moz-border-radius:2px;
+			border-radius:2px;
+			border:0;
+			text-shadow:none;
+			background-image:none;
+			vertical-align:middle;
+			color:#ffffff;
+		 }
+	.goods_list a{
+		display:inline-block;
+		width:100%;
+	}
+	a:hover{
+		text-decoration: none;
+	}
+	</style>
+</block>
+
+<block name="content">
+<div class="row">
+  <div class="col-xs-12 col-sm-12">
+  <!--  <div class="alert alert-warning bolder"id="ceshi">充值金额 <span class="orange" >0.00</span> 元</div>  
+  </div> -->
+</div>
+<div class="tabbable">
+            <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4" style="font-size:12px;">
+                <li class="active">
+                    <a data-toggle="tab" href="#jhtj">进出货统计</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#xstj">销售统计</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#lszl">上下架日志</a>
+                </li>
+				<li>
+                    <a data-toggle="tab" href="#pdtj">盘点统计</a>
+                </li>
+			    <li>
+                    <a data-toggle="tab" href="#jbtj">交班统计</a>
+                </li>
+				<li>
+                    <a data-toggle="tab" href="#zztj">总帐统计</a>
+                </li>
+				<li>
+                    <a data-toggle="tab" href="#goodstj">商品统计</a>
+                </li>
+            </ul>
+
+            <div class="tab-content" >
+                <div id="jhtj" class="tab-pane in active">
+                     <div class="row search-bar" >
+                        <form >
+                            <span class="mgb15 biaodan">
+                                进出货时间<input type="text" name="daterange" id="daterange" class="daterange" style="width:310px;"  placeholder="请选择日期" required /> 
+                            </span>
+							
+						<span class="biaodan mgb15">单据类型
+							<select id="jch_position" name="jch_position">
+							   <option value="0">全部</option>
+							   <option value="1">进货</option>						  						   
+							   <option value="2">出货</option>
+
+							</select>
+						</span>
+                             <span class="biaodan mgb15">
+                                <span>订单号 <input type="text" name="cardno" id="cardno" style="width:150px;" placeholder="请输入订单号"/></span>
+                            </span>
+                            <span class="biaodan mgb15"><button type="button" class="btn1 btn-purple btn-sm" onclick="doSearch()" id="sousuo">搜索<i class="fa fa-search"></i></button></span>
+							<div id="export" class="biaodan mgb15 " >
+				<a data-type="xls" href="" class="btn btn1 btn-sm btn-primary">导出<i class="fa fa-print" style="font-size:16px;"></i></a>
+			</div>
+			<script>
+				var $exportLink = document.getElementById('export');
+				$exportLink.addEventListener('click', function(e){
+					e.preventDefault();
+					if(e.target.nodeName === "A"){
+						tableExport('grid-table', '进出货统计表单', e.target.getAttribute('data-type'));
+					}
+				}, false);
+			</script>
+                      </form>
+                  </div>   
+
+
+
+                      <div id="jqgrid">
+                        <table id="grid-table"></table>
+                        <div id="grid-pager"></div>
+                      </div> 
+                </div>
+
+                <div id="xstj" class="tab-pane" >
+
+                    <div class="row search-bar" >
+                        <form >
+                        <span class="mgb15 biaodan">
+                            出货时间<input type="text" name="daterange1" id="daterange1" class="daterange" style="width:310px;"  placeholder="请选择日期" required /> 
+                        </span>
+
+                         <span class="biaodan mgb15">
+                            <span>订单号 <input type="text" name="cardno1" id="cardno1" style="width:150px;" placeholder="请输入订单号"/></span>
+                        </span>
+                        <span class="biaodan mgb15"><button type="button" class="btn1 btn-purple btn-sm" onclick="doSearch1()" id="sousuo1">搜索<i class="fa fa-search"></i></button></span>
+                        <div id="export1" class="biaodan mgb15 " >
+				<a data-type="xls" href="" class="btn btn1 btn-sm btn-primary">导出<i class="fa fa-print" style="font-size:16px;"></i></a>
+			</div>
+			<script>
+				var $exportLink = document.getElementById('export1');
+				$exportLink.addEventListener('click', function(e){
+					e.preventDefault();
+					if(e.target.nodeName === "A"){
+						tableExport('grid-table1', '销售统计表单', e.target.getAttribute('data-type'));
+					}
+				}, false);
+			</script>
+                        </form>
+                  </div> 
+
+                   <div id="jqgrid1">
+                       <table id="grid-table1"></table>
+                       <div id="grid-pager1"></div>
+                   </div>        
+                </div>
+
+
+                <div id="lszl" class="tab-pane">
+
+                    <div class="row search-bar" >
+                        <form >
+                        <span class="mgb15 biaodan">
+                            上下架时间<input type="text" name="daterange2" id="daterange2" class="daterange" style="width:310px;"  placeholder="请选择日期" required /> 
+                        </span>
+
+                         <span class="biaodan mgb15">
+                            <span>订单号 <input type="text" name="cardno2" id="cardno2" style="width:150px;" placeholder="请输入订单号"/></span>
+                        </span>
+                        <span class="biaodan mgb15"><button type="button" class="btn1 btn-purple btn-sm" onclick="doSearch2()" id="sousuo2">搜索<i class="fa fa-search"></i></button></span>
+						<div id="export2" class="biaodan mgb15 " >
+				<a data-type="xls" href="" class="btn btn1 btn-sm btn-primary">导出<i class="fa fa-print" style="font-size:16px;"></i></a>
+			</div>
+			<script>
+				var $exportLink = document.getElementById('export2');
+				$exportLink.addEventListener('click', function(e){
+					e.preventDefault();
+					if(e.target.nodeName === "A"){
+						tableExport('grid-table2', '上下架日志表单', e.target.getAttribute('data-type'));
+					}
+				}, false);
+			</script>
+                        </form>
+                  </div> 
+
+                   <div id="jqgrid2">
+                       <table id="grid-table2"></table>
+                       <div id="grid-pager2"></div>
+                   </div>        
+                </div>
+				
+				
+				
+                <div id="pdtj" class="tab-pane">
+                     <div class="row search-bar" >
+                        <form >
+                            <span class="mgb15 biaodan">
+                                盘点时间<input type="text" name="daterange3" id="daterange3" class="daterange" style="width:310px;"  placeholder="请选择日期" required /> 
+                            </span>
+
+                             <span class="biaodan mgb15">
+                                <span>订单号 <input type="text" name="cardno3" id="cardno3" style="width:150px;" placeholder="请输入订单号"/></span>
+                            </span>
+                            <span class="biaodan mgb15"><button type="button" class="btn1 btn-purple btn-sm" onclick="doSearch3()" id="sousuo3">搜索<i class="fa fa-search"></i></button></span>
+							<div id="export3" class="biaodan mgb15 " >
+				<a data-type="xls" href="" class="btn btn1 btn-sm btn-primary">导出<i class="fa fa-print" style="font-size:16px;"></i></a>
+			</div>
+			<script>
+				var $exportLink = document.getElementById('export3');
+				$exportLink.addEventListener('click', function(e){
+					e.preventDefault();
+					if(e.target.nodeName === "A"){
+						tableExport('grid-table3', '盘点统计表单', e.target.getAttribute('data-type'));
+					}
+				}, false);
+			</script>
+                      </form>
+                  </div>   
+
+
+
+                      <div id="jqgrid3">
+                        <table id="grid-table3"></table>
+                        <div id="grid-pager3"></div>
+                      </div> 
+                </div>
+				
+				
+				<div id="jbtj" class="tab-pane">
+                     <div class="row search-bar" >
+                        <form >
+                            <span class="mgb15 biaodan">
+                                交班时间<input type="text" name="daterange4" id="daterange4" class="daterange" style="width:310px;"  placeholder="请选择日期" required /> 
+                            </span>
+
+                             <span class="biaodan mgb15">
+                                <span>订单号 <input type="text" name="cardno4" id="cardno4" style="width:150px;" placeholder="请输入订单号"/></span>
+                            </span>
+                            <span class="biaodan mgb15"><button type="button" class="btn1 btn-purple btn-sm" onclick="doSearch4()" id="sousuo4">搜索<i class="fa fa-search"></i></button></span>
+							<div id="export4" class="biaodan mgb15 " >
+				<a data-type="xls" href="" class="btn btn1 btn-sm btn-primary">导出<i class="fa fa-print" style="font-size:16px;"></i></a>
+			</div>
+			<script>
+				var $exportLink = document.getElementById('export4');
+				$exportLink.addEventListener('click', function(e){
+					e.preventDefault();
+					if(e.target.nodeName === "A"){
+						tableExport('grid-table4', '交班统计表单', e.target.getAttribute('data-type'));
+					}
+				}, false);
+			</script>
+                      </form>
+                  </div>   
+
+
+
+                      <div id="jqgrid4">
+                        <table id="grid-table4"></table>
+                        <div id="grid-pager4"></div>
+                      </div> 
+                </div>
+				
+				
+				
+				<div id="zztj" class="tab-pane" >
+                    <div class="row search-bar" >
+                        <form >
+                        <span class="mgb15 biaodan">
+                            销售时间<input type="text" name="daterange5" id="daterange5" class="daterange" style="width:310px;"  placeholder="请选择日期" required /> 
+                        </span>
+
+                         <span class="biaodan mgb15">
+                            <span>商品名称 <input type="text" name="spname5" id="spname5" style="width:150px;" placeholder="请输入商品名称"/></span>
+                        </span>
+                        <span class="biaodan mgb15"><button type="button" class="btn1 btn-purple btn-sm" onclick="doSearch5()" id="sousuo5">搜索<i class="fa fa-search"></i></button></span>
+                        <!-- <span class="mgb15 biaodan" style="padding-top:5px;"> -->
+						<!-- <a class="btn1 btn-sm btn-primary"  style="padding:8px 15px;" id="print5" onclick="doPrint5()" href="" >导出<i class="fa fa-print" style="font-size:16px;"></i></a> -->
+						<!-- </span> -->
+						
+						<script>
+
+						<!-- function doPrint5() -->
+						<!-- { -->
+						<!-- var daterange5=$('#daterange5').val(); -->
+						<!-- var spname=$('#spname').val(); -->
+						<!-- $("#print5").attr('href',"{:U('Api/expxstj')}?daterange5="+daterange5+"&cardno5="+cardno5); -->
+						<!-- } -->
+
+						</script>
+                        </form>
+                  </div> 
+                   <div id="jqgrid5">
+                       <table id="grid-table5"></table>
+                       <div id="grid-pager5"></div>
+                   </div>        
+                </div>
+				<div id="goodstj" class="tab-pane" >
+                    <div class="row search-bar" >
+                        <form >
+                        <span class="mgb15 biaodan">
+                            销售时间<input type="text" name="daterange6" id="daterange6" class="daterange" style="width:310px;"  placeholder="请选择日期" required /> 
+                        </span>
+						<span class="biaodan mgb15">
+                            <span>订单号 <input type="text" name="order_num" id="order_num"  placeholder="请输入订单号"/></span>
+							<input  id="one_goods_id" type="hidden"/>
+                        </span>
+                         <span class="biaodan mgb15">
+                            <span>商品名称 <input type="text" name="spname6" id="spname6"  placeholder="请输入商品名称"/></span>
+                        </span>
+						 
+                        <span class="biaodan mgb15"><button type="button" class="btn1 btn-purple btn-sm" onclick="doSearch6()" id="sousuo6">搜索<i class="fa fa-search"></i></button></span>
+                        </form>
+                  </div> 
+                   <div id="jqgrid6">
+                       <table id="grid-table6"></table>
+                       <div id="grid-pager6"></div>
+                   </div>        
+                </div>
+
+
+
+          </div>  
+    </div>
+
+
+</block>
+
+
+
+
+
+
+<block name="script">
+
+ <script>
+/*
+ if(window.localStorage){
+ alert('支持localStorage');
+}else{
+ alert('不支持localStorage');
+} 
+*/
+
+
+</script>
+    <script>
+	   
+
+        $(function(){
+            $('#grid-table').jqGrid({
+                url:'{:U("getjchtongjilist")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                     colModel:[
+                    {label:'网吧id',name:'wbid',hidden:true,},
+					<!-- {label:'网吧id',name:'id',hidden:true,}, -->
+					{label:'操作时间',name:'dtInsertTime',width:100,},
+					{label:'订单号',name:'post_order_no',width:100,},                   
+					{label:'单据类型',name:'jch_type_caption',width:60,},  
+                    {label:'单据类型',name:'jch_type',hidden:true,width:50,}, 					
+					{label:'商品信息',name:'info',width:240},					
+					                   
+                    {label:'操作人',name:'operator',width:60},			                                     	
+	                {label:'操作',name:'opera',width:60},	
+					{label:'备注',name:'bz',width:60},
+                ],
+				loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+                   /*
+                   $("#ceshi").html('');
+                   var text='';       
+                        <!-- 充值金额 <span class="orange" >0.00</span> 元 -->
+                        text='会员加钱<span class=\"orange\" >'+data['sum_hyk_jq_money']+"</span>&nbsp;";
+						text+='会员奖励<span class=\"orange\" >'+data['sum_hyk_jl_money']+"</span>&nbsp;";
+						text+='临时卡加钱<span class=\"orange\" >'+data['sum_lsk_jq_money']+"</span>&nbsp;";
+						text+='临时卡找零<span class=\"orange\" >'+data['sum_lsk_zlje']+"</span>&nbsp;";
+                        
+                        $("#ceshi").append(text);
+						*/
+
+                 },
+				
+                rowNum:30,
+				rowList:[30,100,500,1000],
+                viewrecords: true,
+				sortorder: "desc",
+                pager:'#grid-pager',
+
+
+		     gridComplete: function()
+				{
+                    var ids = $("#grid-table").jqGrid('getDataIDs');
+                    var add,edit,save,del,bangding,info_edit,edit2,wbid = '';
+
+                    var end_str,sta_str,jch_type_caption,jch_type;                                             										
+                
+                        for(var i=0;i < ids.length;i++)
+                        {
+                            var getRow = $('#grid-table').getRowData(ids[i]);//获取当前的数据行  
+                            var colVal = getRow.wbid;             
+                            var rownum = ids[i];
+							var jch_type= getRow.jch_type;  
+							
+							
+							if(jch_type=='0')
+							{
+							  jch_type_caption='出货';
+							  edit2= '<a href="#" onclick="ckchuhuomx('+rownum+')">查看详情</a>';
+							}
+							else if(jch_type=='1')
+							{
+							   jch_type_caption='进货';
+							   edit2= '<a href="#" onclick="ckjinhuomx('+rownum+')">查看详情</a>';
+							}
+			                                                         
+	
+                            							 
+						     $("#grid-table").jqGrid('setRowData',ids[i],{opera:edit2});
+							 
+							$("#grid-table").jqGrid('setRowData',ids[i],{jch_type_caption:jch_type_caption});													   								
+								
+                        }
+                    
+                    
+                    
+                },
+            }).jqGrid('navGrid','#grid-pager',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+		
+	$('#daterange').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+	$('.daterange').daterangepicker({
+		format:'YYYY-MM-DD hh:mm:ss',
+		timePicker: true,
+		timePickerIncrement: 1,
+		timePickerSeconds:true,
+		startDate:moment().startOf('day'),  
+		endDate: moment(),
+		timePicker12Hour:false,		
+		ranges: {  
+				   '今天': [moment().startOf('day'), moment().endOf('day')],  
+				   '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+				   '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+				   '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+				   '本月': [moment().startOf('month'), moment().endOf('month')],  
+				   '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+				},				
+		locale:{
+			applyLabel:'确定',
+			cancelLabel:'取消',
+			fromLabel:'从',
+			toLabel:'至',
+			daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+			monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+			customRangeLabel: '自定义',
+			firstDay : 1
+		}
+
+	},function(start,end,label){
+		$('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+		$('#daterange1').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+		$('#daterange2').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+		$('#daterange3').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+		$('#daterange4').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+		$('#daterange5').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+	}).next().click(function(){$(this).prev().focus();});
+
+    function doSearch()
+	{
+	
+	
+    $('#grid-table').jqGrid('setGridParam',{
+        postData:{                 
+            daterange:$('#daterange').val(),
+			cardno:$('#cardno').val(),
+			<!-- jch_type:$('#jch_type').val(), -->
+			jch_position:$('#jch_position').val(),
+                          
+        }
+    }).trigger('reloadGrid');
+   }
+   
+ doSearch();
+
+   
+				
+          $(function(){
+            $('#grid-table1').jqGrid({
+                url: '{:U("getxstongjilist")}',
+                datatype: "json",
+               
+                height:"100%",
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[
+                    {label:'网吧id',name:'wbid',hidden:true,},
+					{label:'操作时间',name:'dtInsertTime',width:100,}, 
+					{label:'订单号',name:'post_order_no',width:100,},                   
+					<!-- {label:'商品位置',name:'position',width:50,},                -->
+					{label:'商品信息',name:'info',width:240},
+					{label:'支付金额',name:'sum_sr_je',width:60,},
+					{label:'商品金额',name:'sum_sp_je',width:60,},
+					{label:'找零金额',name:'sum_zl_je',width:60,},
+					                  
+                    {label:'操作人',name:'operator',width:60},			                                     	
+	                {label:'操作',name:'opera',width:60},	
+					{label:'备注',name:'beizhu',width:60},
+                ],
+				
+			    gridComplete: function()
+				{
+                    var ids = $("#grid-table1").jqGrid('getDataIDs');
+                    var add,edit,save,del,bangding,info_edit,edit2,wbid = '';
+
+                    var end_str,sta_str,position_str;                                             										
+                
+                        for(var i=0;i < ids.length;i++)
+                        {
+                            var getRow = $('#grid-table1').getRowData(ids[i]);//获取当前的数据行  
+                            var colVal = getRow.wbid;             
+                            var rownum = ids[i];
+							var col_position= getRow.position;  
+							var col_post_order_no= getRow.post_order_no;  
+							if(col_position=='0')
+							{
+							  position_str='仓库';
+							}
+							else if(col_position=='1')
+							{
+							   position_str='货架';
+							}
+																					 						  				                                                         
+						    
+							 <!--  edit2= '<a href={:U('chuhuomx')}?post_order_no='+col_post_order_no+'>查看详情</a>';  -->
+							  
+							edit2= '<a href="#" onclick="xiaoshoumx('+rownum+')">查看详情</a>';                     							   							
+						     $("#grid-table1").jqGrid('setRowData',ids[i],{opera:edit2});
+							 
+							$("#grid-table1").jqGrid('setRowData',ids[i],{position:position_str});													   								
+								
+                        }
+                    
+                    
+                    
+                },
+				
+				loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+                    /*
+                   $("#ceshi").html('');
+                   var text='';
+        
+                        <!-- 充值金额 <span class="orange" >0.00</span> 元 -->
+						
+
+		   
+                        text='会员加钱<span class=\"orange\" >'+data['sum_hyk_jq_money']+"</span>&nbsp;";
+						text+='会员奖励<span class=\"orange\" >'+data['sum_hyk_jl_money']+"</span>&nbsp;";
+						text+='临时卡加钱<span class=\"orange\" >'+data['sum_lsk_jq_money']+"</span>&nbsp;";
+						text+='临时卡找零<span class=\"orange\" >'+data['sum_lsk_zlje']+"</span>&nbsp;";
+                        
+                        $("#ceshi").append(text);
+						  */
+
+                 },
+                styleUI : 'Bootstrap',
+                rowNum:30,
+				rowList:[30,100,500,1000],
+                viewrecords: true,
+				sortorder: "desc",
+                pager:'#grid-pager1',
+                loadError:function(xhr,status,error){  
+                      }, 
+        
+            });
+      
+       $('#grid-table1').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+         $(window).resize(function(){
+                $('#grid-table1').jqGrid('setGridWidth', $(window).width()*0.8, true);
+          });
+      
+
+  
+  });  
+	$('#daterange1').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+
+	function doSearch1(){
+    $('#grid-table1').jqGrid('setGridParam',{
+        postData:{                 
+            daterange1:$('#daterange1').val(),
+            cardno1:$('#cardno1').val(),   
+        }
+    }).trigger('reloadGrid');
+   }
+   doSearch1();
+
+   $(function (){
+            $('#grid-table2').jqGrid({
+                url:'{:U("get_shangxiajiainfo_list")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colModel:[
+				    {label:'操作时间',name:'dtInsertTime',width:100,},
+                    {label:'网吧id',name:'wbid',hidden:true,},
+                    {label:'订单号',name:'post_order_no',width:100,},
+					{label:'单据类型',name:'shangxia_type',width:60,}, 
+					{label:'上下架信息',name:'info',width:240,},
+					{label:'上下架',name:'shangxia_status',hidden:true,width:50,}, 
+                    {label:'支付方式',name:'zhifu_type',hidden:true,width:50,},
+                    {label:'操作人',name:'operator',width:60},						
+	                {label:'操作',name:'opera',width:60},
+                    {label:'备注',name:'bz',width:60},					
+                ],
+
+                rowNum:30,
+				rowList:[30,100,500,1000],
+                viewrecords: true,
+                sortorder: "desc",
+                pager:'#grid-pager2',
+
+				loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+                    
+                 },
+
+
+
+              gridComplete: function()
+				{
+                    var ids = $("#grid-table2").jqGrid('getDataIDs');
+                    var add,edit,save,del,bangding,info_edit,edit2,wbid = '';
+
+                    var end_str,sta_str,shangxia_status_str;
+                                    
+                 						
+                
+                        for(var i=0;i < ids.length;i++)
+                        {
+                            var getRow = $('#grid-table2').getRowData(ids[i]);//获取当前的数据行  
+                            var col_post_order_no = getRow.post_order_no;
+                            shangxia_status_str = getRow.shangxia_status;
+                       
+                            var rownum = ids[i];
+							var col_post_order_no_xx=col_post_order_no.slice(0,2);
+							//console.log(col_post_order_no_xx)
+							if(col_post_order_no_xx=='ZH'){
+								//console.log(1)
+								 shangxia_status_str='组合';
+								edit2='';
+							}else if(col_post_order_no_xx=='CF'){
+								 shangxia_status_str='拆分';
+								edit2='';
+								
+							}else
+							{
+							//console.log(shangxia_status_str)
+								if(shangxia_status_str==0)
+								{
+								  shangxia_status_str='上架';
+								  edit2= '<a href="#" onclick="ckshangjiamx('+rownum+')">查看详情</a>';
+								}
+								else if(shangxia_status_str==1)
+								{
+								  shangxia_status_str='下架';
+								  edit2= '<a href="#" onclick="ckxiajiamx('+rownum+')">查看详情</a>';
+								}
+							}	
+						
+						     $("#grid-table2").jqGrid('setRowData',ids[i],{opera:edit2});
+							 $("#grid-table2").jqGrid('setRowData',ids[i],{shangxia_type:shangxia_status_str});
+											   							
+								
+                        }
+                 
+
+                    
+                }
+            }).jqGrid('navGrid','#grid-pager2',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+          $('#grid-table2').jqGrid('setGridWidth',$('#jqgrid').width(), true);
+         $(window).resize(function(){
+                $('#grid-table2').jqGrid('setGridWidth',$(window).width()*0.8, true);
+          });
+        
+		 
+
+  
+		});
+		$('#daterange2').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+		function doSearch2(){
+			$('#grid-table2').jqGrid('setGridParam',{
+				postData:{                 
+					daterange2:$('#daterange2').val(),
+					cardno2:$('#cardno2').val(),
+
+					
+				   
+						  
+				}
+			}).trigger('reloadGrid');
+	   }
+	doSearch2();
+
+ 
+   $(function()
+	{
+            $('#grid-table3').jqGrid({
+                url:'{:U("getpdtongjilist")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colModel:[
+				    {label:'操作时间',name:'dtInsertTime',width:100},
+                    {label:'网吧id',name:'wbid',hidden:true,},
+					{label:'订单号',name:'post_order_no',width:100},					
+					{label:'单据类型',name:'position',width:60},               
+					{label:'商品信息',name:'info',width:240},					                   
+                    {label:'操作人',name:'operator',width:60},			                                     	
+	                {label:'操作',name:'opera',width:60},
+                    {label:'备注',name:'bz',width:60},						
+                ],
+                rowNum:30,
+				rowList:[30,100,500,1000],
+                viewrecords: true,
+                sortorder: "desc",
+                pager:'#grid-pager3',
+
+				loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+                    
+                 },
+
+
+
+                gridComplete: function()
+				{
+                    var ids = $("#grid-table3").jqGrid('getDataIDs');
+                    var add,edit,save,del,bangding,info_edit,edit2,wbid = '';
+
+                    var end_str,sta_str,position_str;                                             										
+                
+                        for(var i=0;i < ids.length;i++)
+                        {
+                            var getRow = $('#grid-table3').getRowData(ids[i]);//获取当前的数据行  
+                            var colVal = getRow.wbid;             
+                            var rownum = ids[i];
+							var col_position= getRow.position;  
+							var col_post_order_no= getRow.post_order_no;  
+							if(col_position=='0')
+							{
+							  position_str='仓库';
+							}
+							else if(col_position=='1')
+							{
+							   position_str='货架';
+							}
+																					 						   
+					                                                         
+						    
+							  <!-- edit2= '<a href={:U('pandianmx')}?post_order_no='+col_post_order_no+'>查看详情</a>'; -->
+							  edit2= '<a href="#" onclick="ckpandianmx('+rownum+')">查看详情</a>';                    							   							
+						     $("#grid-table3").jqGrid('setRowData',ids[i],{opera:edit2});
+							 
+							$("#grid-table3").jqGrid('setRowData',ids[i],{position:position_str});													   								
+								
+                        }
+                    
+                    
+                    
+                },
+            }).jqGrid('navGrid','#grid-pager3',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+          $('#grid-table3').jqGrid('setGridWidth',$('#jqgrid').width(), true);
+         $(window).resize(function(){
+                $('#grid-table3').jqGrid('setGridWidth',$(window).width()*0.8, true);
+          });
+		  
+    });
+
+    $('#daterange3').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+    function doSearch3(){
+    $('#grid-table3').jqGrid('setGridParam',{
+        postData:{                 
+            daterange3:$('#daterange3').val(),
+            cardno3:$('#cardno3').val(),
+
+            
+           
+                  
+        }
+    }).trigger('reloadGrid');
+   }
+   
+   doSearch3();
+   
+    
+    $(function(){
+            $('#grid-table4').jqGrid({
+                url:'{:U("getjbtongjilist")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colModel:[
+                             {label:'网吧id',name:'wbid',hidden:true,},
+					{label:'订单号',name:'post_order_no',width:100,},                   
+					<!-- {label:'商品位置',name:'position',width:50,},                -->
+					{label:'商品信息',name:'info',width:240},
+					{label:'时间',name:'dtInsertTime',width:60,},                   
+                    {label:'操作人',name:'operator',width:60},			                                     	
+	                {label:'操作',name:'opera',width:60},
+                    {label:'备注',name:'bz',width:60},						
+                ],
+                rowNum:30,
+				rowList:[30,100,500,1000],
+                viewrecords: true,
+                sortorder: "desc",
+                pager:'#grid-pager4',
+
+				loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+                    
+                 },
+
+
+
+		     gridComplete: function()
+				{
+                    var ids = $("#grid-table4").jqGrid('getDataIDs');
+                    var add,edit,save,del,bangding,info_edit,edit2,wbid = '';
+
+                    var end_str,sta_str,position_str;                                             										
+                
+                        for(var i=0;i < ids.length;i++)
+                        {
+                            var getRow = $('#grid-table4').getRowData(ids[i]);//获取当前的数据行  
+                            var colVal = getRow.wbid;             
+                            var rownum = ids[i];
+							var col_position= getRow.position;  
+							var col_post_order_no= getRow.post_order_no;  
+							if(col_position=='0')
+							{
+							  position_str='仓库';
+							}
+							else if(col_position=='1')
+							{
+							   position_str='货架';
+							}
+																					 						   				                                                         
+						    
+							   <!-- edit2= '<a href={:U('jiaobanmx')}?post_order_no='+col_post_order_no+'>查看详情</a>';  -->
+							   edit2= '<a href="#" onclick="ckjiaobanmx('+rownum+')">查看详情</a>';
+							                       							   							
+						     $("#grid-table4").jqGrid('setRowData',ids[i],{opera:edit2});
+							 
+							$("#grid-table4").jqGrid('setRowData',ids[i],{position:position_str});													   								
+								
+                        }
+                    
+                    
+                    
+                },
+            }).jqGrid('navGrid','#grid-pager4',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+          $('#grid-table4').jqGrid('setGridWidth',$('#jqgrid').width(), true);
+         $(window).resize(function(){
+                $('#grid-table4').jqGrid('setGridWidth',$(window).width()*0.8, true);
+          });
+		  
+ 
+        });
+     $('#daterange4').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+    function doSearch4(){
+    $('#grid-table4').jqGrid('setGridParam',{
+        postData:{                 
+            daterange4:$('#daterange4').val(),
+            cardno4:$('#cardno4').val(),
+
+            
+           
+                  
+        }
+    }).trigger('reloadGrid');
+   }
+ doSearch4();
+   
+   
+   
+    $(function(){
+            $('#grid-table5').jqGrid({
+                url: '{:U("getxstongjilist_zongzhang")}',
+                datatype: "json",
+               
+                height:"100%",
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[
+                 //   {label:'网吧id',name:'wbid',hidden:true,},
+
+		            {label:'商品id',name:'goods_id',width:50,hidden:true,},
+                    {label:'商品名称',name:'goods_name',width:100,},
+					{label:'商品分类',name:'type_id',width:50,},
+					<!-- {label:'商品单位(件)',name:'one_jian_num',width:50}, -->
+                    {label:'销售数量',name:'xiaoshou_num',width:100}, 
+                    {label:'进货数量',name:'jinhuo_num',width:100,},
+                    <!-- {label:'详情 ',name:'shou_price',width:50}, -->
+                ],
+				
+			    gridComplete: function()
+				{
+                    var ids = $("#grid-table5").jqGrid('getDataIDs');
+                    var add,edit,save,del,bangding,info_edit,edit2,wbid = '';
+
+                    var end_str,sta_str,position_str;                                             										
+                
+                        for(var i=0;i < ids.length;i++)
+                        {
+						    var rownum = ids[i];
+                            var getRow = $('#grid-table5').getRowData(ids[i]);//获取当前的数据行  
+                            <!-- var colVal = getRow.wbid;              -->
+							var xiaoshou_num_str=getRow.xiaoshou_num;
+							var jinhuo_num_str=getRow.jinhuo_num;
+							xiaoshou_num_str='<a href="#"  onclick="xiaoshou_mx_zongzhang('+rownum+');">'+xiaoshou_num_str+'</a>';
+                            <!-- jinhuo_num_str='<a href="#"  onclick="jinhuo_mx_zongzhang('+rownum+');">'+jinhuo_num_str+'</a>'; -->
+																					 						  				                                                         
+						    						  
+							  <!-- edit2= '<a href="#" onclick="ckchuhuomx('+rownum+')">查看详情</a>';                     							   							 -->
+						     <!-- $("#grid-table5").jqGrid('setRowData',ids[i],{opera:edit2}); -->
+							 
+							<!-- $("#grid-table5").jqGrid('setRowData',ids[i],{position:position_str});													   								 -->
+							 $("#grid-table5").jqGrid('setRowData',ids[i],{xiaoshou_num:xiaoshou_num_str});     	
+                        }                                    
+                    
+                },
+				
+				loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+                    /*
+                   $("#ceshi").html('');
+                   var text='';
+        
+                        <!-- 充值金额 <span class="orange" >0.00</span> 元 -->
+						
+
+		   
+                        text='会员加钱<span class=\"orange\" >'+data['sum_hyk_jq_money']+"</span>&nbsp;";
+						text+='会员奖励<span class=\"orange\" >'+data['sum_hyk_jl_money']+"</span>&nbsp;";
+						text+='临时卡加钱<span class=\"orange\" >'+data['sum_lsk_jq_money']+"</span>&nbsp;";
+						text+='临时卡找零<span class=\"orange\" >'+data['sum_lsk_zlje']+"</span>&nbsp;";
+                        
+                        $("#ceshi").append(text);
+						  */
+
+                 },
+                styleUI : 'Bootstrap',
+                rowNum:30,
+				rowList:[30,100,500,1000],
+                viewrecords: true,
+				sortorder: "desc",
+                pager:'#grid-pager5',
+                loadError:function(xhr,status,error){  
+                      }, 
+        
+            });
+      
+       $('#grid-table5').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+         $(window).resize(function(){
+                $('#grid-table5').jqGrid('setGridWidth', $(window).width()*0.8, true);
+          });
+      
+
+   
+  });  
+  $('#daterange5').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+
+
+    function doSearch5(){
+    $('#grid-table5').jqGrid('setGridParam',{
+        postData:{                 
+            daterange5:$('#daterange5').val(),
+            spname5:$('#spname5').val(),   
+        }
+    }).trigger('reloadGrid');
+   }
+   
+   doSearch5(); 
+   
+   
+   $(function(){
+            $('#grid-table6').jqGrid({
+                url: '{:U("getAllShangpinLiuchenglist")}',
+                datatype: "json",
+               
+                height:"100%",
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[
+                 //   {label:'网吧id',name:'wbid',hidden:true,},
+				    {label:'订单号',name:'post_order_no',width:80,},
+					{label:'订单类型',name:'ordertype',width:50,},	
+                    {label:'商品名称',name:'goods_name',width:100,},				
+		            {label:'商品id',name:'goods_id',width:50,hidden:true,},
+                    {label:'仓库数量',name:'ck_num',width:50},
+                    {label:'货架数量',name:'hj_num',width:50},					 
+                    {label:'数量',name:'sumnum',width:50}, 
+                    {label:'操作时间',name:'dtInsertTime',width:100,},
+                ],
+				
+			    gridComplete: function()
+				{
+                    var ids = $("#grid-table6").jqGrid('getDataIDs');
+                    var add,edit,save,del,bangding,info_edit,edit2,wbid = '',type,ordertype;
+                    var end_str,sta_str,position_str;           
+                        for(var i=0;i < ids.length;i++)
+                        {
+						    var rownum = ids[i];
+                            var getRow = $('#grid-table6').getRowData(ids[i]);//获取当前的数据行  
+                            <!-- var colVal = getRow.wbid;              -->
+							
+							var jinhuo_num_str=getRow.jinhuo_num;
+							var post_order_no=getRow.post_order_no.slice(0,2);
+							if(post_order_no=='XS'){
+								type='销售';
+							}else if(post_order_no=='JB'){
+								type='交班';
+							}else if(post_order_no=='CF'){
+								type='拆分';
+							}else if(post_order_no=='ZH'){
+								type='组合';
+							}else if(post_order_no=='SJ'){
+								type='上架';
+							}else if(post_order_no=='XJ'){
+								type='下架';
+							}else if(post_order_no=='JH'){
+								type='进货';
+							}else if(post_order_no=='CH'){
+								type='出货';
+							}
+							ordertype='<span>'+type+'</span>';
+							$("#grid-table6").jqGrid('setRowData',ids[i],{ordertype:ordertype});    	
+                        }      
+                },
+				loadComplete:function(data)
+                { 
+					
+                },
+                styleUI : 'Bootstrap',
+                rowNum:30,
+				rowList:[30,100,500,1000],
+                viewrecords: true,
+				sortorder: "desc",
+                pager:'#grid-pager6',
+                loadError:function(xhr,status,error){  
+                      }, 
+        
+            });
+      
+       $('#grid-table6').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+         $(window).resize(function(){
+                $('#grid-table6').jqGrid('setGridWidth', $(window).width()*0.8, true);
+          });
+      
+
+   
+  });  
+  $('#daterange6').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+
+
+    function doSearch6()
+	{
+		var spname6=$('#spname6').val();
+		var order_num=$('#order_num').val();
+		if((spname6==''||spname6==null)&&(order_num==''||order_num==null))
+		{
+			layer.msg('订单号和商品名不能同时为空', 
+			 {
+				  offset: 0,
+				  shift: 6,
+				  icon:2,
+				  time:3000,
+			  },function(){
+				
+			  });
+		}else{
+			//console.log(1)
+			$('#grid-table6').jqGrid('setGridParam',{
+				postData:{                 
+					daterange6:$('#daterange6').val(),
+					goods_id:$('#one_goods_id').val(), 
+					order_num:$('#order_num').val(), 
+				}
+			}).trigger('reloadGrid');
+		}
+   }
+   
+ 
+function xiaoshou_mx_zongzhang(rownum)
+{   
+
+ var rowData = $('#grid-table5').jqGrid('getRowData',rownum);
+ var goods_id_str=rowData['goods_id'];
+
+  layer.open({
+  type: 2,
+  offset: '100px',
+  title: '单个商品销售明细',
+  skin: 'layui-layer-lan',
+  maxmin: true,
+  shadeClose: true, //点击遮罩关闭层
+  area : '1000px' ,
+  content: '{:U("xiaoshou_mx_zongzhang")}?goods_id='+goods_id_str+'&canshu=1',
+  });
+}
+
+
+
+function jinhuo_mx_zongzhang(rownum)
+{   
+
+ var rowData = $('#grid-table5').jqGrid('getRowData',rownum);
+ var goods_id_str=rowData['goods_id'];
+
+  layer.open({
+  type: 2,
+  offset: '100px',
+  title: '单个商品销售明细',
+  skin: 'layui-layer-lan',
+  maxmin: true,
+  shadeClose: true, //点击遮罩关闭层
+  area : '1000px' ,
+  content: '{:U("jinhuo_mx_zongzhang")}?goods_id='+goods_id_str+'&canshu=1',
+  });
+}
+   
+   
+   function ckchuhuomx(rowNum)
+   {
+      var rowData = $('#grid-table').jqGrid('getRowData',rowNum);
+	  var orderNum= rowData['post_order_no'];
+	  
+      layer.open({
+	  type: 2,
+	  offset: '100px',
+	  title: '进出货统计详情',
+	  skin: 'layui-layer-lan',
+	  maxmin: true,
+	  shadeClose: true, //点击遮罩关闭层
+	  area : ['1030px' , '560px'],
+	  content: '{:U("chuhuomx")}?post_order_no='+orderNum,
+	  });
+   }   
+   
+   function ckjinhuomx(rowNum)
+   {
+      var rowData = $('#grid-table').jqGrid('getRowData',rowNum);
+	  var orderNum= rowData['post_order_no'];
+	  
+      layer.open({
+	  type: 2,
+	  offset: '100px',
+	  title: '进出货统计详情',
+	  skin: 'layui-layer-lan',
+	  maxmin: true,
+	  shadeClose: true, //点击遮罩关闭层
+	  area : ['1030px' , '560px'],
+	  content: '{:U("jinhuomx")}?post_order_no='+orderNum,
+	  });
+   }   
+   function xiaoshoumx(rowNum)
+   {
+      var rowData = $('#grid-table1').jqGrid('getRowData',rowNum);
+	  var orderNum= rowData['post_order_no'];
+      layer.open({
+	  type: 2,
+	  offset: '100px',
+	  title: '销售统计详情',
+	  skin: 'layui-layer-lan',
+	  maxmin: true,
+	  shadeClose: true, //点击遮罩关闭层
+	  area : ['1030px' , '560px'],
+	  content: '{:U("xiaoshoumx")}?post_order_no='+orderNum,
+	  });
+   }   
+   function ckxiajiamx(rowNum)
+   {
+      var rowData = $('#grid-table2').jqGrid('getRowData',rowNum);
+	  var orderNum= rowData['post_order_no'];
+      layer.open({
+	  type: 2,
+	  offset: '100px',
+	  title: '下架日志',
+	  skin: 'layui-layer-lan',
+	  maxmin: true,
+	  shadeClose: true, //点击遮罩关闭层
+	  area : ['930px' , '560px'],
+	  content: '{:U("xiajiamx")}?post_order_no='+orderNum,
+	  });
+   } 
+   
+   
+   function ckshangjiamx(rowNum)
+   {
+      var rowData = $('#grid-table2').jqGrid('getRowData',rowNum);
+	  var orderNum= rowData['post_order_no'];
+      layer.open({
+	  type: 2,
+	  offset: '100px',
+	  title: '上架日志',
+	  skin: 'layui-layer-lan',
+	  maxmin: true,
+	  shadeClose: true, //点击遮罩关闭层
+	  area : ['930px' , '560px'],
+	  content: '{:U("shangjiamx")}?post_order_no='+orderNum,
+	  });
+   } 
+   
+   
+   
+   function ckpandianmx(rowNum)
+   {
+      var rowData = $('#grid-table3').jqGrid('getRowData',rowNum);
+	  var orderNum= rowData['post_order_no'];
+      layer.open({
+	  type: 2,
+	  offset: '100px',
+	  title: '盘点统计详细',
+	  skin: 'layui-layer-lan',
+	  maxmin: true,
+	  shadeClose: true, //点击遮罩关闭层
+	  area : ['930px' , '560px'],
+	  content: '{:U("pandianmx")}?post_order_no='+orderNum,
+	  });
+   } 
+   function ckjiaobanmx(rowNum)
+   {
+      var rowData = $('#grid-table4').jqGrid('getRowData',rowNum);
+	  var orderNum= rowData['post_order_no'];
+      layer.open({
+	  type: 2,
+	  offset: '100px',
+	  title: '交班统计详细',
+	  skin: 'layui-layer-lan',
+	  maxmin: true,
+	  shadeClose: true, //点击遮罩关闭层
+	  area :['930px' , '560px'],
+	  content: '{:U("jiaobanmx")}?post_order_no='+orderNum,
+	  });
+   } 
+   
+   function goods_mx(rowNum)
+   {
+      var rowData = $('#grid-table6').jqGrid('getRowData',rowNum);
+	  var orderNum= rowData['post_order_no'];
+      layer.open({
+	  type: 2,
+	  offset: '100px',
+	  title: '商品详细',
+	  skin: 'layui-layer-lan',
+	  maxmin: true,
+	  shadeClose: true, //点击遮罩关闭层
+	  area :['930px' , '560px'],
+	  content: '{:U("goods_mx")}?post_order_no='+orderNum,
+	  });
+   } 
+   </script>
+   <script>
+	 $("#myTab4 li").click(function(){
+	    var a=$(this).index();
+		
+		if(a==0){
+		  document.onkeydown = function(e){
+			if((e||event).keyCode==13)
+			$("#sousuo").click();
+		  };
+		}else if(a==1){
+		   document.onkeydown = function(e){
+			if((e||event).keyCode==13)
+			$("#sousuo1").click();
+		   };
+		}else if(a==2){
+		   document.onkeydown = function(e){
+			if((e||event).keyCode==13)
+			$("#sousuo2").click();
+		   };
+		}else if(a==3){
+		   document.onkeydown = function(e){
+			if((e||event).keyCode==13)
+			$("#sousuo3").click();
+		   };
+		}else if(a==4){
+		   document.onkeydown = function(e){
+			if((e||event).keyCode==13)
+			$("#sousuo4").click();
+		   };
+		}
+
+	 })
+	
+	  document.onkeydown = function(e){
+        if((e||event).keyCode==13)
+        $("#sousuo").click();
+      };
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	 $(function() {
+	//alert(0);
+		var projects={$goodslist};
+		//console.log(projects);
+		$( "#spname6" ).autocomplete({
+			minLength: 0,
+			source: projects,
+			focus: function( event, ui ) 
+			{			    
+				$( "#spname6" ).val( ui.item.goods_name);
+				return false;
+			},
+			select: function( event, ui ) 
+			{			
+				var newgoods_id_list='';
+				var a_goods_id=ui.item.goods_id;
+				
+				$('#one_goods_id').val(a_goods_id);
+				return false;
+			}
+		})
+		.data( "ui-autocomplete" )._renderItem = function( ul, item ) 
+		{
+			return $( "<li class='goods_list'>" )
+				.append( "<a>" + item.goods_name +  "</a>" )
+				.appendTo( ul );
+		};
+	});
+   </script>
+   
+</block>

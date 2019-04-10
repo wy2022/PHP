@@ -1,0 +1,271 @@
+<extend name="Public/base" />
+
+<block name="head">
+      <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+    <js href="__PUBLIC__/layer/layer.js" />
+		<js href="__PUBLIC__/js/Blob.js" />
+	<js href="__PUBLIC__/js/FileSaver.js" />
+	<js href="__PUBLIC__/js/tableExport.js" />
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+     .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+		.layui-layer{
+		        width: 550px;left: 550px;
+		}
+		.layer_notice{
+		   width:550px;background:#5FB878;color:#ffffff;font-size:22px;padding:20px;text-align:center;
+		}
+	</style>
+</block>
+
+<block name="content">
+
+<!--
+<div style="display:none" class="layer_notice">
+	  存在新版商品超市，是否需要前往新版超市<a href="http://web.wbcat.com/index.php/rate/fujia.html">设置</a>	
+</div>
+-->
+
+<div class="row search-bar" >
+	<form >
+
+
+      <span class="mgb15 biaodan" style="width:380px;">
+          <span class="input-group" >
+            <input class="form-control daterange" name="daterange" id="daterange" type="text" placeholder="请选择日期"  value="" />
+            <span class="input-group-addon">
+              <i class="fa fa-calendar"></i>
+            </span>
+          </span>
+      </span>
+
+	  </span>
+      <!-- <span class="mgb15 biaodan">      -->
+              <!-- <input class="form-control" name="sContent" id="sContent" type="text"  placeholder="商品名称" /> -->
+      <!-- </span> -->
+	  
+
+
+	   
+
+  <span class="mgb15 biaodan"><button type="button" class="btn btn-purple btn-sm" onclick="doSearch()">搜索
+  <i class="fa fa-search"></i></button></span>
+ 
+ 		<div id="export" class="biaodan mgb15" >
+			<a data-type="xls" href="" class="btn btn-sm btn-primary">导出<i class="fa fa-print" style="font-size:16px;"></i></a>
+		</div>
+							<script>
+							var $exportLink = document.getElementById('export');
+							$exportLink.addEventListener('click', function(e){
+								e.preventDefault();
+								if(e.target.nodeName === "A"){
+									tableExport('grid-table', '交班明细表单', e.target.getAttribute('data-type'));
+								}
+							}, false);
+							</script>
+  
+	</form>
+</div>
+
+    <div id="jqgrid">
+        <table id="grid-table"></table>
+        <div id="grid-pager"></div>
+    </div>
+
+
+
+</block>
+
+
+
+<script type="text/javascript">
+                   $(document).ready(function() {
+                       $('#reservationtime').daterangepicker({
+                           timePicker: true,
+                           timePickerIncrement: 30,
+                           format: 'MM/DD/YYYY h:mm A'
+                       }, function(start, end, label) {
+                           console.log(start.toISOString(), end.toISOString(), label);
+                       });
+                   });
+               </script>
+
+
+<block name="script">
+      <script>
+	  // 请求数据填写到页面上
+        
+            $('#grid-table').jqGrid({
+                url: '{:U("getallxslist_zongzhang")}',
+                datatype: "json",
+                type:"get",
+                height:"100%",
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[
+                    <!-- {label:'编号',name:'id',width:50,}, -->
+                    <!-- {label:'商品id',name:'goods_id',width:50,hidden:true,},				 -->
+                    {label:'商品名称',name:'goods_name',width:140,},				
+                    
+
+					
+                    {label:'总上架数量',name:'sjsl',width:50},  
+                    {label:'总销售数量',name:'xiaoshounum',width:50},	
+                    {label:'当前库存数量',name:'kc_num',width:50},					
+                     					
+                    <!-- {label:'操作人',name:'operate',width:100,}, 					 -->
+                   
+                ],
+                styleUI : 'Bootstrap',
+                rowNum:500,
+                pager:'#grid-pager',
+                viewrecords: true,
+				sortorder: "desc",
+		
+				gridComplete: function()
+				{
+                    var ids = $("#grid-table").jqGrid('getDataIDs');
+                    var add,edit,save,del,bangding,info_edit,edit2,wbid = '';
+
+                    var end_str,sta_str,jch_type_caption,ordertype;                                             										
+                
+                        for(var i=0;i < ids.length;i++)
+                        {
+                            var getRow = $('#grid-table').getRowData(ids[i]);//获取当前的数据行  
+                            var colVal = getRow.wbid;             
+                            var rownum = ids[i];
+							var ordertype_str= getRow.ordertype;  
+							var paytype_str= getRow.paytype; 
+													
+							
+	
+			               													   																
+                        }
+                    
+                    
+                    
+                }, 
+
+    
+            });
+
+
+
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        
+
+         $('#daterange').val(moment().subtract('days', 7).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+            $('.daterange').daterangepicker({
+                format:'YYYY-MM-DD hh:mm:ss',
+                timePicker: true,
+                timePickerIncrement: 1,
+                timePickerSeconds:true,
+                startDate:moment().startOf('day'),  
+                endDate: moment(),
+                timePicker12Hour:false,     
+                ranges: {  
+                           '今天': [moment().startOf('day'), moment().endOf('day')],  
+                           '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+                           '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+                           '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+                           '本月': [moment().startOf('month'), moment().endOf('month')],  
+                           '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+                        },        
+                locale:{
+                    applyLabel:'确定',
+                    cancelLabel:'取消',
+                    fromLabel:'从',
+                    toLabel:'至',
+                    daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+                    monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+          customRangeLabel: '自定义',
+          firstDay : 1
+                }
+
+            },function(start,end,label){
+      $('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+      });
+
+	  
+	  //日期后的搜索框搜索
+        function doSearch(){
+            $('#grid-table').jqGrid('setGridParam',{
+                postData:{
+                    daterange:$('#daterange').val(),                  
+                }
+            }).trigger('reloadGrid');
+        }
+
+		
+   function xiaoshoumx(rowNum)
+   {
+      var rowData = $('#grid-table').jqGrid('getRowData',rowNum);
+	  var id_str= rowData['id'];
+      layer.open({
+	  type: 2,
+	  offset: '100px',
+	  title: '销售统计详情',
+	  skin: 'layui-layer-lan',
+	  maxmin: true,
+	  shadeClose: true, //点击遮罩关闭层
+	  area : ['1030px' , '560px'],
+	  content: '{:U("xiaoshoumx")}?id='+id_str,
+	  });
+   } 	
+		
+		
+    </script>
+  
+<script>
+ //function checkform(){
+    //var daterange=$("#daterange").val();
+  //if(daterange==""||daterange=="请选择日期")
+  //{
+     // alert("请选择日期");
+           //layer.msg('请选择日期', {
+                  //offset: 0,
+                  //shift: 6
+                //});
+     //return false;
+  //}
+  //return true;
+ //}
+ 
+ /*
+ layer.open({
+	  type: 1,
+	  shade: 0.3,
+	  title: false, 
+	  content:$('.layer_notice'),
+	});
+ */
+ 
+ function checkform(){
+    var daterange=$("#reservationtime").val();
+  if(daterange==""||daterange=="请选择日期")
+  {
+     // alert("请选择日期");
+           layer.msg('请选择日期', {
+                  offset: 0,
+                  shift: 6
+                });
+     return false;
+  }
+  return true;
+ }
+</script>
+</block>

@@ -1,0 +1,551 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+	</style>
+</block>
+
+<block name="content">
+<div class="row search-bar" >
+	<form >
+      
+<!-- 		<div class="col-xs-6 col-sm-3 mgb15">
+			<div class="input-group">
+			    <div>选择省市区
+                  <select name="province" id="province">
+						<option value="0">-选择省-</option>
+						<volist name="province_list" id="province">
+							<option value="{$province.id}">{$province.area_name}</option>
+						</volist>
+					</select>
+					<select name="city" id="city">
+						<option value="0">-选择市-</option>
+						<present name="agent.city">
+							<option value="{$agent.city}">{$agent.city|D('Area')->getAreaNameById}</option>
+						</present>
+					</select>
+					<select name="area" id="area">
+						<option value="0">-选择区县-</option>
+						<present name="agent.area">
+							<option value="{$agent.area}">{$agent.area|D('Area')->getAreaNameById}</option>
+						</present>
+					</select>
+                </div>	
+			</div>
+								
+		</div> -->
+		<div class="col-xs-6 col-sm-1 mgb15">
+		   <a class="btn btn-sm" href="{:U('Bar/bar_add')}">新增网吧<i class="fa fa-plus" style="font-size:16px;"></i></a>
+		</div>
+
+
+		<div class="col-xs-6 col-sm-3 mgb15">
+            <div class="input-group">
+                <div>选择市区
+                    <select name="city" id="city">
+                        <option value="749">-郑州市-</option>
+                    </select>
+                    <select name="area" id="area">
+                        <option value="0">-选择区县-</option>
+                        <volist name="district_list" id="area">
+                            <option value="{$area.id}">{$area.area_name}</option>
+                        </volist>
+                    </select>
+                </div>  
+            </div>                          
+        </div>
+
+		<div class="col-xs-6 col-sm-2 mgb15">
+			<div class="input-group">
+				<input class="form-control" name="sContent" id="sContent" type="text" style="width:250px" placeholder="网吧名称/地址/营业场所编号" />
+			</div>
+		</div>
+<!-- 
+		<div class="col-xs-6 col-sm-2">
+			<div class="input-group">
+				<input class="form-control" name="sBossPhone" id="sBossPhone" type="text"  placeholder="网吧电话" />
+			</div>
+		</div> -->
+
+	    <div class="col-xs-6 col-sm-2 mgb15">
+			<div class="input-group">
+			    <div>在线状态
+                  <select id="nOnlineStatus" name="nOnlineStatus">
+                    <option value="0">全部</option>
+                    <option value="1">正常在线</option>
+                    <option value="2">离线</option>   
+                    <option value="3">异常在线</option>       
+                  </select>
+                </div>	
+			</div>								
+		</div>
+
+		<div class="col-xs-6 col-sm-2 mgb15">
+			<div class="input-group">
+			    <div>营业状态
+                  <select id="nBusinessStatus" name="nBusinessStatus">
+                    <option value="0">全部</option>
+                    <option value="1">装机开业</option>
+                    <option value="2">停业整顿</option>     
+                  </select>
+                </div>	
+			</div>								
+		</div>
+
+
+
+		<div class="col-xs-8 col-sm-1 mgb15"><button type="button" class="btn btn-purple btn-sm" onclick="doSearch()">搜索<i class="fa fa-search"></i></button></div>
+	    <div class="col-xs-8 col-sm-1"><a class="btn btn-sm btn-primary" id="print" onclick="doPrint()" href="" >导出<i class="fa fa-print" style="font-size:16px;"></i></a></div>
+	    <script>
+
+
+	    function doPrint(){
+	    var city=$('#city').val();
+	    var area=$('#area').val();
+	    var sBarName=$('#sBarName').val();
+	    var sContent=$('#sContent').val();
+	    var nOnlineStatus=$('#nOnlineStatus').val();
+	    var nBusinessStatus=$('#nBusinessStatus').val();
+	    var sBossPhone=$('#sBossPhone').val();
+	    $("#print").attr('href',"{:U('Api/expBar')}?city="+city+"&area="+area+"&sBarName="+sBarName+'&sContent='+sContent+'&nOnlineStatus='+nOnlineStatus+'&nBusinessStatus='+nBusinessStatus);
+	    }
+
+	    </script>
+	</form>
+</div>
+<div id="jqgrid">
+    <table id="grid-table"></table>
+    <div id="grid-pager"></div>
+</div>
+
+
+<!-- 模态框 -->
+<div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+       <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">上网服务场所详细</h4>
+       </div>
+	   <div class="modal-body">
+	   
+        　<div class="row">
+		    <div class="col-sm-6">
+
+
+			   <div class="row mgb15" >
+			      <div class="col-xs-6 col-sm-6 labelbold">
+				    单位名称:
+				  </div>
+				  <div class="col-xs-6 col-sm-6" id="bar_sBarName">   
+				  </div>
+			   </div>
+
+			   	<div class="row mgb15" >
+			      <div class="col-xs-6 col-sm-6 labelbold">
+				    法人:
+				  </div>
+				  <div class="col-xs-6 col-sm-6" id="bar_sFarenName">   
+				  </div>
+			   </div>
+
+			   <div class="row mgb15">
+			      <div class="col-xs-6 col-sm-6 labelbold">
+				    单位负责人:
+				  </div>
+				  <div class="col-xs-6 col-sm-6" id="bar_sBoss">
+				  </div>
+			   </div>
+			   <div class="row mgb15">
+			      <div class="col-xs-6 col-sm-6 labelbold">
+				    所在区域:
+				  </div>
+				  <div class="col-xs-6 col-sm-6" id="bar_sArea">
+				  </div>
+			   </div>
+
+			     <div class="row mgb15">
+			      <div class="col-xs-6 col-sm-6 labelbold">
+				    在线状态:
+				  </div>
+				  <div class="col-xs-6 col-sm-6" id="bar_nOnlineStatus">
+				  </div>
+			   </div>
+			   <div class="row mgb15">
+			      <div class="col-xs-6 col-sm-6 labelbold">
+				    服务端版本:
+				  </div>
+				  <div class="col-xs-6 col-sm-6" id="bar_sServerVersion">
+				  </div>
+			   </div>
+
+			    <div class="row mgb15">
+			      <div class="col-xs-6 col-sm-6 labelbold">
+				    注册机器数/最高机器数:
+				  </div>
+				  <div class="col-xs-6 col-sm-6" id="bar_nClientCount">
+				  </div>
+			   </div>
+			   <div class="row mgb15">
+			      <div class="col-xs-6 col-sm-6 labelbold">
+				    当前登录IP:
+				  </div>
+				  <div class="col-xs-6 col-sm-6" id="bar_sServerIp">
+				  </div>
+			   </div>
+
+			</div>
+
+			<div class="col-sm-6">
+			   <div class="row mgb15">
+			      <div class="col-xs-6 col-sm-6 labelbold">
+				    文化经营许可证号:
+				  </div>
+				  <div class="col-xs-6 col-sm-6" id="bar_sBarCultureCode" >
+
+				  </div>
+			   </div>
+			   <div class="row mgb15">
+			      <div class="col-xs-6 col-sm-6 labelbold">
+				    百果树计费系统账号:
+				  </div>
+				  <div class="col-xs-6 col-sm-6" id="bar_sShoufeiAccount" >
+
+				  </div>
+			   </div>
+			   <div class="row mgb15">
+			      <div class="col-xs-6 col-sm-6 labelbold">
+				    无盘系统账号:
+				  </div>
+				  <div class="col-xs-6 col-sm-6" id="bar_sWupanAccount" >
+
+				  </div>
+			   </div>
+
+			   	<div class="row mgb15">
+			      <div class="col-xs-6 col-sm-6 labelbold">
+				    单位详细地址：
+				  </div>
+				  <div class="col-xs-6 col-sm-6" id="bar_sBarAddress">
+				  </div>
+			   </div>
+
+			   	<div class="row mgb15">
+			      <div class="col-xs-6 col-sm-6 labelbold">
+				    经营面积:
+				  </div>
+				  <div class="col-xs-6 col-sm-6" id="bar_sBusinessArea">
+				  </div>
+			   </div>
+
+			   <div class="row mgb15">
+			      <div class="col-xs-6 col-sm-6 labelbold">
+				    单位负责人电话:
+				  </div>
+				  <div class="col-xs-6 col-sm-6" id="bar_sBossPhone">
+				  </div>
+			   </div>
+
+			   	<div class="row mgb15">
+			      <div class="col-xs-6 col-sm-6 labelbold">
+				    营业状态:
+				  </div>
+				  <div class="col-xs-6 col-sm-6" id="bar_nBusinessStatus">
+				  </div>
+			   </div>
+
+			   	<div class="row mgb15">
+			      <div class="col-xs-6 col-sm-6 labelbold">
+				    注册IP:
+				  </div>
+				  <div class="col-xs-6 col-sm-6" id="bar_sDefaultIp">
+				  </div>
+			   </div>
+
+			</div>
+		  </div>
+		
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+      </div>
+	  
+    </div>
+  </div>
+</div> 
+
+</block>
+
+
+
+
+<block name="script">
+    <script>
+        $(function(){
+            $('#grid-table').jqGrid({
+                url:'{:U("getindexbarinfo")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colNames:['网吧id','省份','城市','地区','区域','网吧名称','网吧名称2','营业场所编号','在线状态','营业状态','软件状态','登录IP','在线/最高机器数','插入时间','网吧电话','最后联系时间','操作'],
+                colModel:[
+                    {name:'wbid',hidden:true,},
+                    {name:'nProvince',hidden:true},
+                    {name:'nCity',hidden:true},
+                    {name:'nDistrict',hidden:true},
+                    {name:'area',editable:true},
+                    {name:'sBarName',editable:true,width:280},
+                    {name:'sBarName2',hidden:true,width:280},
+                    {name:'sBarCode',editable:true,width:100},
+                    {name:'nOnlineStatus',editable:true,width:70},
+                    {name:'nBusinessStatus',editable:true,width:70},
+                    {name:'nSoftStatus',hidden:true,width:70},  
+                    {name:'sServerIp',editable:true,width:80},                
+                    {name:'nClientCount',editable:true,width:100}, 
+                    {name:'dtInsertTime',hidden:true},   
+                    {name:'sBossPhone',hidden:true},                
+                    {name:'dtLastUpdateTime',editable:true,width:150},
+                    {name:'opera',editable:true,width:340}
+                ],
+                rowNum:15,
+                viewrecords: true,
+				sortorder: "desc",
+                pager:'#grid-pager',
+
+                onCellSelect:function(rowid,index,contents,event)
+                {
+				 var rowData=$("#grid-table").jqGrid("getRowData",rowid);
+
+						   if(index==5)
+						   {
+							  $(function()
+							  {
+									 $.ajax({  
+										 type: "GET",
+										 url: '{:U("track/getwebinfo")}',
+										 data: {wbid:rowData.wbid},
+										 dataType: "json",
+										 success:function(data)
+										 {										   
+										   $('#bar_sBarName').html(data.sBarName);
+										   $('#bar_sBarCultureCode').html(data.sBarCultureCode);
+										   $('#bar_sShoufeiAccount').html(data.sShoufeiAccount);
+										   $('#bar_sWupanAccount').html(data.sWupanAccount);
+										   $('#bar_sBoss').html(data.sBoss);
+										   $('#bar_sBossPhone').html(data.sBossPhone);
+										   $('#bar_sFarenName').html(data.sFarenName);
+										   $('#bar_sArea').html(data.sArea);
+										   $('#bar_sBarAddress').html(data.sBarAddress);
+										   $('#bar_sServerVersion').html(data.sServerVersion);
+										   $('#bar_nDefaultPcCount').html(data.nDefaultPcCount);
+										   $('#bar_sBusinessArea').html(data.sBusinessArea);									   										 			
+										   $('#bar_nOnlineStatus').html(data.nOnlineStatus);										  								
+										   $('#bar_nBusinessStatus').html(data.nBusinessStatus);
+										   $('#bar_nClientCount').html(data.nClientCount);	
+
+										   $('#bar_sServerIp').html(data.sServerIp);
+										   $('#bar_sDefaultIp').html(data.sDefaultIp);
+
+										 				   									   										   										 																				             								   
+										   $('#myModal').modal('show');
+										}
+								   })
+							   })
+					 
+					      }					  						  
+					},
+
+                gridComplete: function()
+                {
+                    var ids = $("#grid-table").jqGrid('getDataIDs');
+                    var add,edit,save,del = '';
+                    var col_nOnlineStatus,col_nSoftStatus,col_nBusinessStatus='';
+
+                    for(var i=0;i < ids.length;i++)                   	
+                    {
+                    	var rownum = ids[i];
+                        var getRow = $('#grid-table').getRowData(ids[i]);//获取当前的数据行  
+                        var wbid = getRow.wbid;
+                        var sBarName = getRow.sBarName;   
+                        var nOnlineStatus = getRow.nOnlineStatus; 
+                        var nSoftStatus   = getRow.nSoftStatus; 
+                        var nBusinessStatus  = getRow.nBusinessStatus; 
+                        var sServerIp  = getRow.sServerIp;                        			                       	    
+						var wbnamemodal='<span  style="cursor:pointer;color:#428bca;font-weight:bold;">'+sBarName+'</span>';	
+
+                        
+                       if(nOnlineStatus=='正常在线')
+                       {
+                          col_nOnlineStatus='<span  style="color:#82af6f;">'+nOnlineStatus+'</span>'	;                  
+                       }
+                       else if(nOnlineStatus=='离线')
+                       {
+                          col_nOnlineStatus='<span  style="color:#d15b47;">'+nOnlineStatus+'</span>'	;             
+                       }
+                       else if(nOnlineStatus=='异常在线')
+                       {
+                          col_nOnlineStatus='<span  style="color:#ffb752;">'+nOnlineStatus+'</span>'	;  
+                       }
+
+
+                       if(nSoftStatus=='正常')
+                       {       
+                          col_nSoftStatus='<span  style="color:#82af6f;">'+nSoftStatus+'</span>'	;              
+                       }
+                       else if(nSoftStatus=='异常')
+                       {
+                          col_nSoftStatus='<span  style="color:#d15b47;">'+nSoftStatus+'</span>'	;  
+                       }
+
+                       if(nBusinessStatus=='装机开业')
+                       {       
+                          col_nBusinessStatus='<span  style="color:#82af6f;">'+nBusinessStatus+'</span>'	;              
+                       }
+                       else if(nBusinessStatus=='未装机开业')
+                       {
+                          col_nBusinessStatus='<span  style="color:#d15b47;">'+nBusinessStatus+'</span>'	;  
+                       }
+					   else if(nBusinessStatus=='装机停业')
+                       {
+                          col_nBusinessStatus='<span  style="color:#ffb752;">'+nBusinessStatus+'</span>'	;  
+                       }
+                       else 
+                       {
+                          col_nBusinessStatus='<span  style="color:#999;">'+nBusinessStatus+'</span>';             
+                       }
+                 
+                           edit= '<a href={:U('bar_edit')}?wbid='+wbid+'>修改</a>&nbsp&nbsp|&nbsp&nbsp<a  onclick=\"delRowData('+rownum+' );\">删除</a>&nbsp&nbsp|&nbsp&nbsp<a href={:U('jiankong')}?wbid='+wbid+'>抓屏</a>&nbsp&nbsp|&nbsp&nbsp<a href=http://'+sServerIp+':8000>视频监控</a>&nbsp&nbsp|&nbsp&nbsp<a href={:U('message/chufa_add')}?wbid='+wbid+'>处罚</a>';
+                        // edit= '<a href={:U('bar_edit')}?wbid='+wbid+'>修改</a>&nbsp&nbsp|&nbsp&nbsp<a  onclick=\"delRowData('+rownum+' );\">删除</a>&nbsp&nbsp|&nbsp&nbsp<a href={:U('jiankong')}?wbid='+wbid+'>抓屏</a>&nbsp&nbsp|&nbsp&nbsp<a href={:U('jiankong')}?wbid='+wbid+'>视频监控</a>&nbsp&nbsp|&nbsp&nbsp<a href={:U('message/chufa_add')}?wbid='+wbid+'>处罚</a>';
+						
+                        // <!-- edit = '<a href={:U('bar_edit')}?wbid='+wbid+'><button type="button" class="btn btn-primary btn-sm">修改</button></a>'; -->                                    
+                        // <!-- del = "<input style=\"padding:4px 9px\"  class=\"btn btn-yellow btn-sm\"  type='button' value='删除' onclick=\"delRowData('"+rownum+"' );\" />"; -->
+                        // <!-- print = '<a href={:U('jiankong')}?wbid='+wbid+'><button type="button" class="btn btn-primary btn-sm">抓屏</button></a>';   -->
+                       
+                        // <!-- chufa = '<a href={:U('message/chufa_add')}?wbid='+wbid+'><button type="button" class="btn btn-primary btn-sm">处罚</button></a>';  -->
+
+                                                    
+                        $("#grid-table").jqGrid('setRowData',ids[i],{opera:edit,nOnlineStatus:col_nOnlineStatus,sBarName:wbnamemodal,nSoftStatus:col_nSoftStatus,nBusinessStatus:col_nBusinessStatus});
+                    }
+
+                }
+            }).jqGrid('navGrid','#grid-pager',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+		
+	$('#daterange').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+	$('.daterange').daterangepicker({
+		format:'YYYY/MM/DD hh:mm:ss',
+		timePicker: true,
+		timePickerIncrement: 1,
+		timePickerSeconds:true,
+		startDate:moment().startOf('day'),  
+		endDate: moment(),
+		timePicker12Hour:false,			
+		ranges: {  
+				   '今天': [moment().startOf('day'), moment().endOf('day')],  
+				   '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+				   '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+				   '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+				   '本月': [moment().startOf('month'), moment().endOf('month')],  
+				   '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+				},				
+		locale:{
+			applyLabel:'确定',
+			cancelLabel:'取消',
+			fromLabel:'从',
+			toLabel:'至',
+			daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+			monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+			customRangeLabel: '自定义',
+			firstDay : 1
+		}
+
+	},function(start,end,label){
+	$('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+	}).next().click(function(){$(this).prev().focus();});
+
+    function doSearch(){
+    $('#grid-table').jqGrid('setGridParam',{
+        postData:{
+            // daterange:$('#daterange').val(),
+            sBarName:$('#sBarName').val(),
+            sContent:$('#sContent').val(),
+            nOnlineStatus:$('#nOnlineStatus').val(),
+            nBusinessStatus:$('#nBusinessStatus').val(),
+            sBossPhone:$('#sBossPhone').val(),
+
+                     
+            province:$('#province').val(),
+            city:$('#city').val(),
+            area:$('#area').val()           
+        }
+    }).trigger('reloadGrid');
+   }
+
+
+   function delRowData(row){
+
+            var rowData = $('#grid-table').jqGrid('getRowData',row);
+            if(confirm('确定要删除“'+rowData['sBarName2']+'”吗？'))
+            {
+                $.post("{:U('bar_delete')}",{wbid:rowData['wbid']},function(data)
+                {   
+
+                    if(data.status==1)
+                    {
+                        alert('删除成功');
+                        $('#grid-table').trigger('reloadGrid');
+                    }
+                    else if(data.status==-1)
+                    {
+                        alert('删除失败');
+                    }
+                });
+            }
+        }
+	
+		$('#province').change(function(){
+			show_areas($(this).val(),'city');
+		});
+		$('#city').change(function(){
+			show_areas($(this).val(),'area');
+		});
+		function show_areas(pid,type){
+			$.get("{:U('Common/getAreaListHtmlById')}",{id:pid},function(data){
+				if(data.status){
+					$('#'+type).html('<option value=0>-请选择-</option>'+data.info);
+				}
+			});
+		}
+
+
+
+
+   </script>
+</block>

@@ -1,0 +1,107 @@
+<extend name="Public/base" />
+
+<block name="content">
+    <div class="tabbable">
+        <include file="nav" />
+        <div class="tab-content">
+            <div class="tab-pane active">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <h4 class="header">区域选择</h4>
+                        <div class="list-group" id="district-list">
+                            <a class="list-group-item" id="district-0" href="javascript:getSurcharge(0,0);">默认区域</a>
+                            <a class="list-group-item" id="district-1" href="javascript:getSurcharge(0,1);">VIP区</a>
+                        </div>
+                    </div>
+                    <div class="col-sm-10">
+                        <h4 class="header">费率设置 <button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#addsurcharge">添加</button></h4>
+                        <div class="tabbable">
+                            <ul class="nav nav-tabs" id="type-list">
+                                <li id="type-0"><a href="javascript:getSurcharge(0);">单机费率</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table id="surcharge" class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>名称</th>
+                                                        <th>金额（元）</th>
+                                                        <th>操作</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addsurcharge" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title">添加附加费</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">名称：</label>
+                            <input class="col-sm-4" type="text" name="points"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">金额：</label>
+                            <input class="col-sm-4" type="text" name="money"/> 元
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-12 text-center">金额：是计费卡扣除的费用；必须大于0。</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" onclick="submitAddSurcharge();" class="btn btn-primary">添加</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script>
+        $(function(){
+            getSurcharge(0,0);
+        })
+        var district = 0;
+        var type = 0;
+        function getSurcharge(){
+            type = arguments[0] !== undefined ? arguments[0] : 0;
+            district = arguments[1] !== undefined ? arguments[1] : $('#district-list .active').attr('id').substr(-1);
+            $.get("{:U('getSurcharge')}",{type:type,district:district},function(data){
+                var surcharge = '';
+                for(var index in data){
+                    surcharge += '<tr><td>'+data[index].name+'</td><td>'+data[index].price+'</td><td>删除</td>';
+                }
+                $('#surcharge tbody').html(surcharge);
+                $('#district-list a').removeClass('active');
+                $('#district-'+district).addClass('active');
+                $('#type-list li').removeClass('active');
+                $('#type-'+type).addClass('active');
+            })
+        }
+        function submitAddSurcharge(){
+            $.post('{:U("setSurcharge")}',$('#addsurcharge form').serialize()+'&district='+district+'&type='+type,function(data){
+                console.log(data);
+            })
+        }
+    </script>
+</block>

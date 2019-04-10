@@ -1,0 +1,1011 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <js href="__PUBLIC__/echarts/echarts.common.min.js" />
+	<js href="__PUBLIC__/layer/layer.js" />
+<style>
+.widget-main p{
+   line-height: 25px;
+   text-indent: 1em;
+}
+.mgb15{
+	margin-bottom: 15px;
+}
+
+
+.header_text{
+   width:50%;
+   text-align:center;
+   font-size:18px;
+   color:#2f2e2e;
+   font-weight:100;
+}
+.header_text span{
+   color:#ff5129;
+   font-weight:800;
+}
+.lengend ul li .sq{
+   display:block;
+   float:left;
+   width:11px;
+   height:11px;
+   background:red;
+   margin-right:7px;
+}
+.lengend{
+   padding-top:15px;
+}
+.lengend ul li{
+   border-bottom:1px solid #ebebeb;
+   font-size:13px;
+   width:192;
+   position:relative;
+   line-height:1em;
+   padding-bottom:5px;
+   padding-top:5px;
+
+}
+.lengend ul li b{
+   float:right;
+   color:#393939;
+   font-weight:100;
+   padding-right:20px;
+}
+.lengend ul li .sub_item{
+  position:absolute;
+  right:-143px;
+  top:0;
+  width:143px;
+  padding:20px;
+  height:auto;
+  background:#7db4d8;
+  z-index:2;
+  color:#fff;
+  display: none;
+}
+.hover{
+  background:#7db4d8;
+}
+.compose table{
+   font-size:14px;
+   margin:0 20px;
+}
+.th_remark{
+   padding-top:15px;
+   padding-bottom:28px;
+   padding-left:20px;
+   color:#7d7d7d;
+}
+.tf_remark{
+   padding-top:15px;
+   padding-bottom:4px;
+   color:#7d7d7d;
+   padding-bottom:15px;
+}
+.layui-dqtime{background:url(__PUBLIC__/image/dqtime.png) no-repeat;}
+.layui-layer{box-shadow:none}
+.layui-dqtime .layui-layer-content {padding:15px;text-align:center;font-size:20px;font-weight:bold;margin-top:300px;color:#e67817;}
+.layer_notice .wbts_title{
+		   background:#5FB878;color:#ffffff;font-size:22px;padding:20px;text-align:center;
+		}
+		.wbymImg_box{width:700px;}
+    .red{
+      color: red;
+    }
+</style>
+</block>
+
+<block name="content">
+<div style="display:none" class="layer_notice">
+	  <!-- <div class="wbts_title">商品超市已上线，是否需要前往新版超市<a href="{:U('rate/fujia')}"> &nbsp;设置</a></div> -->
+	 <p class="wbts_title">商品超市新增商品组合功能</p>
+     <div class="wbymImg_box" style="width:830px;margin:0px 0px 0px 0px;">
+          <img src="__PUBLIC__/image/zuhe_tishi.png" style="width:100%;"/>
+     </div>
+    <p class="wbts_title">吧台商品<span class="red">上下架</span>、<span class="red">进出货</span>以及商品的<span  class="red">组合修改</span>已全部添加</p>
+</div>
+
+      <input type="hidden" class="form-control"id="tanchu" name="tanchu" value = "{$tanchu}" >
+      <input type="hidden" class="form-control"id="daycha" name="daycha"  value = "{$daycha}">	  
+
+              
+    <div class="row">
+        <div class="col-xs-12">
+	 <!--          <div class="alert alert-warning bolder">会员充值收入：<span class="orange" id="hymoney">0</span> 元 临时卡收入：<span class="orange" id="lsmoney">0</span> 元 
+	          	商品收入：<span class="orange" id="change">0</span> 元 
+	        </div> -->
+    	<div class="row">
+	   <div class="col-sm-6">
+	      <!-- <div class="tabbable"> -->
+        <div  class="widget-box" >
+      <div class="widget-header"><i class="fa fa-hand-o-right" ></i><span style="margin-left:5px;">今日收入</span>
+        <!--<a href="#" style="position:absolute;right:20px;">查看明细</a>  -->
+      </div>
+			<div class="widget-body">
+			   <div >
+			      <div class="row">
+				     <div class="col-sm-12">
+					  
+						   
+						   <h4 class="header_text">今日收入：<span class="current_income">{$money_array.sum_money}</span></h4>
+						     <div class="row">
+                  <div class="col-sm-12">
+                  <div class="row">
+							 <div class="col-sm-6">
+					          <div id="pie_income" style="height:150px;"></div>
+							 </div>
+							 <div class="col-sm-5">
+							  <div class="lengend" >
+								  <ul class="lengend_list">
+                    <li style="position:relative;" class="has_child" ><i class="sq" style="background-color:#90A7EB;"></i>网费<b>{$money_array.wf_money}<i class="fa fa-angle-right" style="position:absolute;right:5px;"></i></b>
+                     <div class="sub_item">
+                        <table>
+                          <tbody>
+                             <tr>
+                                <th>会员卡</th>
+                                <td>{$money_array.hyk_money}</td>
+                             </tr>
+                             <tr>
+                                <th>临时卡</th>
+                                <td>{$money_array.lsk_money}</td>
+                             </tr>
+                          </tbody>
+                        </table>
+                     </div>
+                    </li>
+								<!--      <li><i class="sq" style="background-color:#FFD76B;"></i>公众号充值<b>{$money_array.gzh_money}</b></li> -->
+									 <li><i class="sq" style="background-color:#FEBD4F;"></i>微信支付<b>{$money_array.wx_money}</b></li>
+									 <li><i class="sq" style="background-color:#B2E472;"></i>支付宝支付<b>{$money_array.zfb_money}</b></li>
+									 
+								  </ul>                     
+    
+
+								</div>
+               
+								</div>
+                 
+                 </div>
+                   <p style="color:#7d7d7d;text-align:center;">以上信息统计{$today.begtime}到{$today.endtime}</p>
+                 </div>
+               </div>
+						 
+						 
+
+					
+				  </div>
+			   </div>
+			</div>
+		  </div>
+	   </div>
+	   
+	</div>
+	<div class="col-sm-6">
+    <div  class="widget-box" >
+      <div class="widget-header"><i class="fa fa-hand-o-right" ></i><span style="margin-left:5px;">当班收入</span>
+        <!--<a href="#" style="position:absolute;right:20px;">查看明细</a>  -->
+      </div>
+      <div class="widget-body compose" >
+
+           <div class="th_remark">从上次交班时间<span id="js_shift_start">{$nowday.shift_begtime}</span><span class="js_sep"></span>到<span id="js_shiftend">{$nowday.nowtime}</span></div>
+        <div class="row">
+		  <div class="col-sm-6">
+          <table>
+            <!-- <thead>
+            <tr>
+              <td colspan="5" class="th_remark">从上次交班时间<span id="js_shift_start">{$nowday.shift_begtime}</span><span class="js_sep"></span>到<span id="js_shiftend">{$nowday.nowtime}</span></td>
+            </tr>
+            </thead> -->
+            <tbody>
+            <tr style="font-size:20px;">
+              <th>当班收入</th><td style="color:#ff5129">{$nowshift_money.shouru_money}元</td>	  
+            </tr>
+			   
+			<tr style="font-size:14px;color:#7d7d7d;line-height:28px;">
+			 <td>会员加钱明细</td><td style="color:#ff5129">{$nowshift_money.hyk_jq_money}元</td>
+			</tr>
+			<tr style="font-size:14px;color:#7d7d7d;line-height:28px;">
+			 <td>临时加钱明细</td><td style="color:#ff5129">{$nowshift_money.lsk_jq_money}元</td>
+			</tr>
+			<tr style="font-size:14px;color:#7d7d7d;line-height:28px;">
+			 <td>临时找零明细</td><td style="color:#ff5129">{$nowshift_money.lsk_zl_money}元</td>
+			</tr>
+
+
+            </tbody>
+            <tfoot>
+            <tr>
+              <td colspan="5" class="tf_remark">注：当班收入不包含非现金</td>
+            </tr>
+            </tfoot>
+          </table>
+		  </div>
+		  <div class="col-sm-6">
+          <table>
+            <tbody>
+			
+			<volist name="area_list" id="o">		
+			<tr style="font-size:14px;color:#7d7d7d;line-height:28px;">
+			  <td >{$o.GroupName}</td>
+			  <td style="color:#ff5129">总机器数 {$o.ToTal}</td>
+			  <td style="color:#ff5129">在线{$o.Online}</td>		  
+			</tr>            
+            </volist>
+			
+			<tr style="font-size:14px;color:#7d7d7d;line-height:28px;">
+			 
+			  <td>在线临时卡</td><td style="color:#ff5129">{$online_numlist.TemOnline}人</td>
+			  	  
+			</tr>  
+			
+			<tr style="font-size:14px;color:#7d7d7d;line-height:28px;">
+			 
+			 
+			  <td>在线会员</td><td style="color:#ff5129">{$online_numlist.HyOnline}人</td>		  
+			</tr>  
+	
+		
+            </tbody>
+          </table>
+		  </div>
+        </div>
+
+      </div>
+    </div>	   
+	</div>
+</div>
+
+<br>
+
+
+
+
+
+
+
+
+
+            
+<!-- 		    <div class="row">
+		        <div class="col-sm-12">
+		            <h4><strong>最近五次交班记录</strong></h4>
+		       	  <div id="jqgrid">
+		              <table id="grid-table">
+				       </table>
+		             </div>
+		        </div>
+		    </div> -->
+                 <div class="row">
+                    <div class="col-xs-12">
+
+                        <!-- content---start -->
+
+
+        <div class="tabbable">
+            <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4" style="font-size:12px;">
+              <li class="active">
+                <a data-toggle="tab" href="#hy" >当班会员加钱明细</a>
+              </li>
+
+              <li>
+                <a data-toggle="tab" href="#Tem"  >当班临时卡加钱明细</a>
+              </li>
+
+              <li>
+                  <a data-toggle="tab" href="#gzh">当班临时卡找零明细</a>
+              </li>
+
+              <li>
+                <a data-toggle="tab" href="#jifen">当班积分兑换明细</a>
+              </li>
+
+              <li>
+                  <a data-toggle="tab" href="#wx">当班微信支付明细</a>
+              </li>
+              <li>
+                  <a data-toggle="tab" href="#zfb">当班支付宝支付明细</a>
+              </li>
+            </ul>
+
+            <div class="tab-content" >
+              <div id="hy" class="tab-pane in active">
+                <div id="jqgrid">
+                    <table id="grid-table"></table>
+                     <div id="grid-pager"></div>
+                    </div> 
+                </div>
+
+                <div id="Tem" class="tab-pane">
+                 <div id="jqgrid1">
+                    <table id="grid-table1"></table>
+                    <div id="grid-pager1"></div>
+                  </div>                
+               </div>
+
+              <div id="jifen" class="tab-pane">
+                <div id="jqgrid2">
+                    <table id="grid-table2"></table>
+                    <div id="grid-pager2"></div>
+                </div> 
+              </div>
+              <div id="gzh" class="tab-pane">
+                <div id="jqgrid3">
+                  <table id="grid-table3"></table>
+                  <div id="grid-pager3"></div>
+                </div>
+             </div>
+             <div id="wx" class="tab-pane">
+                <div id="jqgrid3">
+                  <table id="grid-table4"></table>
+                  <div id="grid-pager4"></div>
+                </div>
+             </div>
+             <div id="zfb" class="tab-pane">
+                <div id="jqgrid5">
+                  <table id="grid-table5"></table>
+                  <div id="grid-pager5"></div>
+                </div>
+             </div>  
+          </div>  
+    </div>
+                                                                 
+
+                        <!-- content---end -->
+                    </div>
+                </div>
+		    <hr />
+		    <div class="row">
+		        <div class="col-sm-12">
+		            <div id="cash_chart" style="height:350px;"></div>
+		        </div>
+		    </div>
+       </div>
+    </div>
+
+
+
+           
+
+
+
+</block>
+
+<block name="script">
+ <script type="text/javascript">
+
+//         $(function(){
+//             $('#grid-table').jqGrid({
+//                 url:'{:U("bar/getareaserveronlineinfo")}',
+//                 datatype:'json',
+//                 height:"100%",
+//                 autowidth:true,
+//                 colNames:['序号','区域','服务端总数量','在线服务端数量','在线率'],
+//                 colModel:[
+//                     {name:'id',hidden:true},
+//                     {name:'area_name',},                   
+//                     {name:'sumareacount'},  
+//                     {name:'onlineareacount'},                  
+//                     {name:'zaixianlv'}, 
+//                 ],
+//                 rowNum:20,
+//                 viewrecords: true,
+// 				sortorder: "desc",
+// 				caption:"网吧服务器平均在线率统计对照表",
+               
+
+//                gridComplete: function()
+//                {  
+//                     var ids = $("#grid-table").jqGrid('getDataIDs');
+//                     for(var i=0;i < ids.length;i++)                     
+//                     {                      
+//                         var getRow = $('#grid-table').getRowData(ids[i]);//获取当前的数据行  
+//                         var thismonthcaption = getRow.thismonth;
+//                         var othermonthcaption = getRow.othermonth;
+//                     }
+
+//                    $('#grid-table').jqGrid('setLabel', "othermonthcount", othermonthcaption); 
+//                    $('#grid-table').jqGrid('setLabel', "thismonthcount", thismonthcaption);             
+//                 }
+
+
+//             }).jqGrid('navGrid','#grid-pager',{
+//                 add:false,
+//                 edit:false,
+//                 del:false,
+//                 refresh:false,
+//                 // searchtext:'高级搜索',
+//                 // searchtitle:'高级搜索'
+//             },{},{},{},{
+//                 multipleSearch:true
+//             });
+			
+
+//             $(window).resize(function()
+//             {
+//                 $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+//             });
+//         });
+ </script>
+
+
+ <script>
+        var day = new Date();
+        day.setDate(day.getDate()-27)
+        var cash_chart = {
+            title:{
+                text:'近28天现金收入走势'
+            },
+            credits:{
+                enabled:false
+            },
+            xAxis:{
+                type:'datetime',
+                labels:{
+                    format:'{value:%m/%d}'
+                }
+            },
+            yAxis:{
+                title:{
+                    text:'金额'
+                }
+            },
+            tooltip:{
+                formatter:function(){
+                    var d = new Date(this.x);
+                    var month = d.getUTCMonth()+1;
+                    var date = d.getUTCDate();
+                    return '时间：'+month+'月'+date+'日<br />'+this.series.name+'：'+this.y;
+                }
+            },
+            plotOptions:{
+                series:{
+                    pointStart:Date.UTC(day.getUTCFullYear(),day.getUTCMonth(),day.getUTCDate()),
+                    pointInterval:24*3600000
+                }
+            },
+            legend:{
+                enabled:false
+            },
+            series:[{
+                name:'现金',
+                //data:[2,5,8,10,21,35,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+				data:[]
+            }]
+        };
+		
+		    function show_k_line(_data_)
+        {
+        	     cash_chart.series[0].data = _data_;
+        	      $('#cash_chart').highcharts(cash_chart);
+        };
+
+        
+
+
+		
+    </script>
+
+  
+
+
+
+
+
+     <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('pie_income'));
+
+        // 指定图表的配置项和数据
+option = {
+    tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b}: {c} ({d}%)"
+    },
+
+    series: [
+        {
+            name:'访问来源',
+            type:'pie',
+            radius: ['40%', '80%'],
+            avoidLabelOverlap: false,
+            label: {
+                normal: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    show: true,
+                    textStyle: {
+                        fontSize: '14',
+                        fontWeight: 'bold'
+                    }
+                }
+            },
+            labelLine: {
+                normal: {
+                    show: false
+                }
+            },
+            data:[]
+                // {value:0, name:'网费'},
+                // {value:0, name:'购买商品'},
+                // {value:0, name:'0013手机充值'},
+                // {value:0, name:'增收宝加钱'},
+                // {value:0, name:'其他收入'}
+            
+        }
+    ],
+	color:['#90A7EB','#FFD76B','#FEBD4F','#B2E472','#58DBD7',]
+};
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+     
+  <script>
+    getData();
+    function getData(){
+      
+     $.get("{:U('getData')}",function(data)
+     { 
+
+        // alert(data.data[0]['value']);
+		 //alert(data.data[0]['name']);
+		 
+		 //alert(data.data[1]['value']);
+		 //alert(data.data[1]['name']);
+		 
+		 
+        myChart.setOption({
+        series:[{data:data.data}]
+       });
+ 
+       
+        
+        });  
+    // $('#type-list li').removeClass('active');
+    // $('#type_'+type).addClass('active');
+    }
+  </script>
+
+ <script>
+  
+        $(function(){
+            $('#grid-table').jqGrid({
+                url: '{:U("getshiftlist_hyaddmoney_detail")}',
+                datatype: "json",
+                mtype: "get",
+                height:"100%",
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[ 
+                     {label:'收银端',name:'SyId'},
+                     {label:'卡号',name:'cardNo'},
+                     {label:'会员等级',name:'hylevel'},
+                     {label:'姓名',name:'hyname'},
+                     {label:'充值金额',name:'je'}, 
+                     {label:'奖励金额',name:'jlJe'}, 
+                     {label:'分期金额',name:'fqje'}, 
+                     {label:'分期期数',name:'FqCount'},
+                     {label:'日期',name:'cTime'},
+                     {label:'收银员',name:'Operation'}
+                 ],     
+                 styleUI : 'Bootstrap',
+                rowNum:30,
+                viewrecords: true,
+                pager:'#grid-pager',
+                loadError:function(xhr,status,error)
+                {  
+                      }, 
+            });
+              $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+        $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $(window).width()*0.8, true);
+            }); 
+       });
+    
+
+       $(function(){
+            $('#grid-table1').jqGrid({
+                url: '{:U("getshiftlist_lskaddmoney_detail")}',
+                datatype: "json",
+                mtype: "GET",
+                height:"100%",
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[
+                    {label:'收银端',name:'SyId',width:200},
+                    {label:'卡号',name:'cardNo',width:200},
+                    {label:'金额',name:'je',width:200},
+                    {label:'日期',name:'cTime',width:200},
+                    {label:'收银员',name:'Operation',width:200}
+                ],
+                styleUI : 'Bootstrap',
+                rowNum:30,
+                viewrecords: true,
+                pager:'#grid-pager1',
+                loadError:function(xhr,status,error){  
+                      }, 
+        
+            });
+      
+       $('#grid-table1').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+         $(window).resize(function(){
+                $('#grid-table1').jqGrid('setGridWidth', $(window).width()*0.8, true);
+          });
+       
+  });  
+
+       
+  
+        $(function(){
+            $('#grid-table2').jqGrid({
+                url:'{:U("getshift_SpChangeinfo")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                 colModel:[
+                     {label:'收银端',name:'syid',width:70},
+                    {label:'网吧id',name:'wbid',hidden:true},
+                    {label:'会员卡号',name:'HyCardNo',width:120,},
+                    {label:'兑换积分',name:'Integral',width:70},
+                    {label:'兑换类型',name:'Lx',width:70},
+                    {label:'兑换网费',name:'Je',width:70,hidden:true},
+                    {label:'兑换物品',name:'sp',width:70},
+                    {label:'兑换商品',name:'SpName',hidden:true},
+                    {label:'兑换商品数量',name:'SpSl',hidden:true},
+                   
+                    {label:'操作人',name:'Operate',width:70},
+                    {label:'时间',name:'cTime',width:120},
+                ],
+                rowNum:30,
+                viewrecords: true,
+                sortorder: "desc",
+                pager:'#grid-pager2',
+
+
+                gridComplete: function()
+                {
+                    var ids = $("#grid-table2").jqGrid('getDataIDs');
+                    var aa;
+                    for(var i=0;i < ids.length;i++)
+                    {
+
+                      var getRow = $('#grid-table2').getRowData(ids[i]);//获取当前的数据行  
+                      var Lx = getRow.Lx;
+                      var SpName=getRow.SpName;
+                      var SpSl=getRow.SpSl;
+                      var Je=getRow.Je
+                      var sp='';
+                      if(!(SpName=='')){
+
+                           sp='<span style="padding-right:20px;">'+SpName+'</span>数量：'+SpSl;
+                      }
+                      sp+=Je;
+           
+                     if(Lx=='0')
+                      {
+                        aa='<span class="label label-sm label-primary arrowed-in">网费</span>';          
+                      }
+                      else if(Lx=='1')
+                      {
+                        aa='<span class="label label-sm label-pink arrowed-in">商品</span>';
+                      }
+                          
+                      $("#grid-table2").jqGrid('setRowData',ids[i],{Lx:aa});  
+                      $("#grid-table2").jqGrid('setRowData',ids[i],{sp:sp});        
+                       
+
+                    }
+
+                }
+            }).jqGrid('navGrid','#grid-pager',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+            $('#grid-table2').jqGrid('setGridWidth',$('#jqgrid').width(), true);
+         $(window).resize(function(){
+                $('#grid-table2').jqGrid('setGridWidth', $(window).width()*0.8, true);
+          });
+        });
+ 
+
+    
+   $(function(){
+            $('#grid-table3').jqGrid({
+                url:'{:U("getshiftlist_lskzhaoling_detail")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colNames:['收银端','卡号','实找金额','日期','收银员'],
+                colModel:[
+                    {name:'SyId',editable:true,},               
+                    {name:'cardNo',editable:true},
+                    {name:'je',editable:true},
+                    {name:'cTime',editable:true},
+                    {name:'Operation',editable:true},           
+                  
+                ],
+
+                rowNum:30,
+                viewrecords: true,
+                sortorder: "desc",
+                pager:'#grid-pager3',
+
+                loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+                    
+                    $("#summoney").html(data['pay_sum']);
+                    $("#refund").html(data['refund_sum']);                  
+                 }, 
+
+
+
+                gridComplete: function()
+                {
+
+                    // var ids = $("#grid-table3").jqGrid('getDataIDs');
+                    // var aa;
+                    // for(var i=0;i < ids.length;i++)
+                    // {
+
+                    //   var getRow = $('#grid-table3').getRowData(ids[i]);//获取当前的数据行  
+                    //   var zlje = getRow.zlje;
+
+           
+                    //  if(zlje==0)
+                    //   {
+                                  
+                    //   }
+                    //   else 
+                    //   {
+                    //     aa='<span class="label label-sm label-pink arrowed-in">是</span>';
+                    //   }
+                          
+                    //   $("#grid-table3").jqGrid('setRowData',ids[i],{zlje:aa});  
+                     
+                       
+
+                    // }
+                }
+            }).jqGrid('navGrid','#grid-pager',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+          $('#grid-table3').jqGrid('setGridWidth',$('#jqgrid').width(), true);
+         $(window).resize(function(){
+                $('#grid-table3').jqGrid('setGridWidth',$(window).width()*0.8, true);
+          });
+        });
+       
+ 
+
+
+
+            $(function(){
+            $('#grid-table4').jqGrid({
+                url:'{:U("getwxpaylist")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colNames:['交易时间','商户订单号','交易金额(元)','奖励金额(元)','会员卡号','是否会员','收银员ID','操作员'],
+                colModel:[
+                    {name:'cTime',editable:true,},               
+                    {name:'QtZfNo',editable:true},               
+                    {name:'je',editable:true},
+                    {name:'jlje',editable:true},
+                    {name:'CardNo',editable:true},  
+                    {name:'isHy',editable:true}, 
+                                  
+                    {name:'SyId',editable:true}, 
+                    {name:'Operation',editable:true}, 
+
+                    
+                ],
+                rowNum:30,
+                viewrecords: true,
+                sortorder: "desc",
+                pager:'#grid-pager4',
+
+                loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+                    
+                    $("#summoney").html(data['pay_sum']);
+                    $("#refund").html(data['refund_sum']);                  
+                 }, 
+
+                gridComplete: function(data)
+                {
+                         var ids = $("#grid-table4").jqGrid('getDataIDs');
+                    var aa;
+                    for(var i=0;i < ids.length;i++)
+                    {
+
+                      var getRow = $('#grid-table4').getRowData(ids[i]);//获取当前的数据行  
+                      var isHy = getRow.isHy;
+
+           
+                     if(isHy=='0')
+                      {
+                        aa='<span class="label label-sm label-primary arrowed-in">否</span>';          
+                      }
+                      else if(isHy=='1')
+                      {
+                        aa='<span class="label label-sm label-pink arrowed-in">是</span>';
+                      }
+                          
+                      $("#grid-table4").jqGrid('setRowData',ids[i],{isHy:aa});  
+                     
+                       
+
+                    }
+
+                }
+            }).jqGrid('navGrid','#grid-pager',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+             $('#grid-table4').jqGrid('setGridWidth',$('#jqgrid').width(), true);
+         $(window).resize(function(){
+                $('#grid-table4').jqGrid('setGridWidth',$(window).width()*0.8, true);
+          });
+        });
+
+
+
+
+
+
+        $(function(){
+            $('#grid-table5').jqGrid({
+                url:'{:U("getalipayinfo")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colNames:['交易时间','商户订单号','交易金额(元)','奖励金额(元)','会员卡号','是否会员','收银员ID','操作员'],
+                colModel:[
+                    {name:'cTime',editable:true,},               
+                    {name:'QtzfNo',editable:true},               
+                    {name:'je',editable:true},
+                    {name:'jlje',editable:true},
+                    {name:'CardNo',editable:true},  
+                    {name:'isHy',editable:true}, 
+                                  
+                    {name:'SyId',editable:true}, 
+                    {name:'Operation',editable:true}, 
+
+                    
+                ],
+                rowNum:30,
+                viewrecords: true,
+                sortorder: "desc",
+                pager:'#grid-pager5',
+
+                loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+                    
+                    $("#summoney").html(data['pay_sum']);
+                    $("#refund").html(data['refund_sum']);                  
+                 }, 
+
+  
+
+                gridComplete: function()
+                {
+                         var ids = $("#grid-table5").jqGrid('getDataIDs');
+                    var aa;
+                    for(var i=0;i < ids.length;i++)
+                    {
+
+                      var getRow = $('#grid-table5').getRowData(ids[i]);//获取当前的数据行  
+                      var isHy = getRow.isHy;
+
+           
+                     if(isHy=='0')
+                      {
+                        aa='<span class="label label-sm label-primary arrowed-in">否</span>';          
+                      }
+                      else if(isHy=='1')
+                      {
+                        aa='<span class="label label-sm label-pink arrowed-in">是</span>';
+                      }
+                          
+                      $("#grid-table5").jqGrid('setRowData',ids[i],{isHy:aa});  
+                     
+                       
+
+                    }
+
+                }
+            }).jqGrid('navGrid','#grid-pager',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+         $('#grid-table5').jqGrid('setGridWidth',$('#jqgrid').width(), true);
+         $(window).resize(function(){
+                $('#grid-table5').jqGrid('setGridWidth',$(window).width()*0.8, true);
+          });
+        });
+    
+  $('.has_child').hover(function(){
+       $('.has_child').addClass('hover');
+       $('.has_child').css('color','#fff');
+       $('.has_child b').css('color','#fff');
+       $('.sub_item').css('display','block');
+
+  },function(){
+       $('.has_child').removeClass('hover');
+       $('.has_child').css('color','#393939');
+       $('.has_child b').css('color','#393939');
+       $('.sub_item').css('display','none');
+  })
+  
+  function showmessage()
+  {
+     layer.open({
+	  type: 1,
+	  title: false,
+	  closeBtn: 0,
+	  shade: 0,
+	  area: ['500px', '424px'],
+	  time: 50000, 
+	  shift: 1,
+	  shade:0.6,
+	  shadeClose:true,
+	  skin:'layui-dqtime',
+	  content: '您的授权时间马上就要到了，请赶快续费，以免影响正常使用', 
+
+	});
+  }
+  
+  var tanchu=$('#tanchu').val();
+  var daycha=$('#daycha').val();
+  
+  if(tanchu==1 && daycha<30)
+  {
+     showmessage();
+  }
+  else
+  {
+  
+  }
+  
+  
+  
+ layer.open({
+	  type: 1,
+	  shade: 0.3,
+	  time: 5000, 
+	  title: false, 
+	  shadeClose: true, //点击遮罩关闭层
+	  area : ['830px' , '600px'],
+	  content:$('.layer_notice'),
+	});
+
+    </script>
+</block>

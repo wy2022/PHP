@@ -1,0 +1,22 @@
+<div class="sidebar" id="sidebar">
+	<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+		<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+			<button class="btn btn-success"><i class="fa fa-signal fa-lg"></i></button>
+			<button class="btn btn-info"><i class="fa fa-pencil fa-lg"></i></button>
+			<button class="btn btn-warning"><i class="fa fa-group fa-lg"></i></button>
+			<button class="btn btn-danger"><i class="fa fa-cogs fa-lg"></i></button>
+		</div>
+		<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+			<span class="btn btn-success"></span>
+			<span class="btn btn-info"></span>
+			<span class="btn btn-warning"></span>
+			<span class="btn btn-danger"></span>
+		</div>
+	</div>			
+	<ul class="nav nav-list">
+		<php>get_sidebar($perm);</php>
+	</ul>
+	<div class="sidebar-collapse" id="sidebar-collapse">
+		<i class="fa fa-angle-double-left fa-lg icon-" data-icon1="fa fa-angle-double-left fa-lg" data-icon2="fa fa-angle-double-right fa-lg"></i>
+	</div>
+</div>

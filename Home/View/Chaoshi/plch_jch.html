@@ -1,0 +1,288 @@
+<block name="head">
+<include file="Public/head" />
+
+<css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+<js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+<js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+<css href="__PUBLIC__/assets/css/ace.min.css" />
+<css href="__PUBLIC__/assets/css/ace-skins.min.css" />
+<js href="__PUBLIC__/layer/layer.js" />
+  <style>
+   body{background:#fff;min-height:0px;max-height:700px;}
+   .pd15{padding:15px;}
+   .mg15{margin:15px;}
+   .mgb15{margin-bottom:15px;}
+   .sysline{
+      width:100%;;
+	  border-top:1px solid #c0dcea;
+	  border-bottom:1px solid #fff;
+	  margin:0px 0 20px;
+   }
+   .layFooter{
+      width:100%;height:40px; margin:0 auto 20px;text-align:center;
+   }
+   .fixedbottom{width:100%;position:fixed;bottom:0px;background-color:#fff;}
+   .biaodan{float:left;padding-left:15px;}
+   .search-bar input,.search-bar select{
+		display:inline-block;
+		height:30px;
+		font-size:14px;
+		line-height:
+		color:#555555;
+		vertical-align:middle;
+		-webkit-border-radius:4px !important;
+		-moz-border-radius:4px !important;
+		border-radius:4px !important;
+		border-color:#a4bed4;
+		text-align:left;
+		padding:4px 6px;
+		width:200px;
+	 }
+	 .search-bar input{width:200px;}
+	 .search-bar select{width:100px;}
+	 .btn1{
+		    font-size:12px;	
+			height:30px;
+			 width:90px;
+			-webkit-border-radius:2px;
+			-moz-border-radius:2px;
+			border-radius:2px;
+			border:0;
+			text-shadow:none;
+			background-image:none;
+			vertical-align:middle;
+			color:#ffffff;
+		 }
+   </style>
+</block>
+
+<block name="content">
+
+
+<div class="pd15">
+
+
+
+		<div  class="row search-bar" >
+		<form >
+		   <span class="mgb15 biaodan"><input class="form-control" name="goods_name" id="goods_name"     onkeypress="EnterPress(event)" onkeydown="EnterPress()" type="text"  placeholder="商品名称"  />
+		  </span>
+
+
+					<span class="biaodan mgb15">商品类型
+	
+					
+					   <select id="goods_type" name="goods_type"  >
+					    <option value="0">全部</option>
+						<volist name="type_list" id="typeinfo">
+						  <option value="{$typeinfo.type_id}">{$typeinfo.type_name}</option>
+						</volist>
+					   </select>
+					</span>
+
+			<span class="mgb15 biaodan"> <button type="button" class="btn1 btn-purple btn-sm" onclick="doSearch()" id="sousuo">搜索<i class="fa fa-search"></i></button></span>
+
+		</form>
+	</div>
+
+		<div id="jqgrid" style="margin-bottom:82px;">
+			<table id="grid-table"></table>
+			<!-- <div id="grid-pager"></div> -->
+		</div>
+ <div class="fixedbottom">	
+	<div class="sysline"></div>
+	<div class="layFooter">
+        <button type="button" onclick="submitplch();" class="btn btn-primary">确定</button>
+		<button type="button" class="btn btn-default" onclick="exit()">取消</button>
+    </div>
+ </div>
+	
+
+
+</div>
+
+
+<!-- <div class="pd15">
+
+    <div id="jqgrid">
+        <table id="grid-table"></table>
+
+    </div>
+
+	<div class="sysline"></div>
+	<div class="layFooter">
+        <button type="button" onclick="submitplch();" class="btn btn-primary">确定</button>
+		<button type="button" class="btn btn-default" onclick="exit()">取消</button>
+    </div>
+</div> -->
+
+
+</block>
+
+<block name="script">
+<script>
+       function showdata()
+	   {
+	   
+	   
+       
+            $('#grid-table').jqGrid({
+                url: '{:U("getshangpininfo_plch_list")}',
+                datatype: "json",
+                type:"get",
+                height:"auto",
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[
+					    {label:'网吧id',name:'wbid',hidden:true,},
+                    {label:'商品id',name:'goods_id',hidden:true,},
+					{label:'商品分类',name:'type_id',width:50,},
+					{label:'商品位置',name:'position',hidden:true,width:50,}, 
+                    {label:'商品名称',name:'goods_name',width:50,},
+					{label:'货架数量',name:'hj_num',width:60},
+					{label:'仓库数量',name:'ck_num',width:60},
+					
+                     {label:'商品规格',name:'guige',hidden:true},
+                    {label:'商品单位',name:'unit',hidden:true,width:70},			                  
+                    
+                    
+			<!-- 		{label:'是否上架',name:'shangjia_status',width:60},	 -->	
+	                <!-- {label:'操作',name:'operate',width:60},						 -->
+
+                ],
+                styleUI : 'Bootstrap',
+                rowNum:1000,
+                pager:'#grid-pager',
+				multiselect: true,
+                viewrecords: true,
+				gridComplete: function()
+				{
+                   var ids = $("#grid-table").jqGrid('getDataIDs');
+                    var add,edit,save,del,bangding,info_edit,edit2,wbid = '';
+
+                    var end_str,sta_str,position_str;                                             										
+                    var storage=window.localStorage;
+					var yicun_id=storage.getItem("goods_id"); 
+					
+                        for(var i=0;i < ids.length;i++)
+                        {
+                            var getRow = $('#grid-table').getRowData(ids[i]);//获取当前的数据行  
+                            var colVal = getRow.wbid;    
+                            							
+                            var rownum = ids[i];
+							var col_position= getRow.position;  
+							if(col_position=='0')
+							{
+							  position_str='仓库';
+							}
+							else if(col_position=='1')
+							{
+							   position_str='货架';
+							}
+																					 						   				                                                         
+						
+							$("#grid-table").jqGrid('setRowData',ids[i],{position:position_str});													   								
+								
+                        }
+						
+						var index = parent.layer.getFrameIndex(window.name); 
+                          parent.layer.iframeAuto(index);	
+                                                  
+                }
+  
+    
+            });
+
+
+
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        }
+		
+	
+	
+	
+		
+showdata();
+
+ 
+		
+		
+		
+        function doSearch(){
+    $('#grid-table').jqGrid('setGridParam',{
+        postData:{                 
+            goods_name:$('#goods_name').val(),
+            goods_type:$('#goods_type').val(),
+               
+        }
+    }).trigger('reloadGrid');
+   }
+   
+   
+   <!-- doSearch(); -->
+
+
+	function submitplch()
+	{
+	  var storage=window.localStorage;
+      
+	  
+	     var rowKey = $("#grid-table").getGridParam("selrow");
+
+            if (!rowKey)
+			{
+			  alert("No rows are selected");
+			}          
+            else 
+			{
+                var selectedIDs = $("#grid-table").getGridParam("selarrrow");
+                var result = "";
+                for (var i = 0; i < selectedIDs.length; i++) 
+				{
+				    var row = $("#grid-table").jqGrid('getRowData', selectedIDs[i]);
+                    //alert("goods_id:"+row.goods_id+"  "+"goods_name:"+row.goods_name);
+					result += row.goods_id + ",";
+			    }
+            }
+		    
+			var yuan_goods_id=storage.getItem("goods_id");
+			//alert(yuan_goods_id);
+			if(yuan_goods_id==null)
+			{
+			  var new_goods_id=result;
+			}
+			else
+			{
+			  var new_goods_id=yuan_goods_id+','+result;
+			}
+			//alert(new_goods_id);
+			
+			storage.setItem("goods_id",new_goods_id); 
+       
+	
+  
+	  parent.$('#flag').val('1').change();
+	  parent.layer.closeAll();
+
+    }
+   function exit()
+   {
+        parent.layer.closeAll();
+   }
+  
+</script>
+<script>
+    document.onkeydown = function(e){
+        if((e||event).keyCode==13)
+		  $("#goods_name").blur();
+		doSearch();
+       
+      };
+
+
+	
+
+</script>
+</block>

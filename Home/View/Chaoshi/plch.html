@@ -1,0 +1,182 @@
+<block name="head">
+<include file="Public/head" />
+
+<css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+<js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+<js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+<css href="__PUBLIC__/assets/css/ace.min.css" />
+<css href="__PUBLIC__/assets/css/ace-skins.min.css" />
+<js href="__PUBLIC__/layer/layer.js" />
+<style>
+
+   	body{background:#fff;min-height:0px;max-height:700px;}
+   .pd15{padding:15px;}
+   .mg15{margin:15px;}
+   .sysline{
+      width:100%;;
+	  border-top:1px solid #c0dcea;
+	  border-bottom:1px solid #fff;
+	  margin:0px 0 20px;
+   }
+   .layFooter{
+      width:100%;height:40px; margin:0 auto 20px;text-align:center;
+   }
+   .fixedbottom{width:100%;position:fixed;bottom:0px;background-color:#fff;}
+   </style>
+</block>
+
+<block name="content">
+
+<div class="pd15">
+
+    <div id="jqgrid" style="margin-bottom:82px;">
+        <table id="grid-table"></table>
+        <!--  <div id="grid-pager"></div> -->
+    </div>
+ <div class="fixedbottom">
+	<div class="sysline"></div>
+	<div class="layFooter">
+        <button type="button" onclick="submitplch();" class="btn btn-primary">确定</button>
+		<button type="button" class="btn btn-default" onclick="exit()">取消</button>
+    </div>
+ </div> 
+</div>
+
+</block>
+
+<block name="script">
+<script>
+
+
+       $(function(){
+            $('#grid-table').jqGrid({
+                url: '{:U("getshangpininfo_plch_list")}',
+                datatype: "json",
+                type:"get",
+                height:"auto", 
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[
+				    {label:'网吧id',name:'wbid',hidden:true,},
+                    {label:'商品id',name:'goods_id',hidden:true,},
+					{label:'商品位置',name:'position',width:50,}, 
+                    {label:'商品名称',name:'goods_name',width:50,},
+					{label:'商品数量',name:'num',width:60},
+					{label:'商品分类',name:'type_id',width:50,},
+                    {label:'商品规格',name:'guige',width:50},
+                    {label:'商品单位',name:'unit',width:70},			                  
+                    
+                    
+			<!-- 		{label:'是否上架',name:'shangjia_status',width:60},	 -->	
+	          <!--       {label:'操作',name:'operate',width:60},				 -->		
+
+                ],
+                styleUI : 'Bootstrap',
+                rowNum:1000,
+                pager:'#grid-pager',
+				multiselect: true,
+                viewrecords: true,
+				gridComplete: function()
+				{
+                   var ids = $("#grid-table").jqGrid('getDataIDs');
+                    var add,edit,save,del,bangding,info_edit,edit2,wbid = '';
+
+                    var end_str,sta_str,position_str;                                             										
+                    var storage=window.localStorage;
+					var yicun_id=storage.getItem("goods_id"); 
+					
+                        for(var i=0;i < ids.length;i++)
+                        {
+                            var getRow = $('#grid-table').getRowData(ids[i]);//获取当前的数据行  
+                            var colVal = getRow.wbid;    
+                            							
+                            var rownum = ids[i];
+							var col_position= getRow.position;  
+							if(col_position=='0')
+							{
+							  position_str='仓库';
+							}
+							else if(col_position=='1')
+							{
+							   position_str='货架';
+							}
+																					 						   				                                                         
+						
+							$("#grid-table").jqGrid('setRowData',ids[i],{position:position_str});													   								
+								
+                        }
+						 var index = parent.layer.getFrameIndex(window.name); 
+                          parent.layer.iframeAuto(index);					 
+						 
+						  
+                                                  
+                }
+  
+    
+            });
+
+
+
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+
+
+	function submitplch()
+	{
+	  var storage=window.localStorage;
+      
+	  
+	     var rowKey = $("#grid-table").getGridParam("selrow");
+
+            if (!rowKey)
+			{
+			  alert("No rows are selected");
+			}          
+            else 
+			{
+                var selectedIDs = $("#grid-table").getGridParam("selarrrow");
+                var result = "";
+                for (var i = 0; i < selectedIDs.length; i++) 
+				{
+				    var row = $("#grid-table").jqGrid('getRowData', selectedIDs[i]);
+                    //alert("goods_id:"+row.goods_id+"  "+"goods_name:"+row.goods_name);
+					result += row.goods_id + ",";
+			    }
+            }
+		    
+			var yuan_goods_id=storage.getItem("goods_id");
+			//alert(yuan_goods_id);
+			if(yuan_goods_id==null)
+			{
+			  var new_goods_id=result;
+			}
+			else
+			{
+			  var new_goods_id=yuan_goods_id+','+result;
+			}
+			//alert(new_goods_id);
+				
+			storage.setItem("goods_id",new_goods_id); 
+			
+			
+			<!-- var yuan_goods_id2=storage.getItem("goods_id"); -->
+			
+			<!-- alert(yuan_goods_id2); -->
+			
+			
+			
+       
+	
+  
+	  parent.$('#flag').val('1').change();
+	  parent.layer.closeAll();
+
+    }
+   function exit()
+   {
+        parent.layer.closeAll();
+   }
+</script>
+</block>

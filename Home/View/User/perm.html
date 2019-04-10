@@ -1,0 +1,100 @@
+<extend name="Public/base" />
+
+<block name="head">
+<style type="text/css">
+.board{background:url("/public/assets/images/bg_repno.gif") no-repeat scroll 0 0 transparent;padding-left:55px;}
+.third{margin-left:55px;}
+input{width:110px;}
+</style>
+</block>
+
+<block name="content">
+<div class="row" style="margin-bottom:15px;"><div class="col-sm-6"><a href="{:U('perm_add')}" class="btn btn-sm">新增系统权限</a></div></div>
+<div class="table-responsive">
+	<table class="table table-bordered table-hover">
+		<thead>
+			<th>显示顺序</th>
+			<th>权限名称</th>
+			<th>权限路径</th>
+			<th>权限代号</th>
+			<th style="width:100px;">是否在菜单显示</th>
+			<th style="width:100px;">操作</th>
+		</thead>
+		<tbody>
+			<volist name="perm_list" id="perm1">
+				<tr id="{$perm1.perm_id}">
+					<td><input type="text" name="sort" value="{$perm1.sort}" /></td>
+					<td><input type="text" name="perm_name" value="{$perm1.perm_name}" /></td>
+					<td><input type="text" name="perm_value" value="{$perm1.perm_value}" /></td>
+					<td><input type="text" name="perm_current" value="{$perm1.perm_current}" /></td>
+					<td><input type="checkbox" name="is_show" class="ace ace-switch" <?php if($perm1['is_show'])echo 'checked'; ?> /><span class="lbl"></span></td>
+					<td><a href="{:U('perm_edit',array('id'=>$perm1['perm_id']))}">修改</a> <a href="?action=del&id={$perm1.perm_id}" onclick="return confirm('确定要删除么？该操作不可恢复！');">删除</a></td>
+				</tr>
+				<present name="perm1._">
+					<volist name="perm1._" id="perm2">
+						<tr id="{$perm2.perm_id}">
+							<td><i class="board"></i><input type="text" name="sort" value="{$perm2.sort}" /></td>
+							<td><i class="board"></i><input type="text" name="perm_name" value="{$perm2.perm_name}" /></td>
+							<td><i class="board"></i><input type="text" name="perm_value" value="{$perm2.perm_value}" /></td>
+							<td><i class="board"></i><input type="text" name="perm_current" value="{$perm2.perm_current}" /></td>
+							<td><input type="checkbox" name="is_show" class="ace ace-switch" <?php if($perm2['is_show'])echo 'checked'; ?>  /><span class="lbl"></span></td>
+							<td><a href="{:U('perm_edit',array('id'=>$perm2['perm_id']))}">修改</a> <a href="?action=del&id={$perm2.perm_id}" onclick="return confirm('确定要删除么？该操作不可恢复！');">删除</a></td>
+						</tr>
+						<present name="perm2._">
+							<volist name="perm2._" id="perm3">
+								<tr id="{$perm3.perm_id}">
+									<td><i class="third board"></i><input type="text" name="sort" value="{$perm3.sort}" /></td>
+									<td><i class="third board"></i><input type="text" name="perm_name" value="{$perm3.perm_name}" /></td>
+									<td><i class="third board"></i><input type="text" name="perm_value" value="{$perm3.perm_value}" /></td>
+									<td><i class="third board"></i><input type="text" name="perm_current" value="{$perm3.perm_current}" /></td>
+									<td><input type="checkbox" name="is_show" class="ace ace-switch" <?php if($perm3['is_show'])echo 'checked'; ?>  /><span class="lbl"></span></td>
+									<td><a href="{:U('perm_edit',array('id'=>$perm3['perm_id']))}">修改</a> <a href="?action=del&id={$perm3.perm_id}" onclick="return confirm('确定要删除么？该操作不可恢复！');">删除</a></td>
+								</tr>
+							</volist>
+						</present>
+					</volist>
+				</present>
+			</volist>
+		</tbody>
+	</table>
+</div>
+</block>
+
+<block name="script">
+<script>
+$(function(){
+	$('input').change(function(){
+		var input = $(this);
+		if(input[0].type == 'text'){
+			$.get("{:U('update_perm')}",{id:input.closest('tr').attr('id'),name:input.attr('name'),value:input.val()},function(data){
+				if(data.status){
+					input.css('background-color','#87b87f');
+					setTimeout(function(){
+						input.css('background-color','white');
+					},1000);
+				}else{
+					input.css('background-color','red');
+					setTimeout(function(){
+						input.css('background-color','white');
+					},1000);
+				}
+			});
+		}else if(input[0].type == 'checkbox'){
+			$.get("{:U('update_perm')}",{id:input.closest('tr').attr('id'),name:input.attr('name'),value:input[0].checked},function(data){
+				if(data.status){
+					input.parent().css('background-color','#87b87f');
+					setTimeout(function(){
+						input.parent().css('background-color','white');
+					},1000);
+				}else{
+					input.parent().css('background-color','red');
+					setTimeout(function(){
+						input.parent().css('background-color','white');
+					},1000);
+				}
+			});
+		}
+	});
+});
+</script>
+</block>

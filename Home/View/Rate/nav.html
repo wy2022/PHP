@@ -1,0 +1,33 @@
+<button type="button" class="btn btn-primary btn-sm"  onclick="restart_server()" style="float:right;">更新重启网吧服务端</button>
+ <div style="clear:both;"></div>
+<ul class="nav nav-tabs">
+    <li id="district"><a href="{:U('Rate/district')}">区域设置</a></li>
+    <li id="index"><a href="{:U('Rate/index')}">费率设置</a></li>
+    
+    <li id="fixedrate"><a href="{:U('Rate/fixedrate')}">定额费率</a></li>
+<!--     <li id="discount"><a href="{:U('Rate/discount')}">累计优惠</a></li> -->
+    <li id="viplevel"><a href="{:U('Rate/viplevel')}">会员等级</a></li>
+    <li id="awardplan"><a href="{:U('Rate/awardplan')}">奖励计划</a></li>
+    <li id="credits"><a href="{:U('Rate/credits')}">积分兑换</a></li>
+
+<!--     <li id="surcharge"><a href="{:U('Rate/surcharge')}">附加费</a></li>-->
+    <li id="specialrate"><a href="{:U('Rate/specialrate')}">特定费率 </a></li>
+</ul>
+<script>
+    $('.nav li#{$Think.const.ACTION_NAME}').addClass('active');
+    function restart_server()
+{
+       
+    $.post("{:U('post_restart_server')}",{oper:'restart'},function(data)
+    {
+        if(data.result==1)
+        {
+             myalertsuccess('重启成功');
+        }
+        else if(data.result==-1)
+        {
+            myalertdanger('重启失败');
+        }
+    });                   
+}
+</script>

@@ -1,0 +1,73 @@
+<extend name="Public/base" />
+
+<block name="content">
+<form action="" class="form-horizontal" id="user_setting" method="post">
+	<div class="form-group">
+		<label class="col-sm-3 control-label">当前密码：</label>
+		<input type="password" class="col-sm-3" name="password" required placeholder="当前密码" />
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label">新密码：</label>
+		<input type="password" class="col-sm-3" name="newpassword" id="newpassword" required placeholder="新密码" />
+		<span class="label label-success arrowed hidden" style="margin-left:20px;"><i class="fa fa-check"></i></span>
+		<span class="label label-danger arrowed hidden" style="margin-left:20px;"></span>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label">重复密码：</label>
+		<input type="password" class="col-sm-3" name="repassword" id="repassword" required placeholder="重复密码" />
+		<span class="label label-success arrowed hidden" style="margin-left:20px;"><i class="fa fa-check"></i></span>
+		<span class="label label-danger arrowed hidden" style="margin-left:20px;"></span>
+	</div>
+	<div class="clearfix form-actions">
+		<div class="col-sm-9 col-sm-offset-3">
+			<button class="btn btn-info" type="submit"><i class="fa fa-check"></i> 提交</button>
+		</div>
+	</div>
+</form>
+</block>
+
+<block name="script">
+<script>
+$(function(){
+	$('#newpassword').change(function(){
+		if($(this).val().length > 0){
+			if($(this).val().length < 6){
+				$('#newpassword').next().addClass('hidden');
+				$('#newpassword').next().next().removeClass('hidden');
+				$('#newpassword').next().next().text('密码不能小于6位');
+			}else{
+				$('#newpassword').next().removeClass('hidden');
+				$('#newpassword').next().next().addClass('hidden');
+			}
+		}else{
+			$('#password').nextAll('span').addClass('hidden');
+		}
+		$('#repassword').change();
+	});
+	$('#repassword').change(function(){
+		if($(this).val().length > 0){
+			if($(this).val() != $('#newpassword').val()){
+				$('#repassword').next().addClass('hidden');
+				$('#repassword').next().next().removeClass('hidden');
+				$('#repassword').next().next().text('两次密码不一致');
+			}else{
+				$('#repassword').next().removeClass('hidden');
+				$('#repassword').next().next().addClass('hidden');
+			}
+		}else{
+			$('#repassword').nextAll('span').addClass('hidden');
+		}
+	});
+	$('#user_setting').submit(function(){
+		if($('#newpassword').val().length < 6){
+			alert('新密码不能小于6位');
+			return false;
+		}
+		if($('#repassword').val() != $('#newpassword').val()){
+			alert('两次密码不一致！');
+			return false;
+		}
+	})
+})
+</script>
+</block>

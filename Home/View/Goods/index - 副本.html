@@ -1,0 +1,78 @@
+<extend name="Public/base"/>
+
+<block name="head">
+    <css href="__PUBLIC__/Admin/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/Admin/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/Admin/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+</block>
+
+<block name="content">
+    <div id="jqgrid">
+        <table id="grid-table"></table>
+        <div id="grid-pager"></div>
+    </div>
+</block>
+
+<block name="script">
+    <script>
+        $(function(){
+            $('#grid-table').jqGrid({
+                url:'{:U("getGoods")}',
+                datatype:'json',
+                height:250,
+                autowidth:true,
+                //shrinkToFit:true,
+                colNames:['ID','名称','单位','规格','价格','操作'],
+                colModel:[
+                    {name:'SpId',editable:true},
+                    {name:'name',editable:true},
+                    {name:'unit',editable:true},
+                    {name:'guige',editable:true},
+                    {name:'price',editable:true},
+                    {name:'opera'}
+                ],
+                rowNum:10,
+                viewrecords: true,
+                editurl:'{:U("setGoods")}',
+                pager:'#grid-pager',
+                gridComplete: function(){
+                    var ids = $("#grid-table").jqGrid('getDataIDs');
+                    var edit,save,del = '';
+                    for(var i=0;i < ids.length;i++){
+                        var cl = ids[i];
+                        edit = '<a href="javascript:$(\'#grid-table\').jqGrid(\'editRow\','+cl+',true);"><i class="fa fa-pencil"></i></a>';
+                        save = '<a class="green" href="javascript:$(\'#grid-table\').jqGrid(\'saveRow\','+cl+');"><i class="fa fa-floppy-o"></i></a>';
+                        del = '<a class="red" href="javascript:delRowData('+cl+');"><i class="fa fa-trash"></i></a>';
+                        $("#grid-table").jqGrid('setRowData',ids[i],{opera:edit+save+del});
+                    }
+                }
+            }).jqGrid('navGrid','#grid-pager',{
+                //add:false,
+                //edit:false,
+                del:false,
+                refresh:false,
+                searchtext:'高级搜索',
+                searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+        function delRowData(row){
+            var rowData = $('#grid-table').jqGrid('getRowData',row);
+            if(!isNaN(parseInt(rowData['SpId'])) && confirm('确定要删除“'+rowData['name']+'”吗？该操作不可恢复！'))
+            {
+                $.post("{:U('setGoods')}",{oper:'del',SpId:rowData['SpId']},function(data){
+                    if(data.status){
+                        alert('删除成功');
+                        $('#grid-table').trigger('reloadGrid');
+                    }else{
+                        alert('删除失败');
+                    }
+                });
+            }
+        }
+    </script>
+</block>

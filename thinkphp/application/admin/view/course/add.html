@@ -1,0 +1,29 @@
+{extend name="teacher/base" /}
+
+
+{block name="body"}
+
+<form action="{:url('course/add')}" method="post">
+
+    课程名称：<input type="text" name="name" id="name">
+
+    {volist name="klass" id="k"}
+
+
+        <input type="checkbox" name="klass_id[]" id="" value="{$k.id}">
+        {$k.id}:{$k.name}
+
+
+    {/volist}
+
+
+
+    <input type="submit" value="tijiao">
+    
+</form>
+
+
+
+
+
+{/block}

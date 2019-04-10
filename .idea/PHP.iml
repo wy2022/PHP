@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/thinkphp/application" isTestSource="false" packagePrefix="app\" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/bacon/bacon-qr-code" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/endroid/qr-code" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/guzzlehttp/guzzle" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/guzzlehttp/promises" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/guzzlehttp/psr7" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/khanamiryan/qrcode-detector-decoder" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/myclabs/php-enum" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/psr/http-message" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/ralouphie/getallheaders" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/riverslei/payment" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/symfony/options-resolver" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/symfony/polyfill-ctype" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/symfony/property-access" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/topthink/think-captcha" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/topthink/think-helper" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/topthink/think-image" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/topthink/think-installer" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/topthink/think-migration" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/topthink/think-mongo" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/topthink/think-oracle" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/topthink/think-queue" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/topthink/think-worker" />
+      <excludeFolder url="file://$MODULE_DIR$/thinkphp/vendor/workerman/workerman" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

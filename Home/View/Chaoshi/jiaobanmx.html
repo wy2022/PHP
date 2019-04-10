@@ -1,0 +1,374 @@
+<block name="head">
+<include file="Public/head" />
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+	<css href="__PUBLIC__/assets/css/ace.min.css" />
+    <css href="__PUBLIC__/assets/css/ace-skins.min.css" />
+    <js href="__PUBLIC__/layer/layer.js" />
+		<css href="__PUBLIC__/jquery-ui-1.10.3/demos/demos.css" /> 
+	<style>
+	  body{background:#fff;min-height:200px;font-size:13px;}
+	  
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+     .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+		 .fontsize12{font-size:12px;}
+		 .pd15{padding:15px;}
+	.search-bar input,.search-bar select{
+		display:inline-block;
+		height:30px;
+		font-size:14px;
+		line-height:
+		color:#555555;
+		vertical-align:middle;
+		-webkit-border-radius:4px !important;
+		-moz-border-radius:4px !important;
+		border-radius:4px !important;
+		border-color:#a4bed4;
+		text-align:left;
+		padding:4px 6px;
+		width:200px;
+	 }
+	 .search-bar input{width:200px;}
+	 .search-bar select{width:100px;}
+	 .btn1{
+		    font-size:13px;	
+			height:30px;
+			 width:90px;
+			-webkit-border-radius:2px;
+			-moz-border-radius:2px;
+			border-radius:2px;
+			border:0;
+			text-shadow:none;
+			background-image:none;
+			vertical-align:middle;
+			color:#ffffff;
+		 }
+	</style>
+</block>
+
+<block name="content">
+<div class="pd15" >
+<div class="tabbable">
+	<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4" style="font-size:12px;">
+		<li class="active">
+			<a data-toggle="tab" href="#flmx" >分类明细</a>
+	
+		</li>
+
+		<li>
+			<a data-toggle="tab" href="#spmx" >商品明细</a>
+		</li>
+
+		
+	</ul>
+    <div class="tab-content" >
+	  <div id="flmx" class="tab-pane in active">
+		<div class="row search-bar" >
+		    
+<!-- 			<form >
+			   <span class="mgb15 biaodan"><input class="form-control" name="goods_name" id="goods_name" type="text"  placeholder="请输入商品名称"  />
+			  </span>
+
+						<span class="mgb15 biaodan">库存位置
+						<select id="position" name="position">
+						   <option value="0">全部</option>
+						   <option value="1">仓库</option>
+						   <option value="2">货架</option>
+
+						</select>
+						</span>
+
+				<span class="mgb15 biaodan"> <button type="button" class="btn1 btn-purple btn-sm" onclick="doSearch()">搜索<i class="fa fa-search"></i></button></span>
+
+			</form> -->
+			
+		
+		</div>
+
+		<div id="jqgrid">
+			<table id="grid-table"></table>
+			<div id="grid-pager"></div>
+		</div>
+	   </div><!--//#flmx -->
+	   <div id="spmx" class="tab-pane">
+		<div class="row search-bar" >
+			<form >
+			   <span class="mgb15 biaodan"><input class="form-control" name="goods_name" id="goods_name1" type="text"  placeholder="请输入商品名称"  />
+			  </span>
+
+						<span class="mgb15 biaodan">库存位置
+						<select id="position1" name="position">
+						   <option value="0">全部</option>
+						   <option value="1">仓库</option>
+						   <option value="2">货架</option>
+
+						</select>
+						</span>
+
+				<span class="mgb15 biaodan"> <button type="button" class="btn1 btn-purple btn-sm" onclick="doSearch1()">搜索<i class="fa fa-search"></i></button></span>
+
+			</form>
+		</div>
+
+		<div id="jqgrid1">
+			<table id="grid-table1"></table>
+			<div id="grid-pager1"></div>
+		</div>
+	   </div><!-- //#spmx -->
+	</div><!-- //.tab-content -->
+ </div><!-- //.tabbable -->
+</div>
+</block>
+
+
+
+	
+
+<block name="script">
+      <script>
+
+    <!-- //#grid-table开始 -->			
+        $(function(){
+            $('#grid-table').jqGrid({
+                url: '{:U("getjb_fenleitongji_mx_listByMap")}',
+                datatype: "json",
+                type:"get",
+                height:"auto",
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[
+					{label:'网吧id',name:'wbid',hidden:true,},
+					<!-- {label:'订单号',name:'post_order_no',width:80,}, -->
+					{label:'商品分类',name:'type_id',width:50,},
+                    <!-- {label:'商品id',name:'goods_id',hidden:true,}, -->
+					<!-- {label:'商品位置',name:'position',hidden:true,},  -->
+                    <!-- {label:'商品名称',name:'goods_name',width:50,}, -->
+					{label:'接班时的数量',name:'old_hj_num',width:60},
+					{label:'当前货架数量',name:'now_hj_num',width:60},
+					<!-- {label:'仓库数量',name:'ck_num',width:60}, -->
+					{label:'上架数量',name:'shangjia_num',width:60},
+					{label:'下架数量',name:'xiajia_num',width:60},
+					{label:'现金销售数',name:'xiaoshou_num',width:60},
+					{label:'现金收入',name:'xiaoshou_je',width:60},
+					
+                    <!-- {label:'商品规格',name:'guige',width:50}, -->
+                    <!-- {label:'商品单位',name:'unit',width:70}, -->
+					<!-- {label:'时间',name:'dtInsertTime',width:70}, -->
+                  					
+                    
+                    
+			<!-- 		{label:'是否上架',name:'shangjia_status',width:60},	 -->	
+	              <!--   {label:'操作',name:'operate',hidden:true}, -->						
+
+                ],
+                styleUI : 'Bootstrap',
+                rowNum:15,
+                pager:'#grid-pager',
+				<!-- multiselect: true, -->
+                viewrecords: true,
+				gridComplete: function()
+				{
+                    var ids = $("#grid-table").jqGrid('getDataIDs');
+                    var add,edit,save,del,bangding,info_edit,edit2,wbid = '';
+
+                    var end_str,sta_str,position_str;                                             										
+                
+                        for(var i=0;i < ids.length;i++)
+                        {
+                            var getRow = $('#grid-table').getRowData(ids[i]);//获取当前的数据行  
+                            var colVal = getRow.wbid;             
+                            var rownum = ids[i];
+							var col_position= getRow.position;  
+							if(col_position=='0')
+							{
+							  position_str='仓库';
+							}
+							else if(col_position=='1')
+							{
+							   position_str='货架';
+							}
+																					 						   
+			
+							$("#grid-table").jqGrid('setRowData',ids[i],{position:position_str});													   								
+								
+                        }
+                    
+                    
+            
+                }
+  
+    
+            });
+
+
+
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+
+       $('#daterange').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+            $('.daterange').daterangepicker({
+                format:'YYYY/MM/DD hh:mm:ss',
+                timePicker: true,
+                timePickerIncrement: 1,
+                timePickerSeconds:true,
+                startDate:moment().startOf('day'),  
+                endDate: moment(),
+                timePicker12Hour:false,     
+                ranges: {  
+                           '今天': [moment().startOf('day'), moment().endOf('day')],  
+                           '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+                           '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+                           '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+                           '本月': [moment().startOf('month'), moment().endOf('month')],  
+                           '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+                        },        
+                locale:{
+                    applyLabel:'确定',
+                    cancelLabel:'取消',
+                    fromLabel:'从',
+                    toLabel:'至',
+                    daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+                    monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+          customRangeLabel: '自定义',
+          firstDay : 1
+                }
+
+            },function(start,end,label){
+      $('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+      });
+
+        function doSearch(){
+
+            $('#grid-table').jqGrid('setGridParam',{
+                postData:{
+                   
+                    goods_name:$('#goods_name').val(),
+                    position:$('#position').val(),
+					
+                }
+            }).trigger('reloadGrid');
+        }
+	doSearch();	
+	
+
+	
+<!-- //#grid-table1开始 -->
+        $(function(){
+            $('#grid-table1').jqGrid({
+                url: '{:U("getjbtongji_mx_listByMap")}',
+                datatype: "json",
+                type:"get",
+                height:"auto",
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[
+					{label:'网吧id',name:'wbid',hidden:true,},
+					{label:'订单号',name:'post_order_no',hidden:true,width:60,},
+					{label:'商品分类',name:'type_id',width:50,},
+                    {label:'商品id',name:'goods_id',hidden:true,},
+					{label:'商品位置',name:'position',hidden:true,}, 
+                    {label:'商品名称',name:'goods_name',width:100,},
+					{label:'接班货架库存',name:'old_hj_num',width:60},
+					{label:'上架数量',name:'shangjia_num',width:60},
+					{label:'下架数量',name:'xiajia_num',width:60},
+					{label:'当前货架库存',name:'now_hj_num',width:60},
+					{label:'现金销售数',name:'xiaoshou_num',width:60},
+					{label:'现金收入',name:'xiaoshou_je',width:60},
+					<!-- {label:'仓库数量',name:'ck_num',width:60}, -->
+					
+					
+                    <!-- {label:'商品规格',name:'guige',width:50}, -->
+                    <!-- {label:'商品单位',name:'unit',width:70}, -->
+					<!-- {label:'时间',name:'dtInsertTime',width:70}, -->
+                  					
+                    
+                    
+			<!-- 		{label:'是否上架',name:'shangjia_status',width:60},	 -->	
+	              <!--   {label:'操作',name:'operate',hidden:true}, -->						
+
+                ],
+                styleUI : 'Bootstrap',
+                rowNum:15,
+                pager:'#grid-pager1',
+				<!-- multiselect: true, -->
+                viewrecords: true,
+				gridComplete: function()
+				{
+                    var ids = $("#grid-table1").jqGrid('getDataIDs');
+                    var add,edit,save,del,bangding,info_edit,edit2,wbid = '';
+
+                    var end_str,sta_str,position_str;                                             										
+                
+                        for(var i=0;i < ids.length;i++)
+                        {
+                            var getRow = $('#grid-table1').getRowData(ids[i]);//获取当前的数据行  
+                            var colVal = getRow.wbid;             
+                            var rownum = ids[i];
+							var col_position= getRow.position;  
+							if(col_position=='0')
+							{
+							  position_str='仓库';
+							}
+							else if(col_position=='1')
+							{
+							   position_str='货架';
+							}
+																					 						   
+			
+							$("#grid-table").jqGrid('setRowData',ids[i],{position:position_str});													   								
+								
+                        }
+                    
+                    
+       
+                }
+  
+    
+            });
+
+
+
+         $('#grid-table1').jqGrid('setGridWidth', $('#jqgrid').width()*0.95, true);
+   
+        });
+
+  $('#daterange1').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+
+
+        function doSearch1(){
+
+            $('#grid-table1').jqGrid('setGridParam',{
+                postData:{
+                   
+                    goods_name:$('#goods_name1').val(),
+                    position:$('#position1').val(),
+					
+                }
+            }).trigger('reloadGrid');
+        }
+	doSearch1();	
+    </script>
+  
+<script>
+    document.onkeydown = function(e){
+        if((e||event).keyCode==13)
+		  $("#goods_name1").blur();
+		doSearch1();
+       
+      };
+
+</script>
+</block>

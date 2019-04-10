@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css">
+		<script type="text/javascript" src="__PUBLIC__/jquery-ui-1.10.3/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+		<style type="text/css">
+			.foot{
+				text-align: center;
+			}
+			.main{
+				padding: 20px;
+			}
+			.xia{
+				margin-top: 10px;
+			}
+		</style>
+	</head>
+	<body>
+	     <input type="hidden" name="TOKEN" id="TOKEN" value="{:session('TOKEN')}"> 
+		<input type="hidden" id="goods_id" value="{$goodsinfo.goods_id}"/>
+		
+		<input type="hidden" id="one_goods_price" value="{$goodsinfo.shou_price}"/>
+		
+		<span style="display:none" id="zuhe_list_price">{$zuhe_list_price}</span>
+	
+		<div class="main">
+			<div class="row">
+				<span class="col-xs-4">将该商品组合到</span>
+				<div class="col-xs-4">
+					<select class="leixing" style="height: 30px;" onchange="goods_price()">
+						<option value="0">请选择组合</option>
+						<volist name="zuhelist" id="zuhe">						
+						<option value="{$zuhe.zuhe_id}" >{$zuhe.zuhe_name}</option>
+					   </volist>
+		
+						
+					</select>
+				</div>
+			</div>
+			<div class="xia">
+				<span>允许分类和价格相同的商品组合；组合商品后，该商品的货架库存会计入到组合的货架库存中。</span>
+			</div>
+		</div>
+		<div class="foot">
+			<button class="btn btn-success" disabled onclick="queding()">确定</button>
+			<button class="btn btn-default" onclick="quxiao()">取消</button>
+		</div>
+		<script>
+			/*$('.leixing').change(function(){
+				var zuh=$('.leixing').val();
+				if(zuh=="0"){
+					$('.btn-success').attr({'disabled':true});
+				}else{
+					$('.btn-success').attr({'disabled':false});
+				}
+			})*/
+			function goods_price(){
+				var zuh=$('.leixing').val();
+				if(zuh=="0"){
+					$('.btn-success').attr({'disabled':true});
+				}else{
+					$('.btn-success').attr({'disabled':false});
+				}
+			}
+			
+		function queding()
+		{
+				$('.btn-success').attr({'disabled':true});
+				var one_goods_price=$('#one_goods_price').val();
+				//console.log(one_goods_price);
+				var zuhe_list_price=$('#zuhe_list_price').html();
+				var bFind=false;
+				var  data =eval('(' + zuhe_list_price + ')');
+				//console.log(data);
+				
+				
+				
+                var zuhe_price=0;				
+				var goods_id=$('#goods_id').val();
+				var zuhe_id=$('.leixing').val();
+				
+				for(var i=0;i<data.length;i++)
+				{
+				   if(zuhe_id==data[i]['zuhe_id'])
+				   {
+				      zuhe_price=data[i]['zuhe_price'];
+					  bFind=true;
+				   }
+				}
+				if(bFind==true)
+				{
+				   if(zuhe_price == one_goods_price)
+				   {
+				      
+				   }
+				   else
+				   {
+				      layer.msg('数据不合法，组合失败', 
+					 {
+					  offset: 0,
+					  shift: 6,
+					  icon:2,
+					  time:3000,
+					  
+					  },function()
+					  { 		
+						parent.layer.closeAll();		
+					  });
+					  return;
+				   }
+				}
+				else
+				{
+				     layer.msg('数据不合法，组合失败', 
+					 {
+					  offset: 0,
+					  shift: 6,
+					  icon:2,
+					  time:3000,
+					  
+					  },function()
+					  { 		
+						parent.layer.closeAll();		
+					  });
+					  return;
+				}
+				
+				
+				
+				
+				  var token_str=$('#TOKEN').val();
+				$.ajax({
+ 				  url : "{:U("addgoods_to_zuhe_set")}",
+ 				  type : "get",
+ 				  dataType : "json",
+ 				  data: {'goods_id':goods_id,'zuhe_id':zuhe_id,token:token_str},
+ 				  success : function(data) 
+ 				  {
+				//  alert(data);
+					if(data.result==1)
+					{
+					  	layer.msg('组合成功', 
+						 {
+						  offset: 0,
+						  shift: 6,
+						  icon:1,
+						  time:1000,
+						  
+						  },function()
+						  { 		
+						  parent.window.location.reload();
+							parent.layer.closeAll();		
+						  });
+					}
+					else if(data.result==-1)
+					{
+					   	layer.msg('组合失败', 
+					 {
+					  offset: 0,
+					  shift: 6,
+					  icon:2,
+					  time:1000,
+					  
+					  },function()
+					  { 		
+						parent.layer.closeAll();		
+					  });
+					}
+					else if(data.result==-2)
+					{
+					   	layer.msg('数据不合法，组合失败', 
+					 {
+					  offset: 0,
+					  shift: 6,
+					  icon:2,
+					  time:1000,
+					  
+					  },function()
+					  { 		
+						parent.layer.closeAll();		
+					  });
+					}
+					else if(data.result==-3)
+					{
+					   	layer.msg('该商品本班单独销售过，组合失败', 
+					 {
+					  offset: 0,
+					  shift: 6,
+					  icon:2,
+					  time:1000,
+					  
+					  },function()
+					  { 		
+						parent.layer.closeAll();		
+					  });
+					}
+					else if(data.result==-4)
+							{
+							    layer.msg('数据重复提交', 
+								 {
+								  offset: 0,
+								  shift: 6,
+								  icon:2,
+								  time:1000,
+								  
+								  },function(){
+									
+								  });
+							
+							} 
+				
+				
+				  }
+               })
+				
+				//增加组合商品tr
+				
+		}
+
+			   function quxiao(){
+				parent.layer.closeAll();		
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,655 @@
+
+<block name="head">
+<include file="Public/head" />
+     <css href="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.min.css" />
+    <js href="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.min.js" />
+    <js href="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.zh-CN.js" /> 
+    <js href="__PUBLIC__/layer/layer.js" />
+  <js href="__PUBLIC__/layer/myalert.js" />
+  <css href="__PUBLIC__/layer/myalert.css"/>
+   <style>
+      body{background:#fff;}
+   </style>
+</block>
+
+<block name="content">
+
+<div class="modal-body">
+ <form class="form-horizontal" id="editaward">
+                        <input class="hidden" type="text" id="bianhao"  value="{$oneawardplan.id}"/>
+
+                        <input class="hidden" type="text" id="hytype_ght" value="{$oneawardplan.HyCardGuid}"/>
+                        <input class="hidden" type="text" id="LimitDayLx_ght" value="{$oneawardplan.LimitDayLx}"/>
+                        <input class="hidden" type="text" id="LimitDays_ght" value="{$oneawardplan.LimitDays}"/>
+                        <input class="hidden" type="text" id="FqLx_ght" value="{$oneawardplan.FqLx}"/>
+                        <input class="hidden" type="text" id="LimitTimeLx_ght" value="{$oneawardplan.LimitTimeLx}"/>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">会员卡类型：</label>
+                              <div class="col-sm-7"style="padding-left:0px;">
+                                <volist name="viplevellist" id="aViplevel">
+                                       <label style="padding-right:10px;padding-top:4px;">
+                                           <input type="checkbox" name="viplevel" id="viplevel_yz" value="{$aViplevel.id}"/> {$aViplevel.Name}
+                                       </label>
+                                </volist>
+                                <span class="help-button " data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="“奖励会员等级”是控制哪些会员等级享受本条充送规则，即未勾选的会员等级不享受本条充送奖励" >?</span>
+                              </div>
+                           
+                        </div>
+                        <hr/>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">会员加钱：</label>
+                            <input type="text" class="col-sm-4" id="ght_addmoney" onkeyup="return priceValidate('ght_addmoney','会员加钱金额不能为空！','会员加钱金额输入格式不正确！')" name="price" value="{$oneawardplan.AddMoney}" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">自动奖励：</label>
+                            <input type="text" class="col-sm-4" name="auto" id="ght_auto" onkeyup="return priceValidate('ght_auto','自动奖励金额输入格式不正确！')" value="{$oneawardplan.JLMoney}" />
+                        </div>
+                       <div class="form-group">
+                            <label class="control-label col-sm-4">等比奖励：</label>
+                            <label style="padding-right:10px;padding-top:4px;">
+                                 <input type="checkbox" name="BlJl" id="BlJl" value="{$oneawardplan.BlJl}"/> 允许按比例充值奖励
+                            </label>
+                           
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-6"><input type="radio"  name="toaccount" value="0" checked/> 加钱金额进入本金账户</label>
+                            <label class="control-label col-sm-6" style="text-align:left;"><input type="radio"  name="toaccount" value="1"/> 加钱金额进入奖励账户</label>
+                        </div>
+                        <hr/>
+                        <div class="form-group text-center">自动奖励全部计入奖励账户</div>
+                          <div class="form-group">
+                            <label class="control-label col-sm-4">生效时段：</label>
+                            <label style="padding-right:10px;padding-top:4px;"> 
+                            
+
+                            <input type="radio"  name="sxsd" value="0"   checked="checked"/>无限制</label>
+
+                               <label style="padding-top:4px;"><input type="radio"  name="sxsd" id="sxsd_limit" value="1" />限制为</label>
+                               <span class="help-button " data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="例：设定2015年10月至2015年12月里每月8号为会员日，在会员日黄金会员充100送50。那需要设置“生效时段”为2015-10-1至2015-12-31，“生效时段内限制”里勾选8号，“奖励会员等级”里勾选黄金会员。注：“生效时段”是控制整个本条充送规则的生效时段，即在生效时段外会员加钱不享受本条充送奖励。" >?</span>
+                               
+                        </div>
+                        <div id="sxsd_time1" style="display:none;">
+                       <div class="row">
+                        <div class="col-sm-offset-1 col-sm-5" >
+                            <div  class="input-group" >
+                            <input type="text" class="form-control datetime-picker" id="start" name="start" style="height:29px" />
+                            <span class="input-group-addon">
+                             <i class="fa fa-calendar"></i>
+                          </span>
+                           </div>
+                         </div>
+                         <div class="col-sm-1" style="padding-top:5px;">至</div>
+                         <div class="col-sm-5" >
+                            <div  class="input-group" >
+                            <input type="text" class="form-control datetime-picker" id="end" name="end" style="height:29px"/>
+                            <span class="input-group-addon">
+                             <i class="fa fa-calendar"></i>
+                          </span>
+                         </div>
+                         </div>
+                             
+                       </div>
+                      </div>
+                      <div class="form-group" >
+                            <label class="control-label col-sm-4">生效时段内限制：</label>
+                            <label style="padding-right:10px;padding-top:4px;"><input type="radio"  name="sxsdlime" value="0"  checked="checked"/>无限制</label>
+                               <label style="padding-top:4px;" id="premon"><input type="radio"  name="sxsdlime"   value="1" />每月</label>
+                               <label style="padding-top:4px;" id="preweek"><input type="radio"  name="sxsdlime"  id="sxsdlime_yz" value="2" />每周</label>
+                               
+                        </div>      
+                      <div id="sxsd_mon1" style="display:none;">
+                          <div class="row">
+                          <div class="col-sm-offset-4 col-sm-7"style="padding-left:0px;" >
+                               <volist name="monthlist" id="mon">
+                               <label style="padding:4px 10px 0px 0px; "><input type="checkbox" id="mon" name="mon" value="{$mon}"/>{$mon}</label>
+                               </volist>
+                           </div>
+                          </div>
+                        </div>  
+                     <div id="sxsd_week1" style="display:none;">
+                          <div class="row">
+                          <div class="col-sm-offset-4 col-sm-7"style="padding-left:0px;" >
+                               
+                               <label style="padding:4px 10px 0px 0px; "><input type="checkbox" name="week" id="week_yz"  value="1"/>周一</label>
+                               <label style="padding:4px 10px 0px 0px; "><input type="checkbox" name="week" value="2"/>周二</label>
+                               <label style="padding:4px 10px 0px 0px; "><input type="checkbox" name="week" value="3"/>周三</label>
+                               <label style="padding:4px 10px 0px 0px; "><input type="checkbox" name="week" value="4"/>周四</label>
+                               <label style="padding:4px 10px 0px 0px; "><input type="checkbox" name="week" value="5"/>周五</label>
+                               <label style="padding:4px 10px 0px 0px; "><input type="checkbox" name="week" value="6"/>周六</label>
+                               <label style="padding:4px 10px 0px 0px; "><input type="checkbox" name="week" value="0"/>周日</label>
+                           </div>
+                          </div>
+                        </div>  
+                      <div class="form-group">
+                            <label class="control-label col-sm-4">分期奖励：</label>
+                            <label style="padding-right:10px;padding-top:4px;"><input type="radio"  name="fq" value="0"  checked="checked"/>无分期奖励</label>
+                               <label style="padding-top:4px;"><input type="radio"   name="fq" id="fq_limit" value="1" />允许分期奖励</label>
+                               
+                        </div>  
+                        <div id="fq_limit_set1" style="display:none;">
+                       <div class="row">
+                           <div class="form-group">
+                              <div class="col-sm-offset-2 col-sm-10" style="padding-left:0"><label class="control-label col-sm-3">分期总额：</label>
+                            <input type="text" class="col-sm-4" name="fq_total" id="fq_total" /><label class="control-label">元<span class=" help-button " data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="分期奖励总金额" style="float:right;">?</span></label></div>
+                            </div>
+                             <div class="form-group">
+                             <div class="col-sm-offset-2 col-sm-10" style="padding-left:0"><label class="control-label col-sm-3">奖励分期：</label>
+                            <input type="text" class="col-sm-4" name="fq_time" id="fq_time"  />
+                               <label class="control-label">期<span class="help-button " data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="期分期奖励从加钱下个月起每月1日返还奖励金额" >?</span></label>
+                               
+                              </div>
+                           </div>
+                       </div>
+                      </div>   
+                     </form>
+                     </div>
+                    <div class="modal-footer" style="text-align:center;">
+                        <button type="button" onclick="submitEditAward()" class="btn btn-primary">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="exit()">取消</button>
+                     </div>                                   
+</block>
+
+<block name="script">
+
+<script type="text/javascript">
+  
+            $('#editaward input[name="sxsd"]').change(function(){
+               if($('#editaward input[name="sxsd"]').prop('checked')){
+                 
+                   $('#sxsd_time1').hide();
+                    $("input[name='start']").val("");
+                    $("input[name='end']").val("");
+               }else{
+                    $('#sxsd_time1').show();
+               }
+			   var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                   parent.layer.iframeAuto(index);
+            });
+           
+            
+            $('#editaward input[name="sxsdlime"]').change(function()
+            {
+            
+               if($('#premon input[name="sxsdlime"]').prop('checked')){
+              
+                  $('#sxsd_mon1').show();
+                  $('#sxsd_week1').hide();
+                  $("input[name='week']").each(function(){this.checked=false;});
+               }else if($('#preweek input[name="sxsdlime"]').prop('checked')){
+              
+                  $('#sxsd_week1').show();
+                  $('#sxsd_mon1').hide();
+                  $("input[name='mon']").each(function(){this.checked=false;});
+               }else
+               {
+                  $('#sxsd_week1').hide();
+                  $('#sxsd_mon1').hide();
+                  $("input[name='week']").each(function(){this.checked=false;});
+                  $("input[name='mon']").each(function(){this.checked=false;});
+               }
+			    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                   parent.layer.iframeAuto(index);
+
+            });
+			
+			 $('#editaward input[name="fq"]').change(function(){
+               if($('#editaward input[name="fq"]').prop('checked')){
+                 
+                   $('#fq_limit_set1').hide();
+                    $("input[name='fq_total']").val("");
+                    $("input[name='fq_time']").val("");
+               }else{
+                    $('#fq_limit_set1').show();
+               }
+			   var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                   parent.layer.iframeAuto(index);
+            });
+ //判断多选框有没有被选中的
+ function checkcheckbox(name)
+ {
+     var count=0;
+     var checkArry=document.getElementsByName(name);
+     for(var i=0;i<checkArry.length;i++){
+         if(checkArry[i].checked==true){
+             count++;
+         }
+     }
+     if(count==0)
+     {
+         return false;
+     }
+     else
+     {
+      return true;
+     }
+ }
+//判断文本框是否为空
+function checktext(id){
+    if(document.getElementById(id).value.length==0){
+      document.getElementById(id).focus();
+      return false;
+    }else{
+      return true;
+    }
+}
+//判断输入是否为金额格式
+function isMoney(id){
+  var val=document.getElementById(id).value;
+   var a=/^([1-9][0-9]{0,7}|0)(\.[0-9]{0,2})?$/;
+  if(!a.test(val))
+  {
+    document.getElementById(id).focus();
+    return false;
+  }else{
+    return true;
+  }
+}
+
+
+function priceValidate(id,msg){
+var num=/^([1-9][0-9]{0,7}|0)(\.[0-9]{0,2})?$/;
+var value=$('#'+id).val();
+	if(!(num.test(value)))
+	{
+	  $('#'+id).val("");
+	  layer.tips(msg, '#'+id);
+
+	}
+}
+</script>
+
+
+<script type="text/javascript">
+     $('.datetime-picker').datetimepicker({
+        format:'yyyy-mm-dd hh:ii:ss',
+        autoclose:true,
+        todayBtn:true,
+        todayHighlight:true,
+        language:'zh-CN'
+    });
+
+ function submitEditAward()
+  {       
+
+
+
+          var bviplevel=checkcheckbox('viplevel');
+          if(bviplevel==false)
+           {
+              layer.tips('会员卡类型不能为空！', '#viplevel_yz',{tips:3});
+              return false;
+           }
+
+
+          var bprice=checktext('ght_addmoney');
+          if(bprice==false)
+           {
+              layer.tips('会员加钱金额不能为空！', '#ght_addmoney');
+              return false;
+           }
+           var gprice=isMoney('ght_addmoney');
+           if(gprice==false)
+           {
+              layer.tips('会员加钱金额输入格式不正确！', '#ght_addmoney');
+              return false;
+           }
+           var bauto=checktext('ght_auto');
+           var gauto=isMoney('ght_auto');
+          if(bauto==true){
+            if(gauto==false)
+           {
+              layer.tips('自动奖励金额输入格式不正确！', '#ght_auto');
+              return false;
+           }
+          }else{
+            document.getElementById('ght_auto').blur()
+          }
+
+            var sxsd_str=$('input:radio[name="sxsd"]:checked').val();
+            if(sxsd_str==null)
+            {
+              layer.tips('什么也没选中!', '#sxsd_limit',{tips:3});
+                return false;
+            }
+            else if(sxsd_str==1)
+            {
+              var start_str=checktext('start');
+             
+
+             if(start_str==false)
+              {
+                layer.tips('请选择开始时间！', '#start',{tips:4});
+                return false;
+              } 
+              var end_str=checktext('end');
+              if(end_str==false)
+              {
+                layer.tips('请选择结束时间！', '#end');
+                return false;
+              } 
+  
+            }
+
+            var val=$('input:radio[name="sxsdlime"]:checked').val();
+            if(val==null)
+            {
+                layer.tips('什么也没选中!', '#sxsdlime_yz',{tips:3});
+                return false;
+            }
+            else if(val==1)
+            {
+              var bmon=checkcheckbox('mon');
+              if(bmon==false)
+               {  layer.tips('请选择天数！', '#mon',{tips:4});
+                  return false;
+               }
+            }
+            else if(val==2)
+            {
+              var bWeek=checkcheckbox('week');
+              if(bWeek==false)
+              {
+                layer.tips('请选择周几！', '#week_yz',{tips:4});
+                return false;
+              } 
+            }
+
+
+
+
+            var fq_str=$('input:radio[name="fq"]:checked').val();
+            if(fq_str==null)
+            {
+              layer.tips('什么也没选中!', '#fq_limit',{tips:3});
+                return false;
+            }
+            else if(fq_str==1)
+            {
+              var fq_total_str=$('#fq_total').val();
+              var fq_time_str=$('#fq_time').val();
+
+              if(fq_total_str >0){
+
+              }else{
+                layer.tips('分期总额不能为空且需大于0!', '#fq_total');
+                return false;
+              }
+
+              if(fq_time_str >0)
+              {
+                  
+              } else
+              {
+                layer.tips('奖励期数不能为空且需大于0!', '#fq_time');
+                return false;
+              }   
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+           
+
+            var json_str,hytype_str,week_str,mon_str,price_str,auto_str,start_str,end_str,toaccount_str,sxsd_str,sxsd_limit_str,fq_str,fq_time_str,fq_total,bljl_str='';  
+
+
+            var BlJl_Chk_object = document.getElementById('BlJl');  
+            if(BlJl_Chk_object.checked)
+            {
+              bljl_str=1;
+            } 
+            else 
+            {         
+              bljl_str=0;
+            }
+
+
+             json_str='';
+            $("#editaward input[name='viplevel']:checkbox:checked").each(function()
+            {
+                if(hytype_str==undefined)
+               {
+                 json_str=$(this).val();
+                 hytype_str=json_str+',';
+               }
+               else
+               {
+                hytype_str=$(this).val()+","+hytype_str;
+               }                 
+            })
+
+            json_str='';
+            $("#editaward input[name='mon']:checkbox:checked").each(function()
+            {
+              
+              if(mon_str==undefined)
+               {
+                 json_str=$(this).val();
+                 mon_str=json_str+',';
+              }
+              else
+              {
+                mon_str=$(this).val()+","+mon_str;
+              } 
+
+            })
+            
+            json_str='';
+            $("#editaward input[name='week']:checkbox:checked").each(function()
+            {
+               if(week_str==undefined)
+               {
+                 json_str=$(this).val();
+                 week_str=json_str+',';
+                  }
+                  else
+                  {
+                    week_str=$(this).val()+","+week_str;
+                  }                             
+            })
+               
+
+            sxsd_str     =$('#editaward input[name="sxsd"]:checked').val();
+            sxsdlime_str =$('#editaward input[name="sxsdlime"]:checked').val();
+            price_str    =$('#editaward input[name="price"]').val();
+            auto_str     =$('#editaward input[name="auto"]').val();
+            toaccount_str=$('#editaward input[name="toaccount"]:checked').val();
+            start_str    =$('#editaward input[name="start"]').val();
+            end_str      =$('#editaward input[name="end"]').val();
+            fq_str       =$('#editaward input[name="fq"]:checked').val();
+            fq_time_str  =$('#editaward input[name="fq_time"]').val();
+            fq_total_str =$('#editaward input[name="fq_total"]').val();
+
+            bianhao_str=$('#bianhao').val();
+ 
+
+
+            $.ajax({
+                url: "{:U('add_award_set')}",//请求数据的php链接
+                type: 'post',//传输数据格式 get/post
+                dataType : 'text', //回调类型 text/json/...
+                data: {'bianhao':bianhao_str,'hytype':hytype_str,'price':price_str,'auto':auto_str,'sxsd':sxsd_str,'sxsdlime':sxsdlime_str,'toaccount':toaccount_str,'start':start_str,'end':end_str,'fq':fq_str,'fq_time':fq_time_str,'fq_total':fq_total_str,'mon':mon_str,'week':week_str,'bljl':bljl_str},
+                success: function(data)
+                {
+                    var mybangobj=eval("("+data+")");                
+
+                    if(mybangobj.result==1)  
+                    {  
+                        
+
+                          layer.msg('添加成功', {
+                                  offset: 0,
+                                  shift: 6,
+                                  icon: 1,
+                                },function(){ 
+                                  parent.location.reload();
+                                  parent.layer.closeAll();
+                              });
+
+                    } 
+                        
+                      
+                    else if(mybangobj.result==0)//未绑定微博  
+                    {  
+ 
+                              layer.msg('添加失败', {
+                              offset: 0,
+                              shift: 6,
+                              icon: 2,
+                            });
+                    }    
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) 
+                {
+                   layer.msg('error', {
+                              offset: 0,
+                              shift: 6,
+                              icon: 2,
+                            });
+  
+                }
+            });
+
+
+      
+
+       
+
+            
+        }
+        
+
+
+
+  // function submitEditAward()
+  // {
+
+  //           var json_str,hytype_str,week_str,mon_str,price_str,auto_str,start_str,end_str,toaccount_str,sxsd_str,sxsd_limit_str,fq_str,fq_time_str,fq_total ='';     
+
+  //            json_str='';
+  //           $("#editaward input[name='viplevel']:checkbox:checked").each(function()
+  //           {
+  //               if(hytype_str==undefined)
+  //              {
+  //                json_str=$(this).val();
+  //                hytype_str=json_str+',';
+  //              }
+  //              else
+  //              {
+  //               hytype_str=$(this).val()+","+hytype_str;
+  //              }                 
+  //           })
+
+  //           json_str='';
+  //           $("#editaward input[name='mon']:checkbox:checked").each(function()
+  //           {
+              
+  //             if(mon_str==undefined)
+  //              {
+  //                json_str=$(this).val();
+  //                mon_str=json_str+',';
+  //             }
+  //             else
+  //             {
+  //               mon_str=$(this).val()+","+mon_str;
+  //             } 
+
+  //           })
+            
+  //           json_str='';
+  //           $("#editaward input[name='week']:checkbox:checked").each(function()
+  //           {
+  //              if(week_str==undefined)
+  //              {
+  //                json_str=$(this).val();
+  //                week_str=json_str+',';
+  //                 }
+  //                 else
+  //                 {
+  //                   week_str=$(this).val()+","+week_str;
+  //                 }                             
+  //           })
+               
+
+  //           sxsd_str     =$('#editaward input[name="sxsd"]:checked').val();
+  //           sxsdlime_str =$('#editaward input[name="sxsdlime"]:checked').val();
+  //           price_str    =$('#editaward input[name="price"]').val();
+  //           auto_str     =$('#editaward input[name="auto"]').val();
+  //           toaccount_str=$('#editaward input[name="toaccount"]:checked').val();
+  //           start_str    =$('#editaward input[name="start"]').val();
+  //           end_str      =$('#editaward input[name="end"]').val();
+  //           fq_str       =$('#editaward input[name="fq"]:checked').val();
+  //           fq_time_str  =$('#editaward input[name="fq_time"]').val();
+  //           fq_total_str =$('#editaward input[name="fq_total"]').val();
+
+  //           bianhao_str=$('#bianhao').val();
+ 
+
+
+  //           $.ajax({
+  //               url: "{:U('add_award_set')}",//请求数据的php链接
+  //               type: 'post',//传输数据格式 get/post
+  //               dataType : 'text', //回调类型 text/json/...
+  //               data: {'bianhao':bianhao_str,'hytype':hytype_str,'price':price_str,'auto':auto_str,'sxsd':sxsd_str,'sxsdlime':sxsdlime_str,'toaccount':toaccount_str,'start':start_str,'end':end_str,'fq':fq_str,'fq_time':fq_time_str,'fq_total':fq_total_str,'mon':mon_str,'week':week_str},
+  //               success: function(data)
+  //               {
+  //                   var mybangobj=eval("("+data+")");                
+
+  //                   if(mybangobj.result==1)  
+  //                   {  
+  //                       // alert("添加成功"); 
+  //                       // parent.location.reload();
+  //                       // parent.layer.closeAll();
+
+  //                         layer.msg('添加成功', {
+  //                                 offset: 0,
+  //                                 shift: 6
+  //                               },function(){ 
+  //                                             parent.location.reload();
+  //                                            parent.layer.closeAll();
+  //                             });
+
+  //                   } 
+                        
+                      
+  //                   else if(mybangobj.result==0)//未绑定微博  
+  //                   {  
+
+  //                        // alert("修改失败");  
+  //                             layer.msg('添加失败', {
+  //                             offset: 0,
+  //                             shift: 6
+  //                           });
+  //                   }    
+  //               },
+  //               error: function(XMLHttpRequest, textStatus, errorThrown) 
+  //               {
+  //                   alert("error"); 
+  //               }
+  //           });
+
+            
+  //       }
+        
+ function exit(){
+        parent.layer.closeAll();
+   }
+</script>
+
+</block>

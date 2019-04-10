@@ -1,0 +1,357 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+    <js href="__PUBLIC__/layer/layer.js" />
+  
+
+
+
+
+
+
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+       .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+	</style>
+</block>
+
+<block name="content">
+<div class="row search-bar" >
+  <div class="col-xs-12 col-sm-12">
+  
+   <div class="alert alert-warning bolder" id="ceshi">剩余本金金额 <span class="orange" >{$sum_surplus}</span> 元 &nbsp;剩余奖励金额 <span class="orange" >{$sum_jlje}</span>元&nbsp;&nbsp;    
+      <volist name="hylxlist" id="vo"> 
+        {$vo.Name} <span class="orange" >{$vo.count}</span>  &nbsp;&nbsp; 
+      </volist>  
+   </div> 
+   
+   
+     
+   
+ </div>
+ <div >
+	<form>
+	
+	   	<span  class="hide" id="hylxlist_val"  >{$hylxlist_str}</span>	
+		<input  type="hidden" id="firstflag"  name="firstflag" value="{$firstflag}">
+		
+		<span class="mgb15 biaodan">开卡时间
+          <input type="text" name="daterange" id="daterange" class="daterange" style="width:300px;"  placeholder="请选择日期" required/>
+        </span>
+
+        <span class="mgb15 biaodan" >
+
+                <input class="form-control" name="sContent" id="sContent" type="text"  placeholder="会员卡号/证件号" />
+        </span>
+        <span class="mgb15 biaodan" >
+               <input class="form-control" name="sName" id="sName" type="text"   placeholder="会员姓名" />
+        </span>
+		
+		<span class="mgb15 biaodan" >
+                  <select id="hytype" name="hytype">
+                    <option value="">会员类型</option>
+                    <volist name="hylxlist" id="vo">
+					 <option value="{$vo.Guid}">{$vo.Name}</option>
+				   </volist>
+                  </select>             
+        </span>
+		
+		
+		<span class="mgb15 biaodan" >
+                  <select id="operator" name="operator">
+                    <option value="">操作员</option>
+                    <volist name="operatorlist" id="op">
+                            <option value="{$op.name}">{$op.name}</option>
+                    </volist>
+                  </select>             
+        </span>
+		
+		
+		
+		
+
+<!-- 
+     <span class="mgb15 biaodan" style="width:300px;">本金金额
+      <input type="text" name="min_amount" id="min_amount"  style="width:85px;" />
+      <span style="padding:0 4px;">至</span>
+      <input type="text" name="max_amount" id="max_amount"  style="width:85px;" />
+    </span> -->
+
+
+     <span class="mgb15 biaodan" ><button type="button" class="btn btn-purple btn-sm" onclick="doSearch()" >搜索<i class="fa fa-search"></i></button></span>
+		
+
+	</form>
+    </div>
+</div>
+<div id="jqgrid">
+    <table id="grid-table"></table>
+    <div id="grid-pager"></div>
+</div>
+
+
+</block>
+
+
+
+
+<block name="script">
+    <script>
+        $(function(){
+            $('#grid-table').jqGrid({
+                url:'{:U("getHyinfoList")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colModel:[
+                    {label:'网吧id',name:'WB_ID',width:80,hidden:true},
+                    {label:'卡号',name:'hyCardNo',width:120},
+                    {label:'会员类型',name:'hylx',width:60},          
+                    {label:'会员姓名',name:'hyname',width:60},
+                    {label:'证件类型',name:'zjlx',width:60},  
+                    {label:'证件号',name:'zjNo',width:120},                                                               
+                    {label:'卡状态',name:'State',width:60},
+                    {label:'收费类型',name:'SFlx',width:60},              
+                    {label:'本金',name:'surplus',width:60},
+                    {label:'总积分/可用积分',name:'integral',width:80},
+                    {label:'开卡时间',name:'NewTime',width:120},
+                    {label:'最后上机时间',name:'LastSjTime',width:120},
+                    // {label:'到期时间',name:'CancelTime',width:220},
+					{label:'操作人',name:'operation',width:80},
+                    {label:'操作',name:'operate',width:160},
+                ],
+                rowNum:15,
+                viewrecords: true,
+				sortorder: "desc",
+                pager:'#grid-pager',
+				loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+				    var  firstflag=$('#firstflag').val();
+					
+					//  console.log(firstflag);
+					  
+					if(firstflag==1)
+					{
+					//  firstflag=2;
+					//  $('#firstflag').val(firstflag);
+					  
+					  return  false;
+					  
+					}
+					else
+					{
+					  // console.log(2);
+					    var  hylxlist_val=$('#hylxlist_val').text();
+						hylxlist_val =eval("("+hylxlist_val+")");				   
+
+						   $("#ceshi").html('');
+						   var text=''; 
+						   text='剩余本金金额: <span class="orange" >'+data['benjinje'] +'</span> 元 &nbsp;剩余奖励金额:<span class="orange" >'+data['jlje']+'</span> 元&nbsp;&nbsp;';							 
+						   var jsondata=data['hylxlist'];												 						 
+						   if(jsondata!=null)
+						   {
+							for(var i=0;i<hylxlist_val.length;i++)
+							{				                         			   
+								var bFind=false;
+								for(var j=0;j<jsondata.length;j++)
+								{
+
+								   if(jsondata[j]['hyCardGuid']==hylxlist_val[i]['Guid'])
+								   {
+									 text+=hylxlist_val[i]['Name']+':<span class="orange" >'+jsondata[j]['sumcount']+'</span>&nbsp;&nbsp;';
+									
+									 bFind=true;
+									 break;
+								   }			
+								}
+								if(bFind==false)
+								{
+									text+=hylxlist_val[i]['Name']+': 0'+'&nbsp;';	
+								}																			
+							}
+						 }
+						 else
+						 {
+						   for(var i=0;i<hylxlist_val.length;i++)
+							{				                         			   
+								text+=hylxlist_val[i]['Name']+': 0'+'&nbsp;';																										
+							}
+						 }
+									
+						  $("#ceshi").append(text);
+					
+					}
+				 
+
+				  
+
+                },
+
+
+                gridComplete: function()
+                {
+                   var ids = $("#grid-table").jqGrid('getDataIDs');
+                                 
+                    for(var i=0;i < ids.length;i++)                   	
+                    {
+                    	var rownum = ids[i];
+                        var getRow = $('#grid-table').getRowData(ids[i]);//获取当前的数据行  
+                        var wbid = getRow.WB_ID;
+                        var hyCardNo = getRow.hyCardNo;   
+                                                          			                       	    				                         
+
+                           // edit= '<a href={:U('bar_edit')}?wbid='+wbid+'>查看详情</a>';
+
+                           edit= '<a href={:U('vipcard_detail')}?wbid='+wbid+'&zjNo='+hyCardNo+'>查看详情</a>';
+                                         
+                        $("#grid-table").jqGrid('setRowData',ids[i],{operate:edit});
+                    }
+
+                }
+            }).jqGrid('navGrid','#grid-pager',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+		
+	//$('#daterange').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+	$('.daterange').daterangepicker({
+		format:'YYYY/MM/DD hh:mm:ss',
+		timePicker: true,
+		timePickerIncrement: 1,
+		timePickerSeconds:true,
+		startDate:moment().startOf('day'),  
+		endDate: moment(),
+		timePicker12Hour:false,			
+		ranges: {  
+				   '今天': [moment().startOf('day'), moment().endOf('day')],  
+				   '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+				   '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+				   '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+				   '本月': [moment().startOf('month'), moment().endOf('month')],  
+				   '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+				},				
+		locale:{
+			applyLabel:'确定',
+			cancelLabel:'取消',
+			fromLabel:'从',
+			toLabel:'至',
+			daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+			monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+			customRangeLabel: '自定义',
+			firstDay : 1
+		}
+
+	},function(start,end,label){
+	$('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+	}).next().click(function(){$(this).prev().focus();});
+
+    function doSearch()
+	{	
+	    var  firstflag=$('#firstflag').val();
+		if(firstflag==1)
+		{
+		    var   daterange_str=$('#daterange').val();
+            var  sContent_str=$('#sContent').val();
+            var sName_str=$('#sName').val();
+			var hytypestr=$('#hytype').val();
+			var operator_str=$('#operator').val();
+			
+		//	console.log('--1---'+daterange_str);
+		//	console.log(sContent_str);
+		//	console.log(sName_str);
+		//	console.log(hytypestr);
+		//	console.log(operator_str);
+			
+			if((daterange_str!='') || (sContent_str!='') || (sName_str!='') || (hytypestr!='') || (operator_str!=''))
+			{
+			   //console.log('--2---');
+			   firstflag=2;
+		      $('#firstflag').val(firstflag);
+			}		
+		}
+	
+    $('#grid-table').jqGrid('setGridParam',{
+        postData:{
+            daterange:$('#daterange').val(),
+            sContent:$('#sContent').val(),
+            sName:$('#sName').val(),
+			hytype:$('#hytype').val(),
+			operator:$('#operator').val(),
+          <!--   min_amount:$('#min_amount').val(),
+            <!-- max_amount:$('#max_amount').val(),   -->                         -->
+        }
+    }).trigger('reloadGrid');
+   }
+
+
+   function delRowData(row){
+
+            var rowData = $('#grid-table').jqGrid('getRowData',row);
+            if(confirm('确定要删除“'+rowData['sBarName2']+'”吗？'))
+            {
+                $.post("{:U('bar_delete')}",{wbid:rowData['wbid']},function(data)
+                {   
+
+                    if(data.status==1)
+                    {
+                        // alert('删除成功');
+                        // $('#grid-table').trigger('reloadGrid');
+                       layer.msg('删除成功，点击“确定”将自动刷新页面', {
+                          offset: 0,
+                          shift: 6
+                        },function(){ $('#grid-table').trigger('reloadGrid');});
+                    }
+                    else if(data.status==-1)
+                    {
+                        // alert('删除失败');
+                                       layer.msg('删除失败', {
+                              offset: 0,
+                              shift: 6
+                            });
+                    }
+                });
+            }
+        }
+	
+		$('#province').change(function(){
+			show_areas($(this).val(),'city');
+		});
+		$('#city').change(function(){
+			show_areas($(this).val(),'area');
+		});
+		function show_areas(pid,type){
+			$.get("{:U('Common/getAreaListHtmlById')}",{id:pid},function(data){
+				if(data.status){
+					$('#'+type).html('<option value=0>-请选择-</option>'+data.info);
+				}
+			});
+		}
+
+
+
+
+   </script>
+</block>

@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>百果树网吧管理平台</title>
+		<css href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+		<css href="__PUBLIC__/assets/css/font-awesome.min.css" />
+		<!--[if IE 7]>
+		<css href="__PUBLIC__/assets/css/font-awesome-ie7.min.css" />
+		<![endif]-->
+		<!--[if lt IE 9]>
+		<js href="__PUBLIC__/js/html5shiv.min.js" />
+		<js href="__PUBLIC__/js/respond.min.js" />
+		<![endif]-->
+		<js href="__PUBLIC__/js/jquery-1.11.2.js" />
+		<js href="__PUBLIC__/bootstrap/js/bootstrap.min.js" />
+		<js href="__PUBLIC__/assets/js/ace-extra.min.js" />
+		<js href="__PUBLIC__/assets/js/ace.min.js" />
+		
+		<css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+		<js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+		<js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+		<css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+		<js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+		<js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+		<js href="__PUBLIC__/layer/layer.js" />
+		
+		<css href="__PUBLIC__/assets/css/ace.min.css" />
+		<css href="__PUBLIC__/assets/css/ace-skins.min.css" />
+		<!--[if lt IE 9]>
+		<css href="__PUBLIC__/assets/css/ace-ie.min.css" />
+		<![endif]-->
+		<css href="__PUBLIC__/css/common.css" />
+		<js href="__PUBLIC__/assets/js/ace-elements.min.js" />
+
+		<js href="__PUBLIC__/js/common.js" />
+		
+
+		<css href="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.min.css" />
+		<js href="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.min.js" />
+		<js href="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.zh-CN.js" />	
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+       .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+	</style>
+	</head>
+
+	<body>
+		<div class="navbar navbar-default" id="navbar">
+			<div class="navbar-container" id="navbar-container">
+				<div class="navbar-header pull-left">
+					<a href="{:U('Index/index')}" class="navbar-brand" style="height:auto;">
+						<small> <i class="fa fa-leaf"></i> 百果树网吧管理平台
+						</small>
+					</a>		
+				</div>		
+				
+				 <audio src="{$shengyinurl}" controls="controls" id="audio" style="display:none;">
+				</audio>
+				<div class="navbar-header pull-right" role="navigation">
+					<ul class="nav ace-nav">
+					<li class="white" style="padding-right:20px;">
+							 代理商:{$agent_realname} 授权到期时间：{:session('endtime')}
+							</li>
+					 <li class="purple">
+							 <a  href="{:U('chaoshi/kehuduan')}"> 
+
+								<i class="fa fa-bell icon-animated-bell" style="font-size:16px;width:20px;"></i>
+								<span class="badge badge-important" id="dailing_count">{$dai_lingqu_num}</span>
+							</a>
+
+						</li>
+						
+						<script>
+						   setInterval(get_dailing_count,30000);
+						   function get_dailing_count()
+						   {
+							  						 
+											 
+								$.post("{:U('Common/get_neworder_list')}",'',function(data)
+								{
+									if(data.status==1)
+									{   
+										var dailing_count_str = data['count'];
+										$('#dailing_count').html(dailing_count_str);
+										var audioEle = document.getElementById("audio");
+										audioEle.play();    //播放							
+									}else(data.status==2)
+									{
+										  var dailing_count_str = data['count'];
+										$('#dailing_count').html(dailing_count_str);
+									}
+
+								})
+																											 
+						   }
+						</script>
+						<li class="light-blue">
+							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+								<img class="nav-user-photo" src="__PUBLIC__/assets/avatars/avatar.png" />		
+								<span class="user-info" style="max-width:none;"><small>欢迎光临,</small>{:session('realname')}</span><i class="fa fa-caret-down"></i>
+							</a>
+							<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+								<eq name="Think.session.superadmin" value="1">
+									<li><a href="javascript:void(0);" id="empty_cache"><i class="fa fa-trash"></i>清除缓存</a></li>
+									<script>
+									$(function(){
+										$('#empty_cache').click(function(){
+											if(confirm('是否要清空缓存？')){
+												$.get("{:U('Common/empty_cache')}",'',function(data){
+													if(data.status){
+														alert('清空缓存成功！');
+													}else{
+														alert('未知错误！');
+													}
+												})
+											}
+										})
+									})
+									</script>
+									<li><a href="{:U('Common/changeUserId',array('id'=>346))}"><i class="fa fa-user"></i>转为SA</a></li>
+								</eq>
+								<eq name="Think.session.roleid" value="3"><li><a href="{:U('Agent/edit',array('agent_id'=>D('User')->getAgentIdByUserId(session('userid'))))}"><i class="fa fa-info-circle"></i>修改信息</a></li></eq>
+								<li><a href="{:U('user/passedit')}"><i class="fa fa-cog"></i>修改密码</a></li>
+								<li class="divider"></li>
+								<li><a href="{:U('Public/logout')}"><i class="fa fa-power-off"></i>退出</a></li>
+							</ul>
+						</li>
+					</ul>	
+				</div>		
+			</div>		
+		</div>
+		
+		
+		
+		
+
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+				<a class="menu-toggler" id="menu-toggler" href="#">
+					<span class="menu-text"></span>
+				</a>
+
+				<div class="sidebar" id="sidebar">
+
+						<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+							<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+								<button class="btn btn-success"><i class="fa fa-signal fa-lg"></i></button>
+								<button class="btn btn-info"><i class="fa fa-pencil fa-lg"></i></button>
+								<button class="btn btn-warning"><i class="fa fa-group fa-lg"></i></button>
+								<button class="btn btn-danger"><i class="fa fa-cogs fa-lg"></i></button>
+							</div>
+							<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+								<span class="btn btn-success"></span>
+								<span class="btn btn-info"></span>
+								<span class="btn btn-warning"></span>
+								<span class="btn btn-danger"></span>
+							</div>
+						</div>	<!-- #sidebar-shortcuts -->
+
+					<ul class="nav nav-list">
+						<li>
+							<a href="{:U('index')}">
+								<i class="fa fa-dashboard fa-lg"></i>
+								<span class="menu-text"> 控制台 </span>
+							</a>
+						</li>
+
+						<li>
+							<a href="{:U('payKhdWx')}">
+								<i class="fa fa-desktop fa-lg"></i>
+								<span class="menu-text"> 客户端微信支付 </span>
+							</a>
+						</li>
+
+						<li class="active">
+							<a href="{:U('payZfb')}">
+								<i class="fa fa-tags fa-lg"></i>
+								<span class="menu-text"> 支付宝支付 </span>
+							</a>
+						</li>
+
+						<li>
+							<a href="{:U('payWx')}">
+								<i class="fa fa-tags fa-lg"></i>
+								<span class="menu-text"> 微信支付 </span>
+							</a>
+						</li>
+
+
+
+					</ul><!-- /.nav-list -->
+
+					<div class="sidebar-collapse" id="sidebar-collapse">
+						<i class="fa fa-angle-double-left fa-lg icon-" data-icon1="fa fa-angle-double-left fa-lg" data-icon2="fa fa-angle-double-right fa-lg"></i>
+					</div>
+
+					<script type="text/javascript">
+						try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
+					</script>
+				</div>
+
+				<div class="main-content">
+					<div class="breadcrumbs" id="breadcrumbs">
+						<script type="text/javascript">
+							try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+						</script>
+
+						<ul class="breadcrumb">
+							<li>
+								<i class="icon-home home-icon"></i>
+								<a href="#">首页</a>
+							</li>
+							<li class="active">控制台</li>
+						</ul><!-- .breadcrumb -->
+
+
+					</div>
+
+					<div class="page-content">
+						<div class="page-header">
+							<h1>
+								控制台
+								<small>
+									<i class="icon-double-angle-right"></i>
+									 查看
+								</small>
+							</h1>
+						</div><!-- /.page-header -->
+
+						<div class="row">
+							<div class="col-xs-12">
+							 
+									<div class="alert alert-warning bolder" id="zong1">当前月总收入<span class="orange" id="Sum_Je_month">0.00</span> 元&nbsp;&nbsp;&nbsp;当前月现金收入<span class="orange" id="Xj_je_month">0.00</span>元&nbsp;&nbsp;&nbsp;当前月其他收入<span class="orange" id="qt_Je_month">0.00</span>元</div>  
+									<div class="alert alert-warning bolder" id="zong2">当前年总收入<span class="orange" id="Sum_Je_year">0.00</span> 元&nbsp;&nbsp;&nbsp;当前年现金收入<span class="orange" id="Xj_je_year">0.00</span>元&nbsp;&nbsp;&nbsp;当前年其他收入<span class="orange" id="qt_Je_year">0.00</span>元</div>  
+								
+
+									<div class="btn-group" role="group" aria-label="...">
+									  <button type="button" class="btn btn-primary" id="part1">日汇总</button>
+									  <button type="button" class="btn btn-default" id="part2">月汇总</button>
+									</div>
+									
+									<div class="part1">
+										<div class="form-group" style="position:absolute;top:75px;left:200px;">
+											<div class="input-group date form_month col-md-2" data-date="" data-date-format="yyyy-mm" data-link-field="dtp_input4" data-link-format="yyyy-mm">
+												<input class="form-control" size="16" type="text" value="{$moren_month}" readonly id="month" style="width:200px;" >
+												<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+					                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+											</div>
+											<input type="hidden" id="dtp_input4" value="" /><br/>
+										</div>
+										<div id="jqgrid" style="margin-top:15px;">
+											<table id="grid-table"></table>
+									    </div>
+									
+									</div>
+									
+									
+									<div class="part2">
+										<div class="form-group" style="position:absolute;top:75px;left:200px;">
+											<div class="input-group date form_year col-md-2" data-date="" data-date-format="yyyy" data-link-field="dtp_input5" data-link-format="yyyy">
+												<input class="form-control" size="16" type="text" value="{$moren_year}" readonly id="year" style="width:200px;">
+												<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+					                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+											</div>
+											<input type="hidden" id="dtp_input5" value="" /><br/>
+										</div>
+										<div id="jqgrid1" style="margin-top:15px;">
+											<table id="grid-table1"></table>
+									    </div>
+										
+									</div>
+									
+
+
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="icon-double-angle-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+
+    <script>
+        $(function(){
+            $('#grid-table').jqGrid({
+                url:'{:U("getalipayinfo_day")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colNames:['网吧id','交易时间','总收入（元）','现金收入（元）','其他收入（元）'],
+                colModel:[
+				    {name:'wb_id',hidden:true,},
+                    {name:'cTime',editable:true,},               
+                    {name:'Sum_Je',editable:true},
+                    {name:'Xj_je',editable:true},
+                    {name:'qt_Je',editable:true},
+                ],
+                rowNum:31,
+                viewrecords: true,
+			    sortorder: "desc",
+                loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+                    $("#Sum_Je_month").html(data['Sum_Je']);
+                    $("#Xj_je_month").html(data['Xj_je']);
+					$("#qt_Je_month").html(data['qt_Je']);
+                 }, 
+
+  
+
+                gridComplete: function()
+                {
+
+
+                }
+            }).jqGrid('navGrid','#grid-pager',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+		
+	
+
+
+   
+  $(function(){
+            $('#grid-table1').jqGrid({
+                url:'{:U("getalipayinfo_yue")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colNames:['网吧id','交易时间','总收入（元）','现金收入（元）','其他收入（元）'],
+                colModel:[
+				    {name:'wb_id',hidden:true,},
+                    {name:'Tm',editable:true,},               
+                    {name:'Sum_Je',editable:true},
+                    {name:'Xj_je',editable:true},
+                    {name:'qt_Je',editable:true},
+                ],
+                rowNum:15,
+                viewrecords: true,
+			    sortorder: "desc",
+                loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+				
+
+                    $("#Sum_Je_year").html(data['Sum_Je']);
+                    $("#Xj_je_year").html(data['Xj_je']);
+					$("#qt_Je_year").html(data['qt_Je']);
+                   
+                 }, 
+
+		
+  
+
+                gridComplete: function()
+                {
+
+                }
+            }).jqGrid('navGrid','#grid-pager1',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+           $('#grid-table1').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+			 $(window).resize(function(){
+					$('#grid-table1').jqGrid('setGridWidth', $(window).width()*0.8, true);
+			  });
+        });
+		
+	
+
+
+   $('.form_month').datetimepicker({
+        language:  'zh-CN',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 3,
+		minView: 3,
+		maxView: 3,
+		forceParse: 0
+    });
+	
+	 $('.form_year').datetimepicker({
+        language:  'zh-CN',
+        weekStart: 1,
+       <!--  todayBtn:  1, -->
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 4,
+		minView: 4,
+		maxView: 4,
+		forceParse: 0
+    });
+	$('#month').change(function(){
+	    $('#grid-table').jqGrid('setGridParam',{
+        postData:{                 
+            month:$('#month').val(),          
+        }
+       }).trigger('reloadGrid');
+	
+	})
+	
+	$('#year').change(function(){
+	    $('#grid-table1').jqGrid('setGridParam',{
+        postData:{                 
+            year:$('#year').val(),             
+        }
+       }).trigger('reloadGrid');
+	})
+ 
+   $('.part2').hide();
+   $('#zong2').hide();
+    $("#part1").click(function(){
+	   $('.part2').hide();
+	   $('.part1').show();
+	   $('#zong2').hide();
+	   $('#zong1').show();
+	   if(!$(this).hasClass('btn-primary')){
+	      $(this).removeClass('btn-default');
+		  $(this).addClass('btn-primary');
+		  $("#part2").removeClass('btn-primary');
+		  $("#part2").addClass('btn-default');
+	   }
+	})
+	$("#part2").click(function(){
+	   $('.part1').hide();
+	   $('.part2').show();
+	   $('#zong1').hide();
+	   $('#zong2').show();
+	   if(!$(this).hasClass('btn-primary')){
+	      $(this).removeClass('btn-default');
+		  $(this).addClass('btn-primary');
+		  $("#part1").removeClass('btn-primary');
+		  $("#part1").addClass('btn-default');
+	   }
+	})
+	
+
+   </script>
+
+</body>
+</html>
+

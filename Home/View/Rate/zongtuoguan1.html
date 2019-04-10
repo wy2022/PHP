@@ -1,0 +1,181 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+</block>
+
+<block name="content">
+<div class="row search-bar" style="margin-bottom:15px;">
+	<!-- <form action="{:U("pingyi")}" method="get"> -->
+	<form >
+        <input type="hidden" name="roleid" value="{$roleid}"/>
+
+
+
+        <div class="col-xs-6 col-sm-2">
+            <div class="input-group">
+                <input class="form-control" name="agent_name" id="agent_name" type="text" placeholder="代理商帐号" />
+            </div>
+        </div>
+
+		<div class="col-xs-8 col-sm-1"><button type="button" class="btn btn-purple btn-sm" onclick="doSearch()">搜索<i class="fa fa-search"></i></button></div>
+	</form>
+</div>
+<div id="jqgrid">
+    <table id="grid-table"></table>
+    <div id="grid-pager"></div>
+</div>
+
+</block>
+
+
+
+
+<block name="script">
+    <script>
+
+	    var  url='http://ght.wbzzsf.com/index.php/ServerzongAPI/API_query_oneagentinfo.html';
+        $(function(){
+            $('#grid-table').jqGrid({
+                url:url,
+                datatype:'json',
+                height:'100%',
+                colNames:['编号','网吧id','代理商id','代理商地区','代理商姓名','代理商电话','代理商注册时间','绑定状态','操作'],
+                colModel:[
+				    {name:'guid',hidden:true},
+                    {name:'wbid',hidden:true},					
+                    {name:'agent_id',hidden:true},
+                    {name:'diqu',editable:true}, 					
+                    {name:'agent_realname',editable:true},
+                    {name:'agent_phone',editable:true},
+                    {name:'dtInsertTime',editable:true},					           					             
+                    {name:'bing_status',editable:true},
+                    {name:'opera',editable:true}
+                ],
+                rowNum:15,
+                viewrecords: true,
+				sortorder: "desc",
+                pager:'#grid-pager',
+                gridComplete: function()
+				{
+                    var ids = $("#grid-table").jqGrid('getDataIDs');
+                    var add,edit,save,del = '';
+                    for(var i=0;i < ids.length;i++)
+                    {
+
+	                    var getRow = $('#grid-table').getRowData(ids[i]);
+				        var colVal = getRow.wbid;
+			
+                        var bing_status = getRow.bing_status; 
+
+				        var rownum = ids[i];
+
+                        if(bing_status=='1')
+                          {
+                            aa='<span class="label label-sm label-success">已绑定</span>'; 
+                            edit ='<span class="label label-sm label-success">操作完成</span>' ;                         
+                          }
+                          else if(bing_status=='0')
+                          {
+                            aa='<span class="label label-sm label-warning">未绑定</span>';                        
+							edit= '<a  onclick=\"query_bangding('+rownum+' );\">申请绑定</a>&nbsp&nbsp';							
+                          }    
+                            else if(bing_status=='2')
+                          {
+                            aa='<span class="label label-sm label-warning">申请中</span>';     						
+                          } 						  
+                     
+                        $("#grid-table").jqGrid('setRowData',ids[i],{bing_status:aa}); 
+                        						
+                        $("#grid-table").jqGrid('setRowData',ids[i],{opera:edit});
+                       
+                    }
+					
+                }
+            }).jqGrid('navGrid','#grid-pager',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+                 
+            });
+        });
+		
+	$('#daterange').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+	$('.daterange').daterangepicker({
+		format:'YYYY/MM/DD hh:mm:ss',
+		timePicker: true,
+		timePickerIncrement: 1,
+		timePickerSeconds:true,
+		startDate:moment().startOf('day'),  
+		endDate: moment(),
+		timePicker12Hour:false,			
+		ranges: {  
+				   '今天': [moment().startOf('day'), moment().endOf('day')],  
+				   '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+				   '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+				   '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+				   '本月': [moment().startOf('month'), moment().endOf('month')],  
+				   '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+				},				
+		locale:{
+			applyLabel:'确定',
+			cancelLabel:'取消',
+			fromLabel:'从',
+			toLabel:'至',
+			daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+			monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+			customRangeLabel: '自定义',
+			firstDay : 1
+		}
+
+	},function(start,end,label){
+	$('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+	}).next().click(function(){$(this).prev().focus();});
+
+    function doSearch(){
+    $('#grid-table').jqGrid('setGridParam',{
+        postData:{
+            agent_name:$('#agent_name').val()     
+        }
+    }).trigger('reloadGrid');
+   }
+
+
+    function query_bangding(row)
+	{
+
+	        var  post_url='http://ght.wbzzsf.com/index.php/ServerzongAPI/API_agent_bangding_set.html';
+            var rowData = $('#grid-table').jqGrid('getRowData',row);
+            if( confirm('确定要绑定代理商“'+rowData['agent_realname']+'”吗？'))
+            {
+                $.post(post_url,{wbid:rowData['wbid'],agent_id:rowData['agent_id']},function(data)
+                {   
+
+                    if(data.status==1)
+                    {
+                        alert('申请绑定提交成功');
+                        $('#grid-table').trigger('reloadGrid');
+                    }
+                    else if(data.status==0)
+                    {
+                        alert('申请绑定提交失败');
+                    }
+                });
+            }
+        }
+
+   </script>
+</block>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css">
+		<script type="text/javascript" src="__PUBLIC__/jquery-ui-1.10.3/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+		<style>
+			div{
+				margin-top: 15px;
+			}
+			.Red{
+				color: red;
+				font-weight:bold ;
+				margin:0 10px;
+			}
+		</style>
+	</head>
+	<body>
+	    <input type="hidden" name="TOKEN" id="TOKEN" value="{:session('TOKEN')}"> 
+		<input type="hidden" id="goods_id" value="{$goods_id}"/>
+		
+		<input type="hidden" id="zuhe_id" value="{$zuhe_id}"/>
+		<input type="hidden" id="disabl" value="{$disabl}"/>
+		<div>
+			<div class="text-center">
+				从<span class="Red">{$zh_name}</span>组合中拆分，库存将重新管理。
+			</div>
+			<div class="text-center">
+				组合货价总库存数为<span class="Red"id="sumnum">{$sumnum}</span>，请清点该商品数量。
+			</div>
+			<div class="text-center">
+				商品数量：<input type="text" id='goods_num'/>
+			</div>
+			<div class="text-center">
+				<button class="btn btn-success" onclick="queding()">确定</button>
+				<button class="btn btn-default" onclick="quxiao()">取消</button>
+			</div>
+		</div>
+		<script>
+			var disabl=$('#disabl').val();
+			var sumnum=$('#sumnum').html();
+			//console.log(disabl);
+			if(disabl==1){
+				$('#goods_num').val(sumnum);
+				$('#goods_num').attr({'readonly':'readonly'});
+			}
+			function queding(){
+				$('.btn-success').attr({'disabled':true});
+				var goods_id=$('#goods_id').val();
+				var goods_num=$('#goods_num').val();
+				var zuhe_id=$('#zuhe_id').val();
+				
+				
+				if(goods_num!='')
+				{
+				     var token_str=$('#TOKEN').val();
+					$.ajax({
+						  url : "{:U("chafengoods_from_zuhe_set")}",
+						  type : "get",
+						  dataType : "json",
+						  data: {'goods_id':goods_id,'goods_num':goods_num,'zuhe_id':zuhe_id,token:token_str},
+						  success : function(data) 
+						  {
+							
+							if(data.result==1)
+							{
+								layer.msg('拆分成功', 
+								{
+								  offset: 0,
+								  shift: 6,
+								  icon:1,
+								  time:1000,
+								  
+								},function()
+								{ 	
+									parent.window.location.reload();
+									parent.layer.closeAll();		
+								});
+							}else if(data.result==-1)
+							{
+							    layer.msg('拆分失败', 
+								 {
+								  offset: 0,
+								  shift: 6,
+								  icon:2,
+								  time:1000,
+								  
+								  },function(){
+									
+								  });
+							
+							} 
+							else if(data.result==-2)
+							{
+							    layer.msg('数据重复提交', 
+								 {
+								  offset: 0,
+								  shift: 6,
+								  icon:2,
+								  time:1000,
+								  
+								  },function(){
+									
+								  });
+							
+							} 
+						}
+					})
+				}else{
+					layer.msg('商品数量不能为空！', 
+					 {
+					  offset: 0,
+					  shift: 6,
+					  icon:2,
+					  time:1000,
+					  
+					  },function(){
+						$('.btn-success').attr({'disabled':false});
+					  });
+				}
+			}
+			function quxiao(){
+				parent.layer.closeAll();		
+			}
+		</script>
+	</body>
+</html>

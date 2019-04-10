@@ -1,0 +1,414 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+	<js href="__PUBLIC__/layer/layer.js" />
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+	</style>
+</block>
+
+<block name="content">
+
+
+ <div id="search" class="clearfix">
+  <form onsubmit="return checkform()" class="mgb15">
+    <span> 时间 <input type="text" class="daterange" id="daterange" style="width:300px;" value=""/></span>
+    <span><button class="btn btn-primary btn-sm" type="button" onclick="go()">查询</button></span>
+  </form>
+  </div>
+    <div class="tabbable">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#consumption">消费排行</a></li>
+            <li><a data-toggle="tab" href="#addmoneytab">加钱排行</a></li>
+            <li><a data-toggle="tab" href="#time">机时排行</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="consumption" style="height:480px;">
+               <div id="jqgrid" style="width:50%;float:left;">
+                  <table id="grid-table"></table>
+               </div>
+          <div id="pie_consumption" style="width:40%;float:left;"></div>
+            </div>
+            <div class="tab-pane" id="addmoneytab" style="height:480px;">
+        <div id="jqgrid1" style="width:50%;float:left;">
+                  <table id="grid-table1"></table>
+               </div>
+         <div id="pie_addmoneytab" style="width:40%;float:left;"></div>
+            </div>
+            <div class="tab-pane" id="time" style="height:480px;">
+        <div id="jqgrid2" style="width:50%;float:left;">
+                  <table id="grid-table2"></table>
+               </div> 
+         <div id="pie_time" style="width:40%;float:left;"></div>
+            </div>
+        </div>
+    </div>
+
+</block>
+
+
+
+
+<block name="script">
+
+   <script>
+
+      $(function()
+      {
+       $('#grid-table').jqGrid({
+                url:'{:U("getHyxfmxranking")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colModel:[
+                    {label:'名次',name:'rankid'},
+                    {label:'用户',name:'cardNo'},
+                    {label:'所在网吧',name:'WbName'},
+                    {label:'消费额（元）',name:'sumje'}
+                ],
+                rowNum:15,
+                viewrecords: true,
+                sortorder: "desc",
+                pager:'#grid-pager',
+
+            }).jqGrid('navGrid','#grid-pager',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+
+
+
+
+      $(function()
+      {
+       $('#grid-table1').jqGrid({
+                url:'{:U("getHyaddmoneymxranking")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colModel:[
+                    {label:'名次',name:'rankid'},
+                    {label:'用户',name:'HyCardNo'},
+                    {label:'所在网吧',name:'WbName'},
+                    {label:'消费额（元）',name:'sumje'}
+                ],
+                rowNum:15,
+                viewrecords: true,
+                sortorder: "desc",
+                pager:'#grid-pager1',
+
+            }).jqGrid('navGrid','#grid-pager1',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+    
+            },{},{},{},{
+                multipleSearch:true
+            });
+            $(window).resize(function(){
+                $('#grid-table1').jqGrid('setGridWidth', $('#jqgrid1').width(), true);
+            });
+        });
+
+
+
+
+      $(function()
+      {
+       $('#grid-table2').jqGrid({
+                url:'{:U("getHyshangjimxranking")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colModel:[
+                    {label:'名次',name:'rankid'},
+                    {label:'用户',name:'cardNo'},
+                    {label:'所在网吧',name:'WbName'},
+                    {label:'机时（分）',name:'sumtime'}
+                ],
+                rowNum:15,
+                viewrecords: true,
+                sortorder: "desc",
+                pager:'#grid-pager2',
+
+            }).jqGrid('navGrid','#grid-pager2',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+    
+            },{},{},{},{
+                multipleSearch:true
+            });
+            $(window).resize(function(){
+                $('#grid-table2').jqGrid('setGridWidth', $('#jqgrid2').width(), true);
+            });
+        });
+
+
+
+
+  //消费排行饼图  
+
+//     var pie_consumption={
+//         chart: {
+//             plotBackgroundColor: null,
+//             plotBorderWidth: null,
+//             plotShadow: false
+//         },
+//             credits:{
+//                 enabled:false
+//             },
+//         title: {
+//             text: '网吧消费排行'
+//         },
+//         tooltip: {
+
+//        percentageDecimals : 2, // 分母
+//       formatter : function() {
+//         return '<b>' + this.point.name + '<br />' + this.y + '元<br />' + Highcharts.numberFormat(this.percentage, 1) + ' %</b>'; //格式化百分比数据显示
+//       }
+//         },
+//         plotOptions: {
+//             pie: {
+//                 allowPointSelect: true,
+//                 cursor: 'pointer',
+//                 dataLabels: {
+//                     enabled: true,
+//                     color: '#000000',
+//                     connectorColor: '#000000',
+//                     format: '{point.percentage:.1f} %'
+//                 },
+
+//             }
+//         },
+//         series: [{
+//             type: 'pie',
+//             name: 'Browser share',
+//             data: [
+
+//             ]
+//         }]
+//     };
+
+// //饼图结束
+
+
+//                 $('#grid-table1').jqGrid({
+//                 url:'{:U("getSpChangeinfo")}',
+//                 datatype:'json',
+//                 height:"100%",
+//                 autowidth:true,
+//                 colModel:[ 
+//                     {label:'名次',name:'ranking'},
+//                     {label:'用户',name:'HyCardNo'},
+//                     {label:'所在网吧',name:'WbName'},
+//                     {label:'金额（元）',name:'je'}
+//                  ],
+//                 rowNum:15,
+//                 viewrecords: true,
+//                 sortorder: "desc",
+//                 pager:'#grid-pager',
+
+//                 gridComplete: function()
+//                 {
+//                 }
+//             }).jqGrid('navGrid','#grid-pager1',{
+//                 add:false,
+//                 edit:false,
+//                 del:false,
+//                 refresh:false,
+//                 // searchtext:'高级搜索',
+//                 // searchtitle:'高级搜索'
+//             },{},{},{},{
+//                 multipleSearch:true
+//             });
+//             $(window).resize(function(){
+//                 $('#grid-table1').jqGrid('setGridWidth', $('#jqgrid1').width(), true);
+//             });
+//         });
+
+
+
+
+//   //加钱排行饼图  
+
+//     var pie_addmoneytab={
+//         chart: {
+//             plotBackgroundColor: null,
+//             plotBorderWidth: null,
+//             plotShadow: false
+//         },
+//             credits:{
+//                 enabled:false
+//             },
+//         title: {
+//             text: '网吧加钱排行'
+//         },
+//         tooltip: {
+//          <!--  pointFormat: '{'+this.y+'}<br> <b>{point.percentage:.1f}%</b>' -->
+//        percentageDecimals : 2, // 分母
+//       formatter : function() {
+//         return '<b>' + this.point.name + '<br />' + this.y + '元<br />' + Highcharts.numberFormat(this.percentage, 1) + ' %</b>'; //格式化百分比数据显示
+//       }
+//         },
+//         plotOptions: {
+//             pie: {
+//                 allowPointSelect: true,
+//                 cursor: 'pointer',
+//                 dataLabels: {
+//                     enabled: true,
+//                     color: '#000000',
+//                     connectorColor: '#000000',
+//                     format: '{point.percentage:.1f} %'
+//                 },
+//             }
+//         },
+//         series: [{
+//             type: 'pie',
+//             name: 'Browser share',
+//             data: [
+
+//             ]
+//         }]
+//     };
+
+// //饼图结束
+
+//               $('#grid-table2').jqGrid({
+//                 url:'{:U("getSpChangeinfo")}',
+//                 datatype:'json',
+//                 height:"100%",
+//                 autowidth:true,
+//                 colModel:[ 
+//                     {label:'名次',name:'ranking'},
+//                     {label:'用户',name:'cardNo'},
+//                     {label:'所在网吧',name:'WbName'},
+//                     {label:'机时（分）',name:'TimeSize'}
+//                  ],
+//                 rowNum:15,
+//                 viewrecords: true,
+//                 sortorder: "desc",
+//                 pager:'#grid-pager',
+
+//                 gridComplete: function()
+//                 {
+//                 }
+//             }).jqGrid('navGrid','#grid-pager2',{
+//                 add:false,
+//                 edit:false,
+//                 del:false,
+//                 refresh:false,
+//                 // searchtext:'高级搜索',
+//                 // searchtitle:'高级搜索'
+//             },{},{},{},{
+//                 multipleSearch:true
+//             });
+//             $(window).resize(function(){
+//                 $('#grid-table2').jqGrid('setGridWidth', $('#jqgrid2').width(), true);
+//             });
+//         });
+
+
+
+// //机时排行饼图  
+
+//     var pie_time={
+//         chart: {
+//             plotBackgroundColor: null,
+//             plotBorderWidth: null,
+//             plotShadow: false
+//         },
+//             credits:{
+//                 enabled:false
+//             },
+//         title: {
+//             text: '网吧机时排行'
+//         },
+//         tooltip: {
+//          <!--  pointFormat: '{'+this.y+'}<br> <b>{point.percentage:.1f}%</b>' -->
+//        percentageDecimals : 2, // 分母
+//       formatter : function() {
+//         return '<b>' + this.point.name + '<br />' + this.y + '分<br />' + Highcharts.numberFormat(this.percentage, 1) + ' %</b>'; //格式化百分比数据显示
+//       }
+//         },
+//         plotOptions: {
+//             pie: {
+//                 allowPointSelect: true,
+//                 cursor: 'pointer',
+//                 dataLabels: {
+//                     enabled: true,
+//                     color: '#000000',
+//                     connectorColor: '#000000',
+//                     format: '{point.percentage:.1f} %'
+//                 },
+//             }
+//         },
+//         series: [{
+//             type: 'pie',
+//             name: 'Browser share',
+//             data: [
+
+//             ]
+//         }]
+//     };
+
+        $('#daterange').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+  $('.daterange').daterangepicker({
+    format:'YYYY-MM-DD hh:mm:ss',
+    timePicker: true,
+    timePickerIncrement: 1,
+    timePickerSeconds:true,
+    startDate:moment().startOf('day'),  
+    endDate: moment(),
+    timePicker12Hour:false,     
+    ranges: {  
+           '今天': [moment().startOf('day'), moment().endOf('day')],  
+           '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+           '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+           '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+           '本月': [moment().startOf('month'), moment().endOf('month')],  
+           '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+        },        
+    locale:{
+      applyLabel:'确定',
+      cancelLabel:'取消',
+      fromLabel:'从',
+      toLabel:'至',
+      daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+      monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+      customRangeLabel: '自定义',
+      firstDay : 1
+    }
+
+  },function(start,end,label){
+  $('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+  }).next().click(function(){$(this).prev().focus();});
+    </script>
+    
+</block>

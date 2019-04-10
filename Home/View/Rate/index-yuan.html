@@ -1,0 +1,203 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/jquery-ui/jquery-ui.min.css" />
+    <js href="__PUBLIC__/jquery-ui/jquery-ui-1.11.2.min.js" />
+    <style>
+        #ratehead {float:left; list-style-type: none; width:678px; margin:0;}
+        #ratehead li {height:20px; width:27px; float:left; background-color: #669; color:white; text-align:center;}
+        #rateweek {float:left; margin:0;}
+        #rateweek li {width:30px; height:25px; border:1px solid #999;}
+        #selectable {float:left; list-style-type: none; width:648px; margin:0;}
+        #selectable li {height:25px; width:27px; float:left; border:1px solid #999; text-align:center;}
+        #selectable .ui-selecting {background-color:#feca40;}
+        #selectable .ui-selected {background-color:#f39814; color:white;}
+        #ratesetting {width:220px; height:90px; display:none; position:fixed; z-index:11;}
+    </style>
+</block>
+
+<block name="content">
+    <div class="tabbable">
+        <include file="nav" />
+        <div class="tab-content">
+            <div class="tab-pane active">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <h4 class="header">区域选择</h4>
+                        <div class="list-group" id="district-list">
+                            <volist name="districtlist" id="district">
+                                <a class="list-group-item" id="district-{$district.id}" href="javascript:getRate(type,{$district.id});">{$district.GroupName}</a>
+                            </volist>
+                        </div>
+                    </div>
+                    <div class="col-sm-10">
+                        <h4 class="header">费率设置</h4>
+                        <div class="tabbable">
+                            <ul class="nav nav-tabs" id="type-list">
+                                <volist name="viptypelist" id="viptype">
+                                    <li id="type-{$viptype.id}"><a href="javascript:getRate({$viptype.id})">{$viptype.Name}</a></li>
+                                </volist>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <form id="rateconfig" style="margin-bottom:20px;">
+                                                起价：<input type="text" name="startprice" style="width:50px;" value="1.0" />元
+                                                最小收费：<input type="text" id="minprice" name="minprice" style="width:50px;" value="0.5" />
+                                               <!--  <select id="minprice-select">
+                                                    <option value="0.05">0.05</option>
+                                                    <option value="0.1">0.1</option>
+                                                    <option value="0.5">0.5</option>
+													    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="5">5</option>
+													    <option value="10">10</option>
+                                                </select> -->元
+                                                忽略时间：<input type="text" name="ignoreminute" style="width:50px;" value="3" />分钟
+                                                <label><input type="radio" name="enable_hour" value="half" />半点有效</label>
+                                                <label><input type="radio" name="enable_hour" value="integral" checked />整点有效</label>
+                                                <button type="button" class="btn btn-success btn-sm" onclick="submitRateConfig();" style="height:30px;">确定</button>
+                                            </form>
+                                            <div style="width:680px;height:195px;border:1px solid #999;margin-bottom:1px;">
+                                                <ul id="ratehead" onselectstart="javascript:return false;">
+                                                    <li style="width:30px;">时间</li>
+                                                    <for start="0" end="24">
+                                                        <li>{$i}</li>
+                                                    </for>
+                                                </ul>
+                                                <ul id="rateweek" onselectstart="javascript:return false;">
+                                                    <li>周一</li>
+                                                    <li>周二</li>
+                                                    <li>周三</li>
+                                                    <li>周四</li>
+                                                    <li>周五</li>
+                                                    <li>周六</li>
+                                                    <li>周日</li>
+                                                </ul>
+                                                <ul id="selectable" onselectstart="javascript:return false;">
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="ratesetting" style="display:none;">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h5>费率设置</h5>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+                    价格设置：<input type="text" style="width:50px;" /> 元/小时
+                    <div style="margin-top:10px;">
+                        <button type="button" class="btn btn-success btn-sm" onclick="submitRate();" style="margin-left:20px;margin-right:20px;">确定</button>
+                        <button type="button" class="btn btn-default btn-sm" onclick="$('#ratesetting').hide();">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script>
+        $(function(){
+            getRate({$viptypelist.0.id},{$districtlist.0.id});
+            $('#selectable').selectable({
+                stop:function(e)
+				{
+                    select_result = new Array();
+                    $('.ui-selected').each(function(){
+                        var index = $('#selectable li').index(this);
+                        select_result.push(index);
+                    });
+                    $('#ratesetting').show().css({
+                        left: e.pageX,
+                        top: e.pageY
+                    });
+                    $('#ratesetting input').val($('.ui-selected:last').text()).select();
+                }
+            });
+            $('#minprice-select').change(function(){
+                $('#minprice').val($('#minprice-select').val())
+            })
+        });
+        var select_result;
+        var district = 0;
+        var type = 0;
+        function getRate(){
+		
+            type = arguments[0] !== undefined ? arguments[0] : 0;
+            district = arguments[1] !== undefined ? arguments[1] : $('#district-list .active').attr('id').split('-')[1];
+            $.get("{:U('getRate')}",{type:type,district:district},function(jsondata){
+			      
+                	
+                    var data=jsondata;
+                <!-- var data=eval("("+jsondata+")");  -->	
+                if(data.result=='1')
+				{
+			
+                    var rate = '';
+					//for(var index in data.info.rate){
+                        //rate += '<li>' + data.info.rate[index] + '</li>';
+                    //}
+					for(var index in data.rate)
+					{
+                        rate += '<li>' + data.rate[index] + '</li>';
+                    }
+					
+                    $('#selectable').html(rate);
+					
+                    $('#rateconfig input[name="startprice"]').val(data.startprice);
+                    $('#rateconfig input[name="minprice"]').val(data.minprice);
+                    $('#rateconfig input[name="ignoreminute"]').val(data.ignoreminute);
+					
+                    if(data.enable_hour == '1')
+					{
+                        $('#rateconfig input[name="enable_hour"][value="half"]').prop('checked',true);
+                    }
+					else
+					{
+                        $('#rateconfig input[name="enable_hour"][value="integral"]').prop('checked',true);
+                    }
+                }else
+				{
+                    alert('费率加载错误');
+                }
+            });
+            $('#district-list a').removeClass('active');
+            $('#district-'+district).addClass('active');
+            $('#type-list li').removeClass('active');
+            $('#type-'+type).addClass('active');
+        }
+        function submitRate(){
+            $.post("{:U('setRate')}",{district:district,viptype:type,time:select_result,rate:$('#ratesetting input').val()},function(data){
+                if(data.status) {
+                    alert('保存成功');
+                    $('#ratesetting').hide();
+                    getRate(type,district)
+                }else{
+                    alert('保存失败');
+                }
+            });
+        }
+        function submitRateConfig(){
+            $.post("{:U('setRateConfig')}",$('#rateconfig').serialize()+'&district='+district+'&viptype='+type,function(data){
+                if(data.status) {
+                    alert('保存成功');
+                    getRate(type,district)
+                }else{
+                    alert('保存失败');
+                }
+            })
+        }
+    </script>
+</block>

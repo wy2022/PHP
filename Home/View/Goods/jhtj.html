@@ -1,0 +1,200 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+    <js href="__PUBLIC__/layer/layer.js" />
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+     .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+	</style>
+</block>
+
+<block name="content">
+<div class="row search-bar" >
+	<form >
+
+   <!--     <div class="alert alert-warning bolder">总收入金额<span class="orange" id="summoney">0.00</span> 元&nbsp;&nbsp;&nbsp;总退款金额 <span class="orange" id="refund">0.00</span>元</div>  
+ -->
+
+      <span class="mgb15 biaodan" style="width:380px;">
+          <span class="input-group" >
+            <input class="form-control daterange" name="daterange" id="daterange" type="text" placeholder="请选择日期"  value="" />
+            <span class="input-group-addon">
+              <i class="fa fa-calendar"></i>
+            </span>
+          </span>
+      </span>
+      <span class="mgb15 biaodan">     
+              <input class="form-control" name="sContent" id="sContent" type="text"  placeholder="商品名称" />
+      </span>
+
+      <span class="mgb15 biaodan">
+            进货位置
+        <select id="position" name="position">
+
+          <option value="0">所有位置</option>
+          <volist name="sylist" id="sy">
+            <option value="{$sy.Syid}">{$sy.syname}</option>
+          </volist>
+        </select>
+                     
+       </span>
+  <span class="mgb15 biaodan"><button type="button" class="btn btn-purple btn-sm" onclick="doSearch()">搜索<i class="fa fa-search"></i></button></span>
+
+	</form>
+</div>
+
+    <div id="jqgrid">
+        <table id="grid-table"></table>
+        <div id="grid-pager"></div>
+    </div>
+
+      <div  class="col-sm-6" style="margin-top:15px;margin-left:-15px;"> 
+           <table class="table table-bordered table-hover">
+             <thead><tr><th>商品名称</th><th>商品数量</th><th>商品总价</th></tr></thead>
+             <tbody id ="shuju">
+             </tbody>
+           </table>
+       </div>
+
+</block>
+
+
+
+
+
+<block name="script">
+      <script>
+        $(function(){
+            $('#grid-table').jqGrid({
+                url: '{:U("getjhtjinfo")}',
+                datatype: "json",
+                type:"get",
+                height:"100%",
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[
+
+                    {label:'商品名称',name:'name',width:50,},
+                    {label:'商品ID',name:'spid',hidden:true},
+        
+                    {label:'进货数量',name:'count',width:70},
+                    {label:'商品价格',name:'price',width:70},             
+                    {label:'总价',name:'sum_money',width:70}, 
+                    {label:'收银端名称',name:'syname',width:60}, 
+                    {label:'商品规格',name:'guige',width:120},
+                    {label:'商品单位',name:'unit',width:120},                
+                    {label:'收银端ID',name:'syid',hidden:true}, 
+                   
+                ],
+                styleUI : 'Bootstrap',
+                rowNum:10,
+                pager:'#grid-pager',
+                viewrecords: true,
+                loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+
+                   $("#shuju").html('');
+                   var text='';
+                  //   for(var i=0;i < data.tongji_count;i++)                     
+                  //   {                                                         
+                  //     text+="<span>&nbsp"+data['tongji_list'][i]['name']+"</span>";                              
+                  //     text+="<span> 数量:&nbsp"+data['tongji_list'][i]['count']+"</span>";
+                  //     text+="&nbsp&nbsp&nbsp";
+                      
+                  //     text+="<span>总价:"+data['tongji_list'][i]['sum_money']+"</span>";  
+                  //     text+="&nbsp&nbsp&nbsp";                                  
+                  //   }
+                  //    $("#shuju").append(text);
+                        for(var i=0;i<data.tongji_count;i++)
+                        {
+                          text+="<tr><td>"+data['tongji_list'][i]['name']+'</td><td>'+data['tongji_list'][i]['count']+'</td><td>'+data['tongji_list'][i]['sum_money']+'</td></tr>'
+                        }
+                        $("#shuju").append(text);
+
+                 } 
+
+    
+            });
+
+
+
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+
+       $('#daterange').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+            $('.daterange').daterangepicker({
+                format:'YYYY-MM-DD hh:mm:ss',
+                timePicker: true,
+                timePickerIncrement: 1,
+                timePickerSeconds:true,
+                startDate:moment().startOf('day'),  
+                endDate: moment(),
+                timePicker12Hour:false,     
+                ranges: {  
+                           '今天': [moment().startOf('day'), moment().endOf('day')],  
+                           '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+                           '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+                           '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+                           '本月': [moment().startOf('month'), moment().endOf('month')],  
+                           '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+                        },        
+                locale:{
+                    applyLabel:'确定',
+                    cancelLabel:'取消',
+                    fromLabel:'从',
+                    toLabel:'至',
+                    daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+                    monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+          customRangeLabel: '自定义',
+          firstDay : 1
+                }
+
+            },function(start,end,label){
+      $('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+      });
+
+        function doSearch(){
+            $('#grid-table').jqGrid('setGridParam',{
+                postData:{
+                    daterange:$('#daterange').val(),
+                    position:$('#position').val(),
+                    sContent:$('#sContent').val()
+                }
+            }).trigger('reloadGrid');
+        }
+
+    </script>
+  
+<script>
+ function checkform()
+ {
+    var daterange=$("#daterange").val();
+  if(daterange==""||daterange=="请选择日期")
+  {
+     // alert("请选择日期");
+            layer.msg('请选择日期', {
+                  offset: 0,
+                  shift: 6
+                });
+     return false;
+  }
+  return true;
+ }
+
+</script>
+</block>

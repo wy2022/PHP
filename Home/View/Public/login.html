@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>百果树网吧管理平台登录</title>
+<link href="http://cdn.wbzzsf.com/css/login.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all" />
+<link href="http://cdn.wbzzsf.com/css/demo.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all" />
+<script type="text/javascript" src="http://cdn.wbzzsf.com/js/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="http://cdn.wbzzsf.com/js/jquery.SuperSlide.js"></script>
+
+<script type="text/javascript" src="http://cdn.wbzzsf.com/layer/layer.js"></script>
+<script src="http://cdn.wbzzsf.com/layer/myalert.js"></script>
+  <link href="http://cdn.wbzzsf.com/layer/myalert.css" rel="stylesheet" />
+<!-- <script type="text/javascript" src="js/Validform_v5.3.2_min.js"></script> -->
+
+
+<style>
+   .tab{padding-bottom:30px;}
+   #tab_t li{float:left;width:50%;color:#fff;font-weight:bold;cursor:pointer}
+   #tab_t .act span{padding-bottom:5px;border-bottom:2px #fff solid}
+   .hide{display:none;}
+</style>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?b11dc624f19e67686614e666387f5689";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<!--[if lt IE 8]>
+<div id="zh-ie6-mask">
+<div class="bgs"><img src="__PUBLIC__/image/icon_bgs.png" alt="bgs"></div>
+<p class="warning">您正在使用的浏览器版本过低，将不能正常浏览和使用百果树网吧计费后台。<br/><br/>如果您在使用双核浏览器，请切换到高速/极速/神速核心。</p>
+<div class="browser">
+<a style="text-align:center;" href="http://windows.microsoft.com/zh-CN/internet-explorer/downloads/ie"><div class="icon ie"></div><br> 升级至新版本的 IE 浏览器</a>
+<a href="http://www.google.cn/intl/zh-CN/chrome/browser/desktop/index.html"><div class="icon chrome"></div><br> 使用 Google Chrome 浏览器</a>
+<a href="http://www.firefox.com.cn/"  class="last"><div class="icon firefox"></div><br> 使用 Firefox 浏览器</a>
+</div>
+</div>
+<link href="__PUBLIC__/css/login-compatibility.css" rel="stylesheet"  type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/js/login-compatibility.js"></script>
+<![endif]-->
+
+</head>
+
+<body>
+
+<div class="header">
+  <h1 class="headerLogo"><a title="后台管理系统" target="_blank" href="http://www.wbzzsf.com"><img alt="logo" src="http://cdn.wbzzsf.com/images/logo.png"></a></h1>
+	<!-- <div class="headerNav">
+		<a target="_blank" href="#">首页</a>
+		<a target="_blank" href="#">关于</a>
+		<a target="_blank" href="#">下载</a>
+		<a target="_blank" href="#">充值</a>
+		<a target="_blank" href="#">代理</a>
+       <a target="_blank" href="#">帮助</a>
+		<a target="_blank" href="#">售货机</a>		
+	</div> -->
+</div>
+
+<div class="banner">
+
+<div class="login-aside">
+  <div id="o-box-up"></div>
+  <div id="o-box-down"  style="table-layout:fixed;">
+   <div class="tab">
+	   <ul id="tab_t">
+		   <li class="act"><span>老板登录</span></li>
+		   <li ><span>员工登录</span></li>
+	   </ul>
+   </div>
+   <div class="error-box" style="margin-top:10px;"></div>
+
+   <form id="login">
+   <div id="tab_c">
+     <span>
+	   <div class="fm-item">
+		   <label for="logonId" class="form-label">老板登录账号：</label>
+		   <input type="text" placeholder="请输入账号" class="i-text" name="username"   >    
+		   <div class="ui-form-explain"></div>
+	  </div>
+	  
+	  <div class="fm-item">
+		   <label for="logonId" class="form-label">老板登录密码：</label>
+		   <input type="password" placeholder="请输入密码" name="password"   class="i-text" >    
+		   <div class="ui-form-explain"></div>
+	  </div>
+
+    </span>
+     <span class="hide">
+	   <div class="fm-item">
+		   <label for="logonId" class="form-label">老板登录账号：</label>
+		   <input type="text" placeholder="请输入账号" class="i-text" name="username1"   >     
+		   <div class="ui-form-explain"></div>
+	  </div>
+	  
+
+	  <div class="fm-item">
+		   <label for="logonId" class="form-label">员工登录账号：</label>
+		   <input type="text" placeholder="请输入账号" class="i-text" name="username2"   >     
+		   <div class="ui-form-explain"></div>
+	  </div>
+
+	  <div class="fm-item">
+		   <label for="logonId" class="form-label">员工登录密码：</label>
+		   <input type="password" placeholder="请输入密码" name="password1"   class="i-text" >    
+		   <div class="ui-form-explain"></div>
+	  </div>
+	  
+   </span>
+  </div>
+<!--   <div class="fm-item pos-r">
+	   <label for="logonId" class="form-label">验证码</label>
+	   <input type="text" value="输入验证码" maxlength="100" id="yzm" class="i-text yzm" nullmsg="请输入验证码！" >    
+       <div class="ui-form-explain"><img src="images/yzm.jpg" class="yzm-img" /></div>
+  </div> -->
+  
+  <div class="fm-item">
+	   <label for="logonId" class="form-label"></label>
+	   <input type="button" value="" tabindex="4" id="send-btn" class="btn-login"> 
+       <div class="ui-form-explain"></div>
+  </div>
+  <div style="padding-top:5px;">
+     <a href="{:U('public/findpassword')}" style="font-size:12px;color:#fff;">忘记密码？</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://check.wbzzsf.cn/login/register.html" style="font-size:12px;color:#fff;">免费注册</a>
+  </div>
+
+  </form>
+  </div>
+
+
+</div>
+
+	<div class="bd">
+		<ul>
+		   
+			<li style="background:url(http://wx1.sinaimg.cn/large/6bdf06f1ly1ffznjcu9t2j21hc0eraif.jpg) #CCE1F3 center 0 no-repeat;"></li>
+			<li style="background:url(http://wx1.sinaimg.cn/large/6bdf06f1ly1ffznpc048zj21hc0i0n2g.jpg) #BCE0FF center 0 no-repeat;"></li>
+			<li style="background:url(http://wx1.sinaimg.cn/large/6bdf06f1ly1ffznpf2rvhj21jk0drnpd.jpg) #BCE0FF center 0 no-repeat;"></li>
+
+		</ul>
+	</div>
+
+	<div class="hd"><ul></ul></div>
+</div>
+<script type="text/javascript">jQuery(".banner").slide({ titCell:".hd ul", mainCell:".bd ul", effect:"fold",  autoPlay:true, autoPage:true, trigger:"click" });</script>
+
+
+<div class="banner-shadow"></div>
+
+<div class="footer">
+   <p>Copyright © 2016-2017 河南会昌文化传媒有限公司</p>
+</div>
+
+<script>
+window.onload = function(){
+  var tab_t = document.getElementById("tab_t");
+    var tab_t_li = tab_t.getElementsByTagName("li");
+  var tab_c = document.getElementById("tab_c");
+    var tab_c_li = tab_c.getElementsByTagName("span");
+    var len = tab_t_li.length;
+	var len1 = tab_c_li.length;
+
+    var i=0;
+    
+    for(i=0; i<len; i++){
+      tab_t_li[i].index = i;
+      tab_t_li[i].onclick = function(){
+          for(i=0; i<len; i++){
+              tab_t_li[i].className = '';
+                tab_c_li[i].className = 'hide';
+            }
+            tab_t_li[this.index].className = 'act';
+            tab_c_li[this.index].className = '';
+            $(".hide").find("input").attr("value","");
+        }
+    }
+    
+}
+$("#send-btn").click(function(){
+
+
+          
+   			 var param = $("#login").serialize();
+			
+			 $.ajax({
+			  url : "{:U('Public/login')}",
+			  type : "post",
+			  dataType : "json",
+			  data: param,
+			  success : function(data) 
+			  {
+                    
+			  	if(data.result==1)
+			  	{
+                  myalertsuccess('登录成功');
+                  window.location.href="{:U('Index/index')}";
+			  	}
+			  	else if(data.result==-1)
+			  	{
+					myalertdanger('授权到期,禁止登陆');
+                   // alert('授权到期,禁止登陆');
+			  	}
+				else if(data.result==0)
+				{
+				   myalertdanger('帐号或密码错误');
+				}
+				else if(data.result==2)
+				{
+				   myalertdanger('老板帐号不存在');
+				}
+              				
+			 
+                
+			  },
+		 });
+});
+    document.onkeydown = function(e){
+        if((e||event).keyCode==13)
+        $("#send-btn").click();
+      };
+</script>
+
+</body>
+</html>
+

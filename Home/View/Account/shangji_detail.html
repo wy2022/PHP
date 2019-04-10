@@ -1,0 +1,88 @@
+<block name="head">
+<include file="Public/head" />
+<css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+<js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+<js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+<css href="__PUBLIC__/assets/css/ace.min.css" />
+<css href="__PUBLIC__/assets/css/ace-skins.min.css" />
+<js href="__PUBLIC__/layer/layer.js" />
+<style>
+   
+   body{background:#fff;}
+
+</style>
+</block>
+
+<block name="content">
+<div style="padding-right:15px;margin:15px;">
+
+<div id="jqgrid">
+    <table id="grid-table"></table>
+    <div id="grid-pager"></div>
+</div>
+</div>
+</block>
+
+<block name="script">
+<script>
+        $(function(){
+            $('#grid-table').jqGrid({
+                url:'{:U("getshangjimxmxlist")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colModel:[   
+                    {label:'卡号',name:'cardNo',width:60},				
+                    {label:'类型',name:'XfMode',width:200},
+                    {label:'时长',name:'timeCount',width:50},
+                    {label:'金额',name:'je',width:50},
+                    
+                    {label:'时间',name:'cTime',width:140},
+					
+                ],
+                rowNum:10,
+                viewrecords: true,
+				sortorder: "desc",
+                pager:'#grid-pager',
+				loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+                   $("#ceshi").html('');
+                   var text='';       						    		   
+                    text='实收总计:<span class=\"orange\" >'+data['sum_shishou_money']+"</span> 元&nbsp;";							                 
+                    $("#ceshi").append(text);
+
+                 },
+
+
+                gridComplete: function()
+                {
+                 var ids = $("#grid-table").jqGrid('getDataIDs');
+                 
+
+                    for(var i=0;i < ids.length;i++)                     
+                    {
+                      var rownum = ids[i];
+                        var getRow = $('#grid-table').getRowData(ids[i]);
+
+                        edit= '<a href="javascript:void(0)" onclick="shangji_detail()">查看详情</a>';   
+                        $("#grid-table").jqGrid('setRowData',ids[i],{operate:edit});
+                    }
+
+                }
+            }).jqGrid('navGrid','#grid-pager',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+		
+</script>
+</block>

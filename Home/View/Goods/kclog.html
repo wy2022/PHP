@@ -1,0 +1,156 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+    <js href="__PUBLIC__/layer/layer.js" />
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+     .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+	</style>
+</block>
+
+<block name="content">
+<div class="row search-bar" >
+	<form >
+       <span class="mgb15 biaodan"><input class="form-control" name="goodsname" id="goodsname" type="text"  placeholder="请输入商品名称"  />
+      </span>
+
+  <!--             <div class="col-xs-6 col-sm-3 mgb15">时间
+                  <input type="text" name="daterange" id="daterange" class="daterange" style="width:300px;"  placeholder="请选择日期" required/>
+                </div> -->
+                <!-- <div class="col-xs-6 col-sm-2 mgb15">商品名称
+                    <input type="text" name="goodsname" id="goodsname" style="width:150px;"/>
+                </div> -->
+<!--                 <div class="col-xs-6 col-sm-3 mgb15">进货
+                <select id="position" name="position">
+                  <option value="">进货位置</option>
+                  <volist name="sylist" id="sy">
+                    <option value="{$sy.syid}">{$sy.syname}</option>
+                  </volist>
+                </select>
+                </div> -->
+
+		<span class="mgb15 biaodan"> <button type="button" class="btn btn-purple btn-sm" onclick="doSearch()">搜索<i class="fa fa-search"></i></button></span>
+
+	</form>
+</div>
+
+    <div id="jqgrid">
+        <table id="grid-table"></table>
+        <div id="grid-pager"></div>
+    </div>
+
+
+</block>
+
+
+
+<block name="script">
+      <script>
+        $(function(){
+            $('#grid-table').jqGrid({
+                url: '{:U("getkcinfo")}',
+                datatype: "json",
+                type:"get",
+                height:"100%",
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[
+
+                    {label:'商品名称',name:'name',width:50,},
+                    {label:'商品规格',name:'guige',width:120},
+                    {label:'商品单位',name:'unit',width:70},
+                    {label:'当前库存数量',name:'count',width:70}, 
+                    {label:'当前货道',name:'currHd',width:60},
+                    {label:'货道范围',name:'HdFw',width:60},
+                    {label:'收银ID',name:'syid',hidden:true},
+                    {label:'收银端名称',name:'syname',width:60},
+                ],
+                styleUI : 'Bootstrap',
+                rowNum:10,
+                pager:'#grid-pager',
+                viewrecords: true,
+  
+    
+            });
+
+
+
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+
+       $('#daterange').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+            $('.daterange').daterangepicker({
+                format:'YYYY-MM-DD hh:mm:ss',
+                timePicker: true,
+                timePickerIncrement: 1,
+                timePickerSeconds:true,
+                startDate:moment().startOf('day'),  
+                endDate: moment(),
+                timePicker12Hour:false,     
+                ranges: {  
+                           '今天': [moment().startOf('day'), moment().endOf('day')],  
+                           '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+                           '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+                           '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+                           '本月': [moment().startOf('month'), moment().endOf('month')],  
+                           '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+                        },        
+                locale:{
+                    applyLabel:'确定',
+                    cancelLabel:'取消',
+                    fromLabel:'从',
+                    toLabel:'至',
+                    daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+                    monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+          customRangeLabel: '自定义',
+          firstDay : 1
+                }
+
+            },function(start,end,label){
+      $('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+      });
+
+        function doSearch(){
+            $('#grid-table').jqGrid('setGridParam',{
+                postData:{
+                    // daterange:$('#daterange').val(),
+                    goodsname:$('#goodsname').val(),
+                    // position:$('#position').val(),
+                }
+            }).trigger('reloadGrid');
+        }
+
+    </script>
+  
+<script>
+ function checkform(){
+    var daterange=$("#daterange").val();
+  if(daterange==""||daterange=="请选择日期")
+  {
+     // alert("请选择日期");
+            layer.msg('请选择日期', {
+                  offset: 0,
+                  shift: 6
+                });
+     return false;
+  }
+  return true;
+ }
+
+</script>
+</block>

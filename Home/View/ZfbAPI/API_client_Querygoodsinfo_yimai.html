@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>查看订单详情</title>
+        <link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet" /> 
+		<script src="js/jquery.min.js"></script>
+	</head>
+
+	<body>
+	  <div class="container">
+
+		<div class="panel panel-success" style="margin-top:15px;">
+		  <div class="panel-heading">订单详情</div>
+		  <div class="panel-body">		
+		     <!-- <p><label>编号：</label><span>{$orderinfo.post_order_no}</span></p> -->
+			 <p><label>操作时间：</label><span>{$orderinfo.dtCharuTime}</span></p>
+			 <p><label>订单号：</label><span>{$orderinfo.post_order_no}</span></p>
+			 <p><label>商品信息：</label><span>{$orderinfo.info}</span></p>
+			 <p><label>支付金额：</label><span>{$orderinfo.sum_sp_je}元</span></p>
+			 <p><label>支付方式：</label><span>{$orderinfo.pay_fangshi}</span></p>
+			 <p><label>领取状态：</label><span>{$orderinfo.lingqu_jieguo}</span></p>
+		  </div>
+		</div>
+	
+     </div>
+
+	</body>
+	
+	<script>
+/*	        $("#ceshi_ght").empty();
+			var html="";
+			
+			
+				
+            for(var i=0;i<data.length;i++)	
+			{
+					 
+				html+='<div class="filtr-item" data-category='+data[i]['type_id']+'>';
+				html+='<div class="img-thumbnail">';
+				html+='<img src='+data[i]['goods_image']+' alt="..."  class="img-hua">';
+				html+='<div class="goodid hide">'+data[i]['goods_id']+'</div>';
+				html+='<div class="kucun hide">'+data[i]['num']+'</div>';			
+				html+='<div class="goods-name">'+data[i]['goods_name']+'</div>';																			
+				html+='</p>';
+				html+='</div>';
+				html+='</div>';
+				html+='</div>';
+							
+			}	 
+			 
+				
+			
+	
+			$("#ceshi_ght").append(html);
+*/
+	</script>
+
+</html>

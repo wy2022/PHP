@@ -1,0 +1,264 @@
+<extend name="Public/base" />
+<block name="head">
+<js href="__PUBLIC__/layer/layer.js" />
+    <js href="__PUBLIC__/layer/myalert.js" />
+  <css href="__PUBLIC__/layer/myalert.css"/>
+  
+    <js href="__PUBLIC__/js/html2canvas.js" />
+</block>
+
+<block name="content">
+
+<form class="form-horizontal" id="form_gongneng">
+
+
+               <input type="hidden" id="wxcode_url_val" name="wxcode_url_val" value="{$wxcode_url}">
+			   
+			   <input type="hidden" id="barname" name="barname" value="{$barname}">
+			   
+			   
+			   <input type="hidden" id="zfbcode_url_val" name="zfbcode_url_val" value="{$zfbcode_url}">
+			   
+			   
+                <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="chosecard">是否开启公众号</label>
+                <div class="col-sm-9" id="bank">
+                 <div class="row" style="margin-left:0;">
+                  <div class="radio col-xs-10 col-sm-5" >                        
+                  <label>
+                  <input name="gzh_isvalid" type="radio" class="ace" value="1" <?php if($wbinfo['isValid']==1) echo 'checked'; ?>/>
+                   <span class="lbl">开启</span>     
+                   </label>
+                    <label>
+                  <input name="gzh_isvalid" type="radio" class="ace" value="0" <?php if($wbinfo['isValid']==0) echo 'checked'; ?> />
+                   <span class="lbl">不开启</span>
+                   </label>
+    
+                  </div>
+                 </div>
+                    <span class="help-inline col-xs-12 col-sm-7 tips_color"></span>
+                   </div>
+              </div>
+			   <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="chosecard">选择下载类型</label>
+                <div class="col-sm-9" id="bank">
+                 <div class="row" style="margin-left:0;">
+				   <div class="col-xs-3">
+                    <select name="syid" class="form-control" id="syid">
+				
+					   <volist name="syidlist" id="info">
+							<option value="{$info.Syid}">{$info.syname}</option>
+						</volist>
+					   
+					</select>	
+                  </div>					
+                 </div>
+                    <span class="help-inline col-xs-12 col-sm-7 tips_color"></span>
+                   </div>
+              </div>
+			  <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="chosecard">下载微信支付宝二维码</label>
+                <div class="col-sm-9" id="bank">
+                 <div class="row" style="margin-left:0;">
+
+                     <div class="col-xs-6" id="ewm-down">
+		            
+						   <h2 class="text-center" style="color:#129fce"><strong>百果树网吧在线支付系统</strong></h2>
+						   <h4 class="text-center" id="bartitle"></h4>
+						   <br/>
+						   <div style="margin:0 auto;text-align:center;width:500px;">
+						   <div class="thumbnail" style="width:240px;float:left;padding-bottom:15px">
+						     <div class="caption" style="padding:0px;">
+						       <h3 class="text-center" style="height:42px;"><img src="__PUBLIC__/image/wx.png" /></h3>
+							   
+							 </div>
+							
+							  <img src="" crossorigin="anonymous" alt="..." width="200" id="wxcode_image" height="200" > 
+						  </div>
+						  <div class="thumbnail" style="width:240px;float:left;margin-left:20px;padding-bottom:15px">
+						   <div class="caption" style="padding:0px;">
+						       <h3 class="text-center" style="height:42px;"><img src="__PUBLIC__/image/zfb.png"/></h3>
+							   
+							 </div>
+						 <img src="{$zfbcode_url}" alt="..." id="zfbcode_image" width="200" height="200" > 
+						  </div>
+					    </div>
+						
+						 <h4 class="text-center" style="clear:both;font-size:14px;color:#666">扫描上面二维码完成付款</h4>
+				     </div>
+					  
+                 </div>
+                  
+                   </div>
+              </div>
+			  
+			  <div class="clearfix">
+			   <div class="col-md-offset-3 col-md-9">
+			    <div class="row">
+			      <div class="col-xs-6">
+					<div style="margin:0 auto;text-align:center;width:500px;">
+				   <button class="btn btn-primary" id="down-btn">下载微信支付宝二维码</button>
+				   </div>
+			      </div>
+			    </div>
+			   </div>
+			  </div>
+			  
+			
+              <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                  <button class="btn btn-info" type="button" id="submit1"> <i class="icon-ok bigger-110"></i> 提交 </button>
+                  &nbsp; &nbsp; &nbsp;
+                  <button class="btn" type="reset" id="submit_cancel"> <i class="icon-undo bigger-110"></i> 取消 </button>
+                </div>
+              </div> 
+
+            </form>
+
+
+</block>
+<block name="script">
+
+
+<script>
+
+$("#submit1").click(function(){
+
+     var param = $("#form_gongneng").serialize();
+     $.ajax({
+      url : "{:U("fujia_set")}",
+      type : "post",
+      dataType : "json",
+      data: param,
+      success : function(data) 
+      {
+      if(data.data=="1")
+      {
+
+         myalertsuccess('设置成功');
+         location.href="{:U('rate/index')}";
+  
+    }else if(data.data =="-1"){
+
+       myalertdanger('设置失败');
+    }
+    },//success完成
+ });
+
+}); 
+
+moren();
+function  moren()
+{
+  var wxcode_url_str=$('#wxcode_url_val').val();
+  var  syid_str =$('#syid').val(); 
+  wxcode_url_str=wxcode_url_str+'_syid@'+syid_str;
+  $("#wxcode_image").attr("src",wxcode_url_str);
+  
+  $barname_str= $('#barname').val();
+  var bartitle_str=$barname_str+'           收银端'+syid_str;
+  $('#bartitle').html(bartitle_str);
+  
+  <!-- alert(bartitle_str); -->
+  
+  
+  
+  
+  var zfbcode_url_str=$('#zfbcode_url_val').val();
+
+  zfbcode_url_str=zfbcode_url_str+'_syid@'+syid_str;
+  $("#zfbcode_image").attr("src",zfbcode_url_str);
+  
+  
+}
+
+
+$("#syid").change(function()
+{
+  var  syid_str =$('#syid').val();
+  var wxcode_url_str=$('#wxcode_url_val').val();
+  wxcode_url_str=wxcode_url_str+'_syid@'+syid_str;
+  $("#wxcode_image").attr("src",wxcode_url_str);
+  
+
+  
+  var zfbcode_url_str=$('#zfbcode_url_val').val();
+  zfbcode_url_str=zfbcode_url_str+'_syid@'+syid_str;
+  
+     
+  $("#zfbcode_image").attr("src",zfbcode_url_str);
+  
+    $barname_str= $('#barname').val();
+  var bartitle_str=$barname_str+'              收银端'+syid_str;
+  $('#bartitle').html(bartitle_str);
+  
+<!--    alert(bartitle_str); -->
+  
+ 
+})
+
+</script>
+
+        <script  type="text/javascript" >  
+        $(document).ready( function(){  
+		
+			 
+				$("#down-btn").on("click", function () 
+				{    
+                     
+					 
+		
+					 
+                      event.preventDefault();  
+                        html2canvas(document.getElementById("ewm-down"), {  
+						
+                        allowTaint: true,  
+                        taintTest: false,  
+						height: $("#ewm-down").outerHeight() + 20,
+						background:"#ffffff",
+                        onrendered: function(canvas) {  
+                            canvas.id = "mycanvas";  
+                          
+                            var dataUrl = canvas.toDataURL();  
+							
+							
+                            var newImg = document.createElement("img");  
+							
+                            newImg.src =  dataUrl;  
+							
+                           // document.body.appendChild(newImg);  
+							
+						 //以下代码为下载此图片功能	
+						 
+					
+                        var triggerDownload = $("<a>").attr("href", dataUrl).attr("download", "支付二维码.png").appendTo("body");
+                        triggerDownload[0].click();
+                        triggerDownload.remove();
+					
+						
+                        }  
+                    });
+
+
+							
+              /*  html2canvas($("#ewm-down"), {
+                    height: $("#ewm-down").outerHeight() + 20,
+                    onrendered: function (canvas) {
+                        var url = canvas.toDataURL();
+                        //以下代码为下载此图片功能
+                        var triggerDownload = $("<a>").attr("href", url).attr("download", "支付二维码.png").appendTo("body");
+                        triggerDownload[0].click();
+                        triggerDownload.remove();
+                    }
+                });*/
+				
+				
+				
+            });
+               
+        });  
+           
+
+</script>
+
+</block>

@@ -1,0 +1,1197 @@
+<extend name="Public/base" />
+
+<block name="head">
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/xiaoshou/css/style.css">
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/xiaoshou/css/index.css">
+<js href="__PUBLIC__/layer/layer.js" />
+<js href="__PUBLIC__/layer/myalert.js" />
+<css href="__PUBLIC__/layer/myalert.css"/>
+
+
+	<css href="__PUBLIC__/jquery-ui-1.10.3/themes/base/jquery.ui.all.css" />
+	<js href="__PUBLIC__/jquery-ui-1.10.3/jquery-1.9.1.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.core.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.widget.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.position.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.menu.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.autocomplete.js" />
+	 <css href="__PUBLIC__/jquery-ui-1.10.3/demos/demos.css" /> 
+
+	 
+	<js href="__PUBLIC__/js/jquery.base64.js" />
+	<css href="__PUBLIC__/iOSList/css/jquery.ioslist.css"/>
+<style>
+  div.floatCtro{ width:60px; height:350px; position: fixed; left:25px; top:10%; z-index:100}
+  div.floatCtro p{width:60px; text-align:center; height:40px; line-height:40px; font-family:'微软雅黑'; font-size:14px; color:#707070; margin:0; padding:0; cursor:pointer; background:#ddd;}
+  div.floatCtro a{ display:inline-block; display:none; width:60px; height:60px; margin:10px 0 0 0; background:#ddd; color:#707070;  vertical-align:middle; cursor:pointer;}
+  div.floatCtro a span{ display:block; width:28px; height:44px; line-height:22px;  font-family:'微软雅黑'; font-size:14px; line-height:22px; text-align:center; margin:8px 16px; _margin:-10px 0 0 16px;}
+  div.floatCtro a:hover{ background:#000; color:#fff; zoom:1;}
+  div.floatCtro p:hover{ background:#c40000; color:#fff;}
+  div.floatCtro p.cur{ background:#c40000; color:#fff;}
+  .fa-times-circle{cursor:pointer;}
+  #theadid th:nth-child(1){width: 100px;}
+  #theadid th:nth-child(2){width: 300px;}
+  #theadid th:nth-child(3){width: 100px;}
+  #theadid th:nth-child(4){width: 100px;}
+  #theadid th:nth-child(5){width: 200px;}
+  #theadid th:nth-child(6){width: 100px;}
+
+  table tbody tr td:nth-child(2){width: 100px;}
+  table tbody tr td:nth-child(3){width: 300px;}
+  table tbody tr td:nth-child(4){width: 100px;}
+  table tbody tr td:nth-child(5){width: 100px;}
+  table tbody tr td:nth-child(6){width: 200px;}
+  table tbody tr td:nth-child(7){width: 100px;}
+  
+  #bz,#zhifu,#project{
+	display:inline-block;
+	height:30px;
+	font-size:14px;
+	line-height:
+	color:#555555;
+	vertical-align:middle;
+	-webkit-border-radius:4px !important;
+	-moz-border-radius:4px !important;
+	border-radius:4px !important;
+	border-color:#a4bed4;
+	text-align:left;
+	padding:4px 6px;
+	width:200px;
+ }
+#xiaoshou_text td input.result_zuhe,#xiaoshou_text td input.result_dan{
+	width:60px;
+	margin:0 5px;
+	color:#393939;
+	padding:0;
+	font-size:13px;
+}
+.ioslist-group-header{
+   width:3rem
+}
+
+</style>
+</block>
+
+<block name="content">
+<input type="hidden"  id="ght_FAllowXiaoshouPrint" value="{$FAllowXiaoshouPrint}"> 
+
+
+ <div style="padding-left:70px;margin-bottom:15px;">
+            
+			<input type="hidden" name="TOKEN" id="TOKEN" value="{:session('TOKEN')}">
+            <input type="hidden"  id="ght_goodslist" value="{$goodslist}">    
+            <input type="text" placeholder="检索商品" id="project" > 
+			 <span id="zuhe_goodslist" style='display:none' >{$zuhe_goodslist}</span> 
+			
+			
+			             
+        </div>
+
+<!-- <span>{$goods_list1}</span>	
+<span>{$goods_list2}</span>	
+<span>{$goods_list3}</span>	
+<span>{$goods_list4}</span>	
+<span>{$goods_list5}</span>	 -->	
+  
+
+<div style="position:absolute;left:0px;width:450px;" >
+ <div class="floatCtro" style="position:absolute;left:15px;top:0;">
+	  <p class="cur">饮料</p>
+	  <p>快餐</p>
+	  <p>零食</p>
+	  <p>香烟</p>
+	  <p>其他</p>
+	  <a>
+		<font style="width:60px; height:1px; display:block"></font>
+		<span>返回顶部</span>
+	  </a>
+ </div>
+<div id="container" class="container" style="height:600px;overflow:auto;">
+  <div class="section ioslist-group-container" id="st01" class="cur">
+     <div class="ioslist-group-header">饮料</div>
+    <volist name="goods_list1" id="goodsinfo1">
+    <div class="prt-lt">
+        <div class="lt-ct">
+		   
+			   <p class="goodsname">{$goodsinfo1.goods_name}</p>
+				<p class="pr" >
+				  价格<span class="price">{$goodsinfo1.shou_price}</span>
+				  库存<span class="kucun">{$goodsinfo1.num}</span>
+				  商品id<span class="goodid">{$goodsinfo1.goods_id}</span>
+				   is_zuhe<span class="is_zuhe">{$goodsinfo1.is_zuhe}</span>
+				  zuhe_id<span class="zuhe_id">{$goodsinfo1.zuhe_id}</span>
+				</p> 
+			   
+        </div>
+    </div>
+	</volist>
+ 
+
+    
+  </div>
+        
+  <div class="section ioslist-group-container" id="st02">
+     <div class="ioslist-group-header">快餐</div>
+
+
+    <volist name="goods_list2" id="goodsinfo2">
+    <div class="prt-lt">
+        <div class="lt-ct">
+		   
+			   <p class="goodsname">{$goodsinfo2.goods_name}</p>
+				<p class="pr" >
+				  价格<span class="price">{$goodsinfo2.shou_price}</span>
+				  库存<span class="kucun">{$goodsinfo2.num}</span>
+				  商品id<span class="goodid">{$goodsinfo2.goods_id}</span>
+				   is_zuhe<span class="is_zuhe">{$goodsinfo2.is_zuhe}</span>
+				  zuhe_id<span class="zuhe_id">{$goodsinfo2.zuhe_id}</span>
+				</p> 
+			   
+        </div>
+    </div>
+	</volist>
+    
+  </div>
+  
+  <div class="section ioslist-group-container" id="st03">
+     <div class="ioslist-group-header">零食</div>
+        <volist name="goods_list3" id="goodsinfo3">
+    <div class="prt-lt">
+        <div class="lt-ct">
+		   
+			   <p class="goodsname">{$goodsinfo3.goods_name}</p>
+				<p class="pr" >
+				  价格<span class="price">{$goodsinfo3.shou_price}</span>
+				  库存<span class="kucun">{$goodsinfo3.num}</span>
+				  商品id<span class="goodid">{$goodsinfo3.goods_id}</span>
+				   is_zuhe<span class="is_zuhe">{$goodsinfo3.is_zuhe}</span>
+				  zuhe_id<span class="zuhe_id">{$goodsinfo3.zuhe_id}</span>
+				</p> 
+			   
+        </div>
+    </div>
+	</volist>
+   
+    
+  </div>
+   
+  <div class="section ioslist-group-container" id="st04">
+      <div class="ioslist-group-header">香烟</div>
+     <volist name="goods_list4" id="goodsinfo4">
+    <div class="prt-lt">
+        <div class="lt-ct">
+		   
+			   <p class="goodsname">{$goodsinfo4.goods_name}</p>
+				<p class="pr" >
+				  价格<span class="price">{$goodsinfo4.shou_price}</span>
+				  库存<span class="kucun">{$goodsinfo4.num}</span>
+				  商品id<span class="goodid">{$goodsinfo4.goods_id}</span>
+				   is_zuhe<span class="is_zuhe">{$goodsinfo4.is_zuhe}</span>
+				  zuhe_id<span class="zuhe_id">{$goodsinfo4.zuhe_id}</span>
+				</p> 
+			   
+        </div>
+    </div>
+	</volist>
+      
+  </div> 
+    <div class="section ioslist-group-container" id="st05">
+     <div class="ioslist-group-header">其他</div>
+     <volist name="goods_list5" id="goodsinfo5">
+    <div class="prt-lt">
+        <div class="lt-ct">
+		   
+			   <p class="goodsname">{$goodsinfo5.goods_name}</p>
+				<p class="pr" >
+				  价格<span class="price">{$goodsinfo5.shou_price}</span>
+				  库存<span class="kucun">{$goodsinfo5.num}</span>
+				  商品id<span class="goodid">{$goodsinfo5.goods_id}</span>
+				   is_zuhe<span class="is_zuhe">{$goodsinfo5.is_zuhe}</span>
+				  zuhe_id<span class="zuhe_id">{$goodsinfo5.zuhe_id}</span>
+				</p> 
+			   
+        </div>
+    </div>
+	</volist>
+      
+  </div> 
+</div>
+</div>  
+
+
+<div style="position:absolute;left:450px;width:60%">
+<h2 class="text-center">销售单</h2>
+ <div class="table-responsive">
+        <table class="table table-bordered table-hover" id="tableid">
+            <thead>
+				<tr id="theadid">
+					<th>操作</th>
+					<th>商品名称</th>
+					<th>货架库存</th>
+					<th>单价</th>
+					<th>数量</th>
+					<th>金额</th>
+				</tr>
+            </thead>
+		</table>	
+</div>
+ <div style="height:300px;overflow:auto;margin-top:-20px;border-bottom:1px solid #c0dcea;">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover" id="tableid">
+             <thead class="hide">
+				<tr id="theadid">
+					<th>操作</th>
+					<th>商品名称</th>
+					<th>货架库存</th>
+					<th>单价</th>
+					<th>数量</th>
+					<th>金额</th>
+				</tr>
+            </thead> 
+            <tbody id="xiaoshou_text">
+            <tr class="nothing" >
+                <td colspan="7" class="text-center muted td_tip" id="js_in_tip" style="color:#999999;">销售单为空，您可以点击左侧  <strong style="color:#428bca">选择商品</strong></td>
+            </tr> 
+            </tbody>
+        </table>
+    </div>
+	
+
+   
+</div>
+	<div style="width:100%;padding:15px;font-size:18px;margin-top:15px;">
+             			
+			<p style='margin-bottom:20px;'>请选择支付单据
+				<select id="zf_order_no" style='width:240px;font-size:14px;margin-left:10px;'>
+					<option>-请选择-</option>
+					<volist name="order_list" id="order">
+					    <option value="{$order.post_order_no}">{$order.order_value}</option>
+                    </volist>					
+				</select>
+			</p> 
+			
+			<p>
+				商品总额:<span id="total" class="total">0</span>元&nbsp;
+				商品总数：<span class="nm"></span>份
+			</p>
+			<!-- <p id='zf_type'>
+				<label><input type='radio' name='zf_type' value='1' checked='checked'/>现金支付</label>
+				<label><input type='radio' name='zf_type' value='2'/>微信支付</label>
+				<label><input type='radio' name='zf_type' value='3'/>支付宝支付</label>
+				<input type='hidden' id='xz_zfsx' value='1'>
+			</p> -->
+			<p>
+				商品支付：<input type="text" id="zhifu" onfocus="focusinput()" onkeyup="zhifu()" />&nbsp;
+				找零：<span id="zhaoling">0.00</span>元
+			</p>
+			<p>
+				备注：<input type="text" id="bz"/>&nbsp;&nbsp;
+				<input type="checkbox" />打印小票
+			</p>
+			 <button class="btn btn-success" id="btn_save" type="button" >确定</button>
+			 
+			 <!-- <button class="btn btn-success" id="btn_print"  onclick="preview()" type="button" >打印</button> -->
+             
+	
+
+   </div>
+</div>
+
+
+</block>
+<block name="script">
+<script>
+
+   var storage=window.localStorage;
+   storage.removeItem("goods_id");
+
+//var goodslist={$goodslist};
+
+
+function  getonezuhe_num(zuhe_id)
+{
+    var zuhe_list={$zuhe_goodslist};
+	//组合商品库存数量
+	var zuhe_num=0;
+	for(var j=0;j<zuhe_list.length;j++)
+	{
+		if(zuhe_list[j].goods_id==zuhe_id)
+		{
+			zuhe_num =Number(zuhe_list[j].num);
+			break;
+		}
+	}
+	return zuhe_num;
+}
+
+
+
+	function zhifu()
+	{
+		var num=/^([1-9][0-9]{0,7}|0)(\.[0-9]{0,2})?$/;
+		var zhifu=$('#zhifu').val();
+		if(!(num.test(zhifu)))
+		{
+		  $('#zhifu').val("");
+		  $('#zhaoling').text("0.00");
+		  myalertdanger("商品价格输入有误，请重新输入！");
+
+		}
+		else {
+
+		 var zhifu=Number($("#zhifu").val());
+		 var total=Number($("#total").text());
+		 var zhaoling=Number(zhifu-total);
+		  $("#zhaoling").text(zhaoling.toFixed(2));
+		  }
+	}
+
+	function setTotal()
+	{ 
+		var s=0;
+		var v=0;
+
+
+		<!--计算总份数-->
+		$("#xiaoshou_text input[type='text']").each(function(){
+			v += Number($(this).val());
+		});
+
+		var trnum=$("#xiaoshou_text").find("tr");
+
+		  for (var i = 0; i<trnum.length; i++) 
+				{  
+				   var tip= $('#xiaoshou_text tr').hasClass('nothing');
+				   if(tip){
+					  $("#total").text('0.00'); 
+				   }else{
+					 var tr1=$(trnum[i]);
+					 var total=Number(tr1.find('td:eq(6)').text());
+					 s=s+total;
+				   }
+						
+				}
+				
+		$(".nm").html(v);
+
+		$("#total").text(s.toFixed(2)); 
+		$("#zhifu").val(s.toFixed(2));
+		zhifu();
+
+	} 
+
+
+
+   //--------------左侧点击------开始--------------------
+   $('.prt-lt').click(function()   
+   {  	
+		 var ind = $('.prt-lt').index(this);
+		 var goodsname=$('.prt-lt:eq('+ind+') .lt-ct .goodsname ').text();
+		 var goodsid=$('.prt-lt:eq('+ind+') .lt-ct .goodid ').text();
+		 var price=$('.prt-lt:eq('+ind+') .lt-ct .pr .price ').text();
+		 var kucun=$('.prt-lt:eq('+ind+') .lt-ct .pr .kucun ').text();
+		 var is_zuhe=$('.prt-lt:eq('+ind+') .lt-ct .pr .is_zuhe ').text();
+		 var zuhe_id=$('.prt-lt:eq('+ind+') .lt-ct .pr .zuhe_id ').text();
+		 var tip= $('#xiaoshou_text tr').hasClass('nothing');
+		 if(tip==true)
+		 {
+			$('.nothing').remove()
+		 }
+		 
+		 var  db_kucun_num=0;
+		 if(is_zuhe==0)
+		 {
+		    db_kucun_num= kucun; 
+		 }
+		 else  if(is_zuhe==1)
+		 {
+		     db_kucun_num=getonezuhe_num(zuhe_id);
+		 }
+		 
+		
+		 
+		 
+		 
+		var goods_id_str ='';	
+		var newgoods_id_list='';
+		var a_goods_id=goodsid;
+		var storage=window.localStorage;
+		goods_id_str  =  storage.getItem("goods_id");
+   
+	    var flag=0;
+	    if( goods_id_str)
+	    {  
+		   var goods_id_list=goods_id_str.split(",");  
+		   for(var i=0;i<goods_id_list.length;i++)
+		   {
+			  if(goods_id_list[i]==a_goods_id)
+			  {
+				 flag=1;                                  
+			  }
+			  else
+			  {
+				
+			  }
+		   }
+	    }
+	    else
+	    {
+			flag=2;
+			var storage=window.localStorage;
+			storage.setItem("goods_id",a_goods_id);				
+	    }
+   
+   
+
+   
+    
+		if(flag==1)
+		{  
+		   var  a_ght_goods_id,a_ght_goods_num,a_ght_newgoods_num='';
+			var tableInfo = "";
+			
+			var tbl=$('#xiaoshou_text');
+			var trlist=tbl.find("tr");
+			
+			
+			for (var i = 0; i<trlist.length; i++) 
+			{    //遍历Table的所有Row
+				var tr1=$(trlist[i]);
+				
+				a_ght_goods_id = tr1.find('td:eq(0)').text();
+				if(a_ght_goods_id==goodsid)
+				{
+				 
+				  var kucun=0,shengyu=0; 
+				  if(is_zuhe==0)
+				  {
+					a_ght_goods_num = Number(tr1.find('td:eq(5) input[class*=result_dan]').val())+1;
+					//console.log(a_ght_goods_num)
+					kucun = Number(tr1.find('td:eq(3)').text());
+					shengyu=kucun-a_ght_goods_num;
+					
+					  a_ght_newgoods_num=a_ght_goods_num;
+					  if(shengyu>=0)
+					  {
+						  tr1.find('td:eq(5) input[class*=result_dan]').val(a_ght_newgoods_num);
+						  var shuliang=Number(a_ght_newgoods_num);
+						  var price=Number(tr1.find('td:eq(4)').text());
+						  var je=shuliang*price;
+						  var num = new Number(je);
+						  var sum=num.toFixed(2);
+						  tr1.find('td:eq(6)').text(sum);
+						  setTotal();
+					  }
+					  else
+					  {
+						 myalertdanger("库存不足");
+					  }
+				  }
+				  else if(is_zuhe==1)
+				  {
+					a_ght_goods_num = Number(tr1.find('td:eq(5) input[class*=result_zuhe]').val())+1;
+					//组合商品购买数量
+					var zuhe_Num=0;
+					var tr_list=$("#xiaoshou_text").find('tr');		
+					for(var j=0;j<tr_list.length;j++)
+					{	
+						if(tr_list.eq(j).find('td:eq(7)').text()==zuhe_id)
+						{
+							zuhe_Num+=Number(tr_list.eq(j).find('input[class=result_zuhe]').val());
+						}
+					}	
+
+                     shengyu= db_kucun_num-	zuhe_Num-1;				
+					a_ght_newgoods_num=a_ght_goods_num;
+					  if(shengyu>=0)
+					  {
+						  tr1.find('td:eq(5) input[class*=result_zuhe]').val(a_ght_newgoods_num);
+						  var shuliang=Number(a_ght_newgoods_num);
+						  var price=Number(tr1.find('td:eq(4)').text());
+						  var je=shuliang*price;
+						  var num = new Number(je);
+						  var sum=num.toFixed(2);
+						  tr1.find('td:eq(6)').text(sum);
+						  setTotal();
+					  }
+					  else
+					  {
+						 myalertdanger("库存不足");
+					  }					   		   
+				  }
+				  /*a_ght_newgoods_num=a_ght_goods_num;
+				  if(shengyu>=0)
+				  {
+					  tr1.find('td:eq(5) input[class*=result]').val(a_ght_newgoods_num);
+					  var shuliang=Number(a_ght_newgoods_num);
+					  var price=Number(tr1.find('td:eq(4)').text());
+					  var je=shuliang*price;
+					  var num = new Number(je);
+					  var sum=num.toFixed(2);
+					  tr1.find('td:eq(6)').text(sum);
+					  setTotal();
+				  }
+				  else
+				  {
+					 myalertdanger("库存不足");
+				  }*/
+				  
+				  break;
+				}
+									
+			}
+		}
+			else if(flag==0)
+			{
+				var html="";
+			   if(is_zuhe==0)
+				{
+					html+='	<tr>';
+					html+='		<td class="spid hide">'+goodsid+'</td>';
+					html+='		<td><i class="fa fa-times-circle fa-2x text-danger qx" onclick="return del('+goodsid+')" id=del'+goodsid+'></i></td>';
+					html+='		<td><span>'+goodsname+'</span></td>';
+					html+='		<td>'+db_kucun_num+'</td>';
+					html+='		<td><span>'+price+'</span></td>';	
+					html+='		<td><input type="button" class="minus"  value="-"><input type="text" class="result_dan" value="1"  onfocus="selectNum('+goodsid+')"  id=shuliang'+goodsid+'><input type="button" class="add" value="+"></td>';
+					html+='		<td>'+price+'</td>';
+					html+='		<td class="spid hide">'+zuhe_id+'</td>';
+					html+='	</tr>';
+				}
+				else  if(is_zuhe==1)  //显示组合商品
+				{
+				   //有实际的组合商品
+					html+='	<tr>';
+					html+='		<td class="spid hide">'+goodsid+'</td>';
+					html+='		<td><i class="fa fa-times-circle fa-2x text-danger qx" onclick="return del('+goodsid+')" id=del'+goodsid+'></i></td>';
+					html+='		<td><span>'+goodsname+'</span>（组合'+db_kucun_num+'）</td>';
+					html+='		<td>--</td>';
+					html+='		<td><span>'+price+'</span></td>';	
+					html+='		<td><input type="button" class="minus_zuhe"  value="-"><input type="text" class="result_zuhe" value="1"  onfocus="selectNum('+goodsid+')"  id=shuliang'+goodsid+'><input type="button" class="add_zuhe" value="+"></td>';
+					html+='		<td>'+price+'</td>';
+					html+='		<td class="spid hide">'+zuhe_id+'</td>';
+					html+='</tr>';
+				}
+				$("#xiaoshou_text").append(html);	
+			   var newstorage=window.localStorage;
+			   newstorage.setItem("goods_id",goods_id_str+','+goodsid);
+			   setTotal();
+			}
+			else if(flag==2)
+			{
+				var html="";
+				if(is_zuhe==0)
+				{
+					html+='	<tr>';
+					html+='		<td class="spid hide">'+goodsid+'</td>';
+					html+='		<td><i class="fa fa-times-circle fa-2x text-danger qx" onclick="return del('+goodsid+')" id=del'+goodsid+'></i></td>';
+					html+='		<td><span>'+goodsname+'</span></td>';
+					html+='		<td>'+db_kucun_num+'</td>';
+					html+='		<td><span>'+price+'</span></td>';	
+					html+='		<td><input type="button" class="minus"  value="-"><input type="text" class="result_dan" value="1"  onfocus="selectNum('+goodsid+')"  id=shuliang'+goodsid+'><input type="button" class="add" value="+"></td>';
+					html+='		<td>'+price+'</td>';
+					html+='     <td class="hide">'+zuhe_id+'</td>';
+					html+='	</tr>';
+				}
+				else  if(is_zuhe==1)  //显示组合商品
+				{
+				   //有实际的组合商品
+					html+='	<tr>';
+					html+='		<td class="spid hide">'+goodsid+'</td>';
+					html+='		<td><i class="fa fa-times-circle fa-2x text-danger qx" onclick="return del('+goodsid+')" id=del'+goodsid+'></i></td>';
+					html+='		<td><span>'+goodsname+'</span>（组合'+db_kucun_num+'）</td>';
+					html+='		<td>--</td>';
+					html+='		<td><span>'+price+'</span></td>';	
+					html+='		<td><input type="button" class="minus_zuhe"  value="-"><input type="text" class="result_zuhe" value="1"  onfocus="selectNum('+goodsid+')"  id=shuliang'+goodsid+'><input type="button" class="add_zuhe" value="+"></td>';
+					html+='		<td>'+price+'</td>';
+					html+='		<td class="spid hide">'+zuhe_id+'</td>';
+					html+='</tr>';
+				}
+				$("#xiaoshou_text").append(html);
+				
+				  setTotal();
+			} 
+	
+
+	
+	})
+
+
+	
+	
+function del(id)
+{
+   var newgoods_id_list='';
+   var a_goods_id=id;
+   var storage=window.localStorage;
+   var goods_id_str  =  storage.getItem("goods_id"); 
+   var goods_id_list=goods_id_str.split(",");  
+   for(var i=0;i<goods_id_list.length;i++)
+   {
+      if(goods_id_list[i]==a_goods_id)
+	  {
+	    
+	  }
+	  else
+	  {
+	    newgoods_id_list+=goods_id_list[i]+',';
+	  }
+   }
+ 
+   storage.setItem("goods_id",newgoods_id_list);
+   $('#del'+id).parents('tr').remove();
+   setTotal();
+}
+
+</script>
+
+<script language=javascript>
+
+function selectNum(id){
+ $("#shuliang"+id).select();
+}
+function focusinput(){
+    $("#zhifu").select();
+}
+</script>
+
+<script> 
+
+
+$(function()
+{ 
+//单个商品数量改变
+$("#xiaoshou_text").on("keyup","input[class*=result_dan]",function(){
+
+	var num=/^[1-9]\d*$/;
+	var shuliang=$(this).val();
+	if(!(num.test(shuliang)&&(shuliang<100)))
+	{
+	  myalertdanger("商品数量最小为1最大为99且只能输入整数");
+	  $(this).val(1);
+	}else{
+	       
+			var kucun=Number($(this).parents('tr').find('td:eq(3)').text());
+			shuliang=Number(shuliang);
+			if(kucun<shuliang){
+			 myalertdanger("库存不足");
+			  $(this).val(kucun);
+			  shuliang=kucun;
+			}
+			
+			var price=$(this).parents('tr').find('td:eq(4)').text();
+			var je=Number(price)*(Number(shuliang));
+			$(this).parents('tr').find('td:eq(6)').text(je.toFixed(2)); 
+			setTotal(); 
+	}
+})
+
+
+$("#xiaoshou_text").on("click",".add",function()
+{
+	var t=$(this).parent().find('input[class*=result_dan]'); 
+	
+	var kucun=$(this).parents('tr').find('td:eq(3)').text();
+	var shuliang=Number(t.val())+1;
+	if(kucun>=shuliang){
+	  	t.val(shuliang);
+		var price=$(this).parents('tr').find('td:eq(4)').text(); 
+		var je=Number(price)*(Number(t.val()));
+		var num = new Number(je);
+		sum=num.toFixed(2);
+		$(this).parents('tr').find('td:eq(6)').text(sum); 
+		setTotal(); 
+	}else{
+	  myalertdanger("库存不足");
+	}
+
+})
+
+
+ 
+$("#xiaoshou_text").on("click",".minus",function(){ 
+	var t=$(this).parent().find('input[class*=result_dan]'); 
+	t.val(Number(t.val())-1);
+	if(Number(t.val())<2){ 
+	t.val(1);
+	} 
+	var price=$(this).parents('tr').find('td:eq(4)').text(); 
+	var je=Number(price)*(Number(t.val()));
+	var num = new Number(je);
+    sum=num.toFixed(2);
+	$(this).parents('tr').find('td:eq(6)').text(sum);  
+setTotal(); 
+
+
+})
+ 
+//组合商品数量改变
+$("#xiaoshou_text").on("keyup","input[class*=result_zuhe]",function(){
+	var zuhe_list={$zuhe_goodslist};
+	var num=/^[1-9]\d*$/;
+	var shuliang=$(this).val();
+	if(!(num.test(shuliang)&&(shuliang<100)))
+	{
+	  myalertdanger("商品数量最小为1最大为99且只能输入整数");
+	  $(this).val(1);
+	}else{
+	       var zuhe_id=$(this).parents('tr').find('td:eq(7)').text();
+		   var zuhe_Num=0,zong_Num=0;
+		   var tr_list=$("#xiaoshou_text").find('tr');
+		   //console.log(tr_list)
+		   for(var i=0;i<tr_list.length;i++){
+		    //console.log(tr_list.eq(i).find('td:eq(7)').text())
+				if(tr_list.eq(i).find('td:eq(7)').text()==zuhe_id){
+					zuhe_Num+=Number(tr_list.eq(i).find('input[class=result_zuhe]').val())
+				}
+		   }
+		   for(var j=0;j<zuhe_list.length;j++){
+				if(zuhe_list[j].goods_id==zuhe_id){
+					zong_Num=zuhe_list[j].num;
+				}
+				
+		   }
+			//var kucun=Number($(this).parents('tr').find('td:eq(3)').text());
+			shuliang=Number(shuliang);
+			//console.log(zuhe_Num+','+zong_Num)
+			if(zuhe_Num>zong_Num){
+			 myalertdanger("库存不足");
+			  $(this).val(1);
+			  shuliang=1;
+			}
+			
+			var price=$(this).parents('tr').find('td:eq(4)').text();
+			var je=Number(price)*(Number(shuliang));
+			$(this).parents('tr').find('td:eq(6)').text(je.toFixed(2)); 
+			setTotal(); 
+	}
+})
+
+$("#xiaoshou_text").on("click",".add_zuhe",function()
+{
+	var zuhe_list={$zuhe_goodslist};
+	var t=$(this).parent().find('input[class*=result_zuhe]'); 
+	var shuliang=Number(t.val())+1;
+	var zuhe_id=$(this).parents('tr').find('td:eq(7)').text();
+   var zuhe_Num=0,zong_Num=0;
+   var tr_list=$("#xiaoshou_text").find('tr');
+   for(var i=0;i<tr_list.length;i++){
+		if(tr_list.eq(i).find('td:eq(7)').text()==zuhe_id){
+			zuhe_Num+=Number(tr_list.eq(i).find('input[class=result_zuhe]').val());
+		}
+   }
+   for(var j=0;j<zuhe_list.length;j++){
+		if(zuhe_list[j].goods_id==zuhe_id){
+			zong_Num=zuhe_list[j].num;
+		}
+		
+   }
+	//var kucun=Number($(this).parents('tr').find('td:eq(3)').text());
+	//shuliang=Number(shuliang);
+	//console.log(zuhe_Num+1+','+zong_Num)
+	if(zuhe_Num+1>zong_Num){
+	 myalertdanger("库存不足");
+	  shuliang=1;
+	}else{
+		t.val(shuliang);
+		var price=$(this).parents('tr').find('td:eq(4)').text(); 
+		var je=Number(price)*(Number(t.val()));
+		var num = new Number(je);
+		sum=num.toFixed(2);
+		$(this).parents('tr').find('td:eq(6)').text(sum); 
+		setTotal();
+	}
+})
+
+
+$("#xiaoshou_text").on("click",".minus_zuhe",function()
+{ 
+	var t=$(this).parent().find('input[class*=result_zuhe]'); 
+	t.val(Number(t.val())-1);
+	if(Number(t.val())<2){ 
+	t.val(1);
+	} 
+	var price=$(this).parents('tr').find('td:eq(4)').text(); 
+	var je=Number(price)*(Number(t.val()));
+	var num = new Number(je);
+    sum=num.toFixed(2);
+	$(this).parents('tr').find('td:eq(6)').text(sum);  
+setTotal(); 
+
+
+})
+
+setTotal(); 
+
+}) 
+
+
+
+</script> 
+<script>
+
+	   $('div.floatCtro p').click(function(){
+			var ind = $('div.floatCtro p').index(this)+1;
+
+			var topVal = $('#st0'+ind).offset().top-195;
+
+			$('#container').animate({scrollTop:topVal},1000)
+		})
+		$('div.floatCtro a').click(function(){
+			$('#container').animate({scrollTop:0},1000)
+			})
+	   $('#container').scroll(scrolls)
+	   scrolls()
+	   function scrolls(){
+		   var f1,f2,f3,f4,f5,f6,f7,bck;
+		   var fixRight = $('div.floatCtro p');
+		   var blackTop = $('div.floatCtro a')
+		   var sTop = $('#container').scrollTop();
+		   fl = $('#st01').offset().top;
+		   f2 = $('#st02').offset().top;
+		   f3 = $('#st03').offset().top;
+		   f4 = $('#st04').offset().top;
+           f5 = $('#st05').offset().top;		   
+		   if(sTop<=f2-100){
+			   blackTop.fadeOut(300).css('display','none')
+			   }
+		   else{
+			   blackTop.fadeIn(300).css('display','block')
+			   }
+		   if(sTop>=fl){
+			   fixRight.eq(0).addClass('cur').siblings().removeClass('cur');
+			   }
+		   if(sTop>=f2-100){
+			   fixRight.eq(1).addClass('cur').siblings().removeClass('cur');
+			   }
+		   if(sTop>=f3-100){
+			   fixRight.eq(2).addClass('cur').siblings().removeClass('cur');
+			   }
+		   if(sTop>=f4-100){
+			   fixRight.eq(3).addClass('cur').siblings().removeClass('cur');
+			   }
+		   if(sTop>=f5-100){
+			   fixRight.eq(4).addClass('cur').siblings().removeClass('cur');
+			   }
+		   if(sTop>=f6-100){
+			   fixRight.eq(5).addClass('cur').siblings().removeClass('cur');
+			   }
+		   if(sTop>=f7-100){
+			   fixRight.eq(6).addClass('cur').siblings().removeClass('cur');
+			   } 
+		
+	     }
+</script>
+
+<script>
+   $("#btn_save").click(function(){
+	$("#btn_save").attr("disabled",true);
+    var tip= $('#xiaoshou_text tr').hasClass('nothing');
+   
+     if(tip==true){
+	   myalertdanger("请先选择销售商品！");
+	   return false;
+	 }
+
+	var zhifu=Number($("#zhifu").val());
+	var total=Number($("#total").text());
+	if(zhifu<total){
+	   myalertdanger("支付金额输入有误，请重新输入");
+	   return false;
+	}
+
+	 
+	var tableInfo = "";
+	var data = [] ; 
+    var tbl=$('#xiaoshou_text');
+    var trlist=tbl.find("tr");
+	
+	for (var i = 0; i<trlist.length; i++) 
+	{    //遍历Table的所有Row
+		var tr1=$(trlist[i]);
+			
+		var row1 = {};
+		row1.zuhe_id =  tr1.find('td:eq(7)').text();
+		row1.goods_id =  tr1.find('td:eq(0)').text();
+		row1.xiaoshou_num = tr1.find('td:eq(5) input[class*=result]').val();
+		row1.price = Number(tr1.find('td:eq(4)').text());
+		data.push(row1);	
+	}
+
+	var sum_sr_je_str=$("#zhifu").val();
+    var sum_sp_je_str=$("#total").text();
+	var bz_str=$('#bz').val();
+	
+	
+	 var alldata = {};
+	 alldata.sum_sr_je=sum_sr_je_str;
+	 alldata.sum_sp_je=sum_sp_je_str; 
+	 alldata.sum_zl_je=sum_sr_je_str-sum_sp_je_str; 
+	 alldata.bz=bz_str;
+	 alldata.goodsinfo=data;
+	 
+	 
+	 var senddata = JSON.stringify(alldata); 	 	
+	 senddata = encodeURI(senddata);   
+	 senddata=$.base64.btoa(senddata);
+	 
+	 
+	 zf_order_no_str=$('#zf_order_no').val();
+	
+	
+	var token_str=$('#TOKEN').val();	  
+    var param = JSON.stringify(data);		 
+     $.ajax({
+      url : "{:U("xiaoshou_edit_set")}",
+      type : "post",
+      dataType : "json",
+      data: {goodsinfo:param,sum_sr_je:sum_sr_je_str,sum_sp_je:sum_sp_je_str,bz:bz_str,token:token_str,zf_order_no:zf_order_no_str},
+      success : function(data) 
+      {
+	    
+        if(data.status=="1")
+        {
+		   myalertsuccess('销售成功');
+		   var ght_FAllowXiaoshouPrint_str=$('#ght_FAllowXiaoshouPrint').val();   
+           if(ght_FAllowXiaoshouPrint_str==1)
+           {
+		     add_print_content();
+		   }			  
+	    }
+	    else if(data.status =="-1")
+		{
+		   myalertdanger('销售失败');		 	   
+		}
+		else if(data.status =="-2")
+		{
+		 myalertdanger('数据重复提交,销售失败');		 		   
+		}
+		
+		
+     },//success完成
+ });
+
+}); 
+function add_print_content()
+	{
+		var tbl=$('#xiaoshou_text');
+		var trlist=tbl.find("tr");
+		var a_goods_name,a_goods_num,a_goods_price,a_goods_sumje='';
+		
+		var data = [];	
+		for (var i = 0; i<trlist.length; i++) 
+		{    
+			var tr1=$(trlist[i]);
+			
+			var row1 = {};
+			a_goods_name =tr1.find('td:eq(2)').text();	
+			a_goods_num = tr1.find('td:eq(5) input[class*=result]').val();
+			a_goods_price= tr1.find('td:eq(4)').text();		
+			a_goods_sumje=tr1.find('td:eq(6)').text();
+			
+			row1.goods_name = a_goods_name ;
+			row1.num = a_goods_num;
+			row1.price = a_goods_price;
+			row1.qianshu =a_goods_sumje ;
+			data.push(row1);														
+		}
+		
+		var total_shouru= $('#total').text();		
+		var total_zhifu= $('#zhifu').val();			
+		var total_zhaoling= $('#zhaoling').text();	
+
+		
+		var dt = new Date(); 
+        var aa= (dt.getFullYear()+'-'+(dt.getMonth()+1)+'-'+dt.getDate()+' '+dt.getHours()+':'+dt.getMinutes()+':'+dt.getSeconds()).replace(/([\-\: ])(\d{1})(?!\d)/g,'$10$2');
+	
+
+        var alldata={};      
+ 
+    
+		alldata.goodsinfo = data;
+		alldata.total_je = total_shouru;
+		alldata.total_zhifu = total_zhifu;
+		alldata.total_zhaoling = total_zhaoling;
+		alldata.dt = aa;
+
+        var param = JSON.stringify(alldata);   
+		var script=document.createElement("script");  
+
+ 	
+		script.src= 'http://127.0.0.1:51243?a='+param+'&cmdid=1';
+		document.body.appendChild(script);	
+	
+	}
+
+</script>
+
+
+<script>
+	$(function() {
+	
+	var projects={$goodslist};
+	
+		$( "#project" ).autocomplete({
+			minLength: 0,
+			source: projects,
+			focus: function( event, ui ) 
+			{			    
+				$( "#project" ).val( ui.item.goods_name );
+				return false;
+			},
+			select: function( event, ui ) 
+			{			
+			   var newgoods_id_list='';
+			   var a_goods_id=ui.item.goods_id;
+			   
+			   var storage=window.localStorage;
+			   var goods_id_str  =  storage.getItem("goods_id");
+			   var bFind=0;
+			   if(goods_id_str)
+			   {
+			       var goods_id_list=goods_id_str.split(",");  		   
+				 
+				   for(var i=0;i<goods_id_list.length;i++)
+				   {
+					  if(goods_id_list[i]==a_goods_id)
+					  {
+						bFind=1;   //已存在该商品
+					  }			  
+				   }
+			   }
+			   else
+			   {
+			     bFind=0;
+			   }
+			   
+
+			   
+			   
+			   
+			   if(bFind==0)
+			   {
+			     
+				 
+				 	if(goods_id_str==null)
+					{
+					   goods_id_str=a_goods_id;
+					}
+					else
+					{
+					   goods_id_str=goods_id_str+','+a_goods_id;
+					   
+					}
+				
+				     storage.setItem("goods_id",goods_id_str);	
+					 
+					 
+					var jsonlist={$goodslist};						     
+					var data=jsonlist; 	
+					
+                    var tip= $('#xiaoshou_text tr').hasClass('nothing');
+					 if(tip==true)
+					 {
+						$('.nothing').remove()
+					 }		
+					 //console.log(a_goods_id);
+					 //console.log(data);
+					var html="";					
+					for (var i = 0; i <data.length; i++) 
+					{
+					  if(data[i].goods_id==a_goods_id)
+					  {
+						  if(data[i].is_zuhe==0)
+							{
+								var goods_name="'"+data[i].goods_name+"'";
+								//html+='<tbody id=tb'+data[i].goods_id+'>';
+								html+='	<tr>';
+								html+='		<td class="spid hide">'+data[i].goods_id+'</td>';
+								html+='		<td><i class="fa fa-times-circle fa-2x text-danger qx" onclick="return del('+data[i].goods_id+')" id=del'+data[i].goods_id+'></i></td>';
+								
+								//html+='     <td>'+data[i].type_name+'</td>';
+								html+='		<td><span>'+data[i].goods_name+'</span></td>';
+								html+='		<td>'+data[i]['hj_num']+'</td>';
+								html+='		<td><span>'+data[i].shou_price+'</span></td>';	
+								html+='		<td><input type="button" class="minus"  value="-"><input type="text" class="result_dan" value="1"  onfocus="selectNum('+data[i].goods_id+')"  id=shuliang'+data[i].goods_id+'><input type="button" class="add" value="+"></td>';
+								html+='		<td>'+data[i]['shou_price']+'</td>';
+								html+='     <td class="hide">'+data[i].is_zuhe+'</td>';
+								html+='	</tr>';
+								//html+='</tbody>';
+							}
+							else  if(data[i].is_zuhe==1)  //显示组合商品
+							{
+							   //有实际的组合商品
+								var goods_name="'"+data[i].goods_name+"'";
+								//html+='<tbody id=tb'+data[i].goods_id+'>';
+								html+='	<tr>';
+								html+='		<td class="spid hide">'+data[i].goods_id+'</td>';
+								html+='		<td><i class="fa fa-times-circle fa-2x text-danger qx" onclick="return del('+data[i].goods_id+')" id=del'+data[i].goods_id+'></i></td>';
+								//html+='     <td>'+data[i].type_name+'</td>';
+								html+='		<td><span>'+data[i].goods_name+'</span>（组合'+data[i].hj_num+'）</td>';
+								html+='		<td>--</td>';
+								html+='		<td><span>'+data[i].shou_price+'</span></td>';	
+								html+='		<td><input type="button" class="minus_zuhe"  value="-"><input type="text" class="result_zuhe" value="1"  onfocus="selectNum('+data[i].goods_id+')"  id=shuliang'+data[i].goods_id+'><input type="button" class="add_zuhe" value="+"></td>';
+								html+='		<td>'+data[i]['shou_price']+'</td>';
+								html+='		<td class="spid hide">'+data[i].zuhe_id+'</td>';
+								html+='</tr>';
+							
+							   
+							   
+							}
+							$("#xiaoshou_text").append(html);
+							setTotal();	
+							break;
+						}; 
+						
+					}																  	  																					
+				 				 				 
+			   }
+			   else  if(bFind==1)
+			   {
+			   
+			   }			 			   										  												
+			
+				return false;
+			}
+		})
+		.data( "ui-autocomplete" )._renderItem = function( ul, item ) 
+		{
+			return $( "<li>" )
+				.append( "<a>" + item.goods_name +  "</a>" )
+				.appendTo( ul );
+		};
+	});
+	
+	
+	
+	
+	function preview()    
+     {    
+        bdhtml=window.document.body.innerHTML;    
+        sprnstr="<!--startprint-->";    
+        eprnstr="<!--endprint-->";    
+        prnhtml=bdhtml.substring(bdhtml.indexOf(sprnstr)+17);    
+        prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));    
+        window.document.body.innerHTML=prnhtml;    
+        window.print();    
+    }  
+	
+	
+	//选择支付方式
+	
+	$('#zf_type input[name="zf_type"]').change(function(){
+		var zf_type=$('#zf_type input[name="zf_type"]:checked').val();
+		//console.log(zf_type);
+		if(zf_type!=1){
+			$('#zhifu').attr({'readonly':true});
+		}else{
+			$('#zhifu').attr({'readonly':false});
+		}
+		//console.log($('#xz_zfsx').val());
+		$('#xz_zfsx').val(zf_type)
+	})
+	
+	</script>
+	
+	
+
+</block>

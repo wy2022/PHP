@@ -1,0 +1,447 @@
+<extend name="Public/base" />
+
+<block name="head">
+<js href="__PUBLIC__/layer/layer.js" />
+<js href="__PUBLIC__/layer/myalert.js" />
+<css href="__PUBLIC__/layer/myalert.css"/>
+    <style>
+        td .btn {display:block;width:60px;margin:3px auto;font-weight:bold;}
+    </style>
+
+</block>
+
+<block name="content">
+
+    <div class="tabbable">
+	   <span style="font-size:20px;line-height:30px;color:red;font-weight:bold;">开卡机器计算机分组不能移动，否则计费、分组将混乱</span>
+        <include file="nav" />
+        <div class="tab-content">
+            <div class="tab-pane active">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered" style="height:400px;">
+                            <thead>
+                                <tr>
+                                    <th>区域选择</th>
+                                    <th style="width:30%;">所属计算机 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="fenzu_count"></span></th>
+                                    <th style="width:100px;">选择</th>
+                                    <th style="width:30%;">未分组计算机&nbsp;&nbsp;&nbsp;&nbsp;<span id="daifenzu_count"></span></th>
+                                    <th>允许卡类型</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <!--  <a class="" href="javascript:$('#adddistrict').show().find('input').val('');">增加</a>  -->
+										     <a class="" href="javascript:;" id="myadd_area">增加</a>
+											
+                                        <!-- <a class="" href="javascript:$('#editdistrict').show().find('input').val($('#district-'+district).text()).select();">修改</a> -->
+										   <a class="" href="javascript:;" id="myedit_area">修改</a>
+										   
+										    <script>
+											    $("#myadd_area").bind("click", function () {$('#adddistrict').show().find('input').val(''); });
+												$("#myedit_area").bind("click", function () 
+                                                {
+
+                                                       var defaultDistrict=$('#district-'+district).text();
+
+                                                        if(defaultDistrict=='默认分组')
+                                                        {
+                                                          myalertdanger('默认分组禁止修改');
+
+                                                        }
+                                                        else
+                                                        {                                           
+                                                           $('#editdistrict').show().find('input').val($('#district-'+district).text()).select();
+                                                        }                                                  
+                                                });
+											 </script>
+                                        <a class="" href="javascript:deleteDistrict();"  id="delDistrict">删除</a>
+                                        <div class="list-group" id="district-list">
+                                            <volist name="districtlist" id="district">
+                                                <a class="list-group-item" id="district-{$district.id}" href="javascript:getDistrict({$district.id});">{$district.GroupName}</a>
+                                            </volist>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        计算机名称：<input type="text" id="box1filter" style="margin-bottom:5px;" />
+                                        <select class="form-control" name="" id="box1" multiple="multiple" style="height:310px;">
+
+                                        </select>
+                                    </td>
+                                    <td style="padding-top:80px;">
+                                        <button class="btn btn-default btn-sm" id="toleft"><</button>
+                                        <button class="btn btn-default btn-sm" id="alltoleft"><<</button>
+                                        <button class="btn btn-default btn-sm" id="toright">></button>
+                                        <button class="btn btn-default btn-sm" id="alltoright">>></button>
+                                    </td>
+                                    <td>
+                                        计算机名称：<input type="text" id="box2filter" style="margin-bottom:5px;" />
+										   <a class="" href="javascript:;" id="myadd_computer">新增电脑</a>
+                                           <a class="" href="javascript:;" onclick="deleteUnFenzuComputerList()" id="mydelete_computer">删除电脑</a>
+										   <script>
+											    $("#myadd_computer").bind("click", function () {$('#addcomputernum').show().find('input').val(''); });
+											</script>
+                                            <select class="form-control" name="" id="box2" multiple="multiple" style="height:310px;">
+                                           <!--      <for start="1" end="101">
+                                                    <option value="{$i}">{$i}</option>
+                                                </for> -->
+                                            </select>
+
+                                    </td>
+                                    <td>
+			
+                                        <volist name="viptypelist" id="viptype">
+                                            <div><label><input type="checkbox" id="type-{$viptype.id}" name="{$viptype.id}" value="{$viptype.id}" />{$viptype.Name}</label></div>
+                                        </volist>
+                                    </td>
+                                </tr>
+                                <tr>
+								    
+                                    <td colspan="5"><button type="button" onclick="submitComputerList();" class="btn btn-success">确定</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="adddistrict" style="display:none;position:fixed;top:240px;left:260px;z-index:15;">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h5>新增区域</h5>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+                    名称：<input type="text" width="50px;" id="districtname"/>
+                    <div style="margin-top:10px;">
+                        <button type="button" class="btn btn-success btn-sm" onclick="addDistrict();" style="margin-left:20px;margin-right:20px;">确定</button>
+                        <button type="button" class="btn btn-default btn-sm" onclick="$('#adddistrict').hide();">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="editdistrict" style="display:none;position:fixed;top:240px;left:290px;z-index:15;">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h5>修改区域</h5>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+                    名称：<input type="text" width="50px;"/>
+                    <div style="margin-top:10px;">
+                        <button type="button" class="btn btn-success btn-sm" onclick="submitDistrictInfo();" style="margin-left:20px;margin-right:20px;">确定</button>
+                        <button type="button" class="btn btn-default btn-sm" onclick="$('#editdistrict').hide();">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+    <div id="addcomputernum" style="display:none;position:fixed;top:240px;left:800px;z-index:15;">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h5>新增电脑</h5>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+				    <div>
+                    计算机名称前缀：<input type="text" id="pcqz"  placeholder="hc-"/>
+					 </div>
+					 <div style="margin-top:20px;">
+					  <span>名称起始：<input type="text"   style="width:100px;" id="name_start" /></span>
+					  
+					  <span style="padding-left:8px;">连续多少台：<input type="text" style="width:100px;" id="jq_num" /></span>
+					  
+					 </div>
+					 <div style="margin-top:20px;">
+					    编号位数：<input type="text" style="width:100px;" id="bh_num" />
+					 </div>
+                    <div style="margin-top:10px;">
+                        <button type="button" class="btn btn-success btn-sm" onclick="addcomputernum();" style="margin-left:20px;margin-right:20px;">确定</button>
+                        <button type="button" class="btn btn-default btn-sm" onclick="$('#addcomputernum').hide();">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script>
+        var box1 = new Array();
+        var box2 = new Array();
+        var district;
+        $(function(){
+            getDistrict({$districtlist.0.id});
+            $('#box1filter').keyup(function(){
+                var filter_text = $('#box1filter').val();
+                if(filter_text != ''){
+                    $('#box1').empty();
+                    for(var index in box1){
+                        if(box1[index].indexOf(filter_text) != -1){
+                            $('#box1').append('<option value="'+box1[index]+'">'+box1[index]+'</option>');
+                        }
+                    }
+                }else{
+                    refleshbox(1)
+                }
+            });
+
+            $('#box2filter').keyup(function(){
+                var filter_text = $('#box2filter').val();
+                if(filter_text != ''){
+                    $('#box2').empty();
+                    for(var index in box2){
+                        if(box2[index].indexOf(filter_text) != -1){
+                            $('#box2').append('<option value="'+box2[index]+'">'+box2[index]+'</option>');
+                        }
+                    }
+                }else{
+                    refleshbox(2)
+                }
+            });
+
+            $('#toleft').click(function(){
+                $('#box2 option:selected').each(function(){
+                    box1.push($(this).val());
+                    for(var index in box2){
+                        if($(this).val() == box2[index]){
+                            box2.splice(index,1);
+                        }
+                    }
+                });
+                box1.sort(function(a,b){return a-b;});
+                refleshbox(0);
+                $('#box1filter').keyup();
+            });
+
+            $('#toright').click(function(){
+                $('#box1 option:selected').each(function(){
+                    box2.push($(this).val());
+                    for(var index in box1){
+                        if($(this).val() == box1[index]){
+                            box1.splice(index,1);
+                        }
+                    }
+                });
+                box2.sort(function(a,b){return a-b;});
+                refleshbox(0);
+                $('#box2filter').keyup();
+            });
+
+            $('#alltoleft').click(function(){
+                box1 = box1.concat(box2);
+                box2 = Array();
+                box1.sort(function(a,b){return a-b;});
+                refleshbox(0);
+                $('#box1filter').keyup();
+                $('#box2filter').keyup();
+            });
+
+            $('#alltoright').click(function(){
+                box2 = box2.concat(box1);
+                box1 = Array()
+                box2.sort(function(a,b){return a-b;});
+                refleshbox(0);
+                $('#box1filter').keyup();
+                $('#box2filter').keyup();
+            });
+        });
+
+        function deleteUnFenzuComputerList()
+        {
+            // var checked = new Array();
+            // $('td input:checkbox:checked').each(function()
+            // {
+            //     checked.push($(this)[0].name);
+            // });
+            $.post("{:U('deleteUnFenzuComputerList')}",{box2:box2,district:district},function(data)
+            {
+                if(data.result==1)
+                {
+                   myalertsuccess('操作成功，修改完毕后请点击右侧 "更新重启网吧服务端"。');
+
+                }
+                else
+                {
+                    myalertdanger('删除失败');
+                
+                }
+            })
+        }
+
+
+        function submitComputerList()
+        {
+            var checked = new Array();
+            $('td input:checkbox:checked').each(function()
+            {
+                checked.push($(this)[0].name);
+            });
+            $.post("{:U('setDistrict')}",{box1:box1,box2:box2,access:checked,district:district},function(data){
+                if(data.status){
+                     myalertsuccess('操作成功，修改完毕后请点击右侧 "更新重启网吧服务端"。');
+                    getDistrict(district);
+                }else{
+                     myalertdanger('操作失败，请重新操作。');
+                }
+            })
+        }
+
+
+        function getDistrict()
+        {
+            district = arguments[0];
+
+          
+                $.get("{:U('getDistrict')}",{district:district},function(data)
+                {
+                    box1 = data.box1;
+                    box2 = data.box2;
+                    refleshbox(0);
+                    $('#district-list a').removeClass('active');
+                    $('#district-'+district).addClass('active');
+                    $('input:checkbox').prop('checked',false);
+
+                    for(var index in data.viptypeids)
+                    {               
+                        $('#type-'+data.viptypeids[index]).prop('checked',true);
+                    }
+                   // $('#type-23628').prop('checked',true);
+                   // $('#type-23626').prop('checked',true);   
+                    $('#fenzu_count').html(data.fenzu_count+'台');
+                    $('#daifenzu_count').html(data.daifenzu_count+'台');        
+                });
+
+
+
+
+            
+			
+			
+
+        }
+        function refleshbox(box){
+            if(box == 0 || box == 1){
+                $('#box1').empty();
+                for(var index in box1){
+                    $('#box1').append('<option value="'+box1[index]+'">'+box1[index]+'</option>');
+                }
+            }
+            if(box == 0 || box == 2){
+                $('#box2').empty();
+                for(var index in box2){
+                    $('#box2').append('<option value="'+box2[index]+'">'+box2[index]+'</option>');
+                }
+            }
+        }
+        function submitDistrictInfo(){
+            if($('#editdistrict input').val() == ''){
+                myalertdanger('名字不能为空');
+                return;
+            }
+            $.post("{:U('setDistrictInfo')}",{district:district,name:$('#editdistrict input').val()},function(data){
+                if(data.status){
+                    myalertsuccess('操作成功，请点击右侧 "更新重启网吧服务端"。');
+                }else{
+                     myalertdanger('保存失败');
+                }
+            });
+        }
+		$("#districtname").change(function(){
+		   var str=$("#districtname").val();
+		   var newstr=$.trim(str);
+		   $("#districtname").val(newstr);
+		})
+        function addDistrict(){
+            if($('#adddistrict input').val() == ''){
+                  myalertdanger('新增区域名称不能为空');
+                return;
+            }
+			
+            $.post("{:U('addDistrict')}",{name:$('#adddistrict input').val()},function(data){
+
+             
+                if(data.result==1)
+                {
+                   myalertsuccess('新增区域成功，请点击右侧 "更新重启网吧服务端"。');
+                   
+                }
+                else
+                {
+                   myalertdanger('新增区域失败');
+                     
+                }
+            });
+        }
+        function addcomputernum(){
+           // if($('#pcqz').val() == ''){
+           //      myalertdanger('计算机名称前缀不能为空');
+           //     return;
+           // }
+			if($('#name_start').val() == ''){
+                 myalertdanger('名称起始不能为空');
+                return;
+            }
+			if($('#jq_num').val() == ''){
+                 myalertdanger('连续台数不能为空');
+                return;
+            }
+			
+			if($('#bh_num').val() == ''){
+                 myalertdanger('编号位数不能为空');
+                return;
+            }
+            $.post("{:U('addcomputernum')}",{pcqz:$('#pcqz').val(),name_start:$('#name_start').val(),jq_num:$('#jq_num').val(),bh_num:$('#bh_num').val()},function(data){
+			
+			   
+                if(data.result==1)
+				{
+          
+                   myalertsuccess('新增成功，请点击右侧 "更新重启网吧服务端"。');
+                   
+                }else if(data.result==-1)
+				{
+				  myalertdanger('新增失败');
+				}
+				else if(data.result==-2)
+                {
+                    myalertdanger('机器名字重复，新增失败');
+                }
+            });
+        }
+        function deleteDistrict()
+        {
+
+            var defaultDistrict=$('#district-'+district).text();
+
+            if(defaultDistrict=='默认分组')
+            {
+                 myalertdanger('默认分组禁止删除');
+            }
+            else
+            {
+                    layer.confirm('确定要删除"'+$('#district-'+district).text()+'"么？',{icon:3,title:'提示'},function(index){
+                 $.post("{:U('deleteDistrict')}",{oper:'del',district:district},function(data)
+                 {
+                                if(data.status){
+                                  myalertsuccess('操作成功，请点击右侧 "更新重启网吧服务端"。');
+                                   
+                                }else{
+                                  myalertdanger('删除失败,请重新操作');
+                                }
+                            });
+                   layer.close(index);
+                }) 
+
+
+            }
+
+
+
+        }
+    </script>
+</block>

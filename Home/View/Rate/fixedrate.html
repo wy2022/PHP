@@ -1,0 +1,269 @@
+<extend name="Public/base" />
+<block name="head">
+    <css href="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.min.css" />
+    <js href="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.min.js" />
+    <js href="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.zh-CN.js" />
+     <js href="__PUBLIC__/layer/layer.js" />
+      <js href="__PUBLIC__/layer/myalert.js" />
+  <css href="__PUBLIC__/layer/myalert.css"/>
+</block>
+<block name="content">
+    <div class="tabbable">
+        <include file="nav" />
+        <div class="tab-content">
+            <div class="tab-pane active">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <h4 class="header">区域选择</h4>
+                        <div class="list-group" id="district-list">
+                            <volist name="districtlist" id="district">
+                                <a class="list-group-item" id="district-{$district.id}" href="javascript:getfixedrate({$district.id});">{$district.GroupName}</a>
+                            </volist>
+                        </div>
+                    </div>
+                    <div class="col-sm-10">
+                        <h4 class="header">定额费率</h4>
+                        <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#addfixedrate" onclick="addFixedRate();">添加</button>
+                        <button class="btn btn-default btn-sm" onclick="addFreeRate();">添加自由费率</button>
+                        <table id="fixedrate-table" class="table table-bordered" style="margin-top:5px;">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>金额（元）</th>
+                                    <th>机时（分钟）</th>
+                                    <th>开始时间</th>
+                                    <th>结束时间</th>
+									<th>是否分区包时</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <input class="hidden" type="text"  name="district" id="district_ght" value="{$district.id}"/>
+	
+	<input class="hidden"  type="text"  name="flag_hua" id="flag_hua"/>
+
+</block>
+
+<block name="script">
+    <script>
+	     $("#flag_hua").change(function(){
+		 
+		  var  districtid=$('#district_ght').val();
+		  getfixedrate(districtid)
+		 })
+        $(function(){
+            $('#addfixedrate form').submit(function(e){
+                e.preventDefault();
+                submitAddFixedRate();
+            });
+            $('#editfixedrate form').submit(function(e){
+                e.preventDefault();
+                submitEditFixedRate();
+            });
+            getfixedrate({$districtlist.0.id});
+        });
+
+
+        var district;
+        function submitAddFixedRate(){
+            var regex = /^\d+(\.\d+)?$/;
+            if(!regex.test($('#addfixedrate input[name="price"]').val())){
+                 myalertdanger('价格只能输入数字');
+                return;
+            }
+            regex = /^\d+$/;
+            if(!regex.test($('#addfixedrate input[name="time"]').val())){
+                 myalertdanger('机时只能输入数字');
+                return;
+            }
+            regex = /^\d{2}:\d{2}$/;
+            if(!regex.test($('#addfixedrate input[name="start"]').val())){
+                 myalertdanger('开始时间格式错误');
+                return;
+            }
+            if(!regex.test($('#addfixedrate input[name="end"]').val())){
+                 myalertdanger('结束时间格式错误');
+                return;
+            }
+            
+            $.post("{:U('setFixedRate')}",$('#addfixedrate form').serialize() + '&oper=add',function(data){
+                if(data.status){
+                    myalertsuccess_norefresh('操作成功，请点击右侧 "更新重启网吧服务端"。');
+                    $('#addfixedrate').modal('hide');
+                    getfixedrate(district);
+                }else{
+                     myalertdanger('操作失败，请重新操作。');
+                }
+            })
+        }
+        function submitEditFixedRate(){
+            var regex = /^\d+(\.\d+)?$/;
+            if(!regex.test($('#editfixedrate input[name="price"]').val())){
+                myalertdanger('价格只能输入数字');
+                return;
+            }
+            regex = /^\d+$/;
+            if(!regex.test($('#editfixedrate input[name="time"]').val())){
+                myalertdanger('机时只能输入数字');
+                return;
+            }
+            regex = /^\d{2}:\d{2}$/;
+            if(!regex.test($('#editfixedrate input[name="start"]').val())){
+                myalertdanger('开始时间格式错误');
+                return;
+            }
+            if(!regex.test($('#editfixedrate input[name="end"]').val())){
+                myalertdanger('结束时间格式错误');
+                return;
+            }
+            $.post("{:U('setFixedRate')}",$('#editfixedrate form').serialize() + '&oper=edit',function(data){
+                if(data.status){
+                    myalertsuccess_norefresh('操作成功，请点击右侧 "更新重启网吧服务端"。');
+                    $('#editfixedrate').modal('hide');
+                    getfixedrate(district);
+                }else{
+                    myalertdanger('操作失败，请重新操作。');
+                }
+            });
+        }
+        function getfixedrate(districtid)
+        {
+
+           $('#district_ght').val(districtid);
+         
+
+            district = districtid;
+            $.get("{:U('getFixedRate')}",{district:district},function(data){
+                var html = '';
+                var item;
+                for(var index in data.fixed){
+                    item = data.fixed[index];
+					if(item.bfq==1){
+					  item.bfq='不分区'
+					}else if(item.bfq==0){
+					  item.bfq='分区'
+					}
+                    html += '<tr id="t' + item.id + '">/n<td>' + item.name + '</td><td>' + item.price + '</td><td>' + item.time + '</td><td>' + item.start + '</td><td>' + item.end + '</td><td>' + item.bfq + '</td><td><a href="javascript:editFixedRate(' + item.id + ');">修改</a> <a href="javascript:deleteFixedRate(' + item.id + ');">删除</a></td>/n</tr>';
+                }
+                if(data.free){
+                    html += '<tr><td colspan="5">自由设定定额费率</td><td><a href="javascript:deleteFreeRate();">删除</a></td></tr>';
+                }
+                $('#fixedrate-table tbody').html(html);
+                $('#district-list a').removeClass('active');
+                $('#district-'+district).addClass('active');
+            });
+        }
+        function addFixedRate()
+        {
+       
+          var districtid= $('#district_ght').val();
+    
+
+           layer.open({
+          type: 2,
+          title: '添加定额费率',
+          maxmin: true,
+          shadeClose: true, //点击遮罩关闭层
+          area : ['800px' , '500px'],
+          // content: 'addawardplay.html'
+          content: '{:U("Rate/add_fixedrate")}?district='+districtid,
+          });
+        }
+
+
+        function editFixedRate(id)
+        {
+
+          
+          var districtid= $('#district_ght').val();
+    
+           layer.open({
+          type: 2,
+          title: '修改定额费率',
+          maxmin: true,
+          shadeClose: true, //点击遮罩关闭层
+          area : ['800px' , '500px'],
+          // content: 'addawardplay.html'
+          content: '{:U("Rate/edit_fixedrate")}?district='+districtid+'&id='+id,
+          });
+        }
+
+
+
+        function addFreeRate(){
+
+
+      layer.confirm('是否要在“'+ $('#district-'+district).text() +'”添加自由费率？',{icon:3,title:'提示'},function(index){
+        $.post("{:U('addFreeRate')}",{district:district},function(data)
+         {
+                    if(data.status){
+                         myalertsuccess_norefresh('操作成功，请点击右侧 "更新重启网吧服务端"。');
+                        getfixedrate(district);
+                    }else{
+                        myalertdanger('添加自由费率失败，一个区域只能有一个自由费率！');
+                      
+                    }
+                    });
+           layer.close(index);
+        })
+
+
+
+
+        }
+
+        function deleteFixedRate(id){
+
+        layer.confirm('是否要删除“'+ $('#district-'+district).text() +'”的“'+ $('#t'+id).find('td:eq(0)').text() +'”费率？',{icon:3,title:'提示'},function(index){
+        $.post("{:U('deleteFixedRate')}",{oper:'del',district:district,id:id},function(data)
+         {
+                        if(data.status){
+                         myalertsuccess_norefresh('操作成功，请点击右侧 "更新重启网吧服务端"。');
+                         getfixedrate(district);
+                        }else{
+                          myalertdanger('删除失败,请重新操作');
+                        }
+                    });
+           layer.close(index);
+        })
+
+        }
+        function deleteFreeRate(){
+
+
+            layer.confirm('是否要删除“'+ $('#district-'+district).text() +'”的自由费率？',{icon:3,title:'提示'},function(index){
+         $.post("{:U('deleteFreeRate')}",{oper:'del',district:district},function(data)
+         {
+                        if(data.status){
+                         myalertsuccess_norefresh('操作成功，请点击右侧 "更新重启网吧服务端"。');
+                         getfixedrate(district);
+                        }else{
+                          myalertdanger('删除失败,请重新操作');
+                        }
+                    });
+           layer.close(index);
+        })
+
+        }
+            $('.datetime-picker').datetimepicker({
+                format:'hh:ii',
+                autoclose:true,
+				startView:1,
+                //todayBtn:true,
+                //todayHighlight:true,
+				minView:'hour',
+                language:'zh-CN'
+            });
+			
+
+    </script>
+</block>

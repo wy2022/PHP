@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>百果树</title>
+<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css" />
+<!--[if IE 7]>
+<link rel="stylesheet" type="text/css" href="assets/css/font-awesome-ie7.min.css" />
+<![endif]-->
+<!--[if lt IE 9]>
+<script type="text/javascript" src="js/html5shiv.min.js"></script>
+<script type="text/javascript" src="js/respond.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="js/jquery-1.11.2.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="assets/js/ace-extra.min.js"></script>
+
+    <script type="text/javascript" src="highcharts/highcharts.js"></script>
+    <link rel="stylesheet" type="text/css" href="bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <script type="text/javascript" src="bootstrap/daterangepicker/moment.min.js"></script>
+    <script type="text/javascript" src="bootstrap/daterangepicker/daterangepicker.js"></script>
+
+<link rel="stylesheet" type="text/css" href="assets/css/ace.min.css" />
+<link rel="stylesheet" type="text/css" href="assets/css/ace-skins.min.css" />
+<!--[if lt IE 9]>
+<link rel="stylesheet" type="text/css" href="assets/css/ace-ie.min.css" />
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="css/common.css" />
+<script type="text/javascript" src="assets/js/ace-elements.min.js"></script>
+<script type="text/javascript" src="assets/js/ace.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<style>
+    #search div {float:left;margin-right:50px;margin-bottom:15px;font-size: 12px;}
+    .tip{font-size:12px;line-height:28px;font-weight:blod}
+</style>
+</head>
+<body>
+<!-- header---start -->
+    <div class="navbar navbar-default" id="navbar">
+    <div class="navbar-container" id="navbar-container">
+        <div class="navbar-header pull-left">
+            <a href="/Admin/Index/index.html" class="navbar-brand" style="height:auto;">
+                <small> <i class="fa fa-tree"></i> 百果树</small>
+            </a>
+        </div>
+
+        <div class="navbar-header pull-right" role="navigation">
+            <ul class="nav ace-nav">
+                <li class="light-blue">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                        <img class="nav-user-photo" src="assets/avatars/avatar.png" />
+                        <span class="user-info" id="username"><i class="fa fa-caret-down"></i>
+                    </a>
+       <script type="text/javascript">
+		   function getusername(data){
+		      document.getElementById("username").innerHTML="<small>欢迎光临</small>"+data.username;
+		   };
+		   var s=document.createElement("script"); 
+		   s.src="/mq/getuserinfo.psp?callback=getusername";
+		   document.body.appendChild(s);
+		</script>					
+					
+                    <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                        <li><a href=""><i class="fa fa-cog"></i>修改密码</a></li>
+                        <li><a href="/mq/logout.psp"><i class="fa fa-power-off"></i>退出</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- header---end -->
+ <!--  body---start -->
+<div class="main-container" id="main-container">
+    <div class="main-container-inner">
+        <a class="menu-toggler" id="menu-toggler" href="#">
+            <span class="menu-text"></span>
+        </a>
+		
+		<!-- sidebar ---start -->
+        <div class="sidebar" id="sidebar">
+    <div class="sidebar-shortcuts" id="sidebar-shortcuts">
+      <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+           <a href="/mq/index.html" title="网站首页" class="btn btn-success" >首页</a>
+          <a href="/mq/message.html" title="用户中心" class="btn btn-info">用户</a>
+          <a href="/mq/indexCha.html" title="查账中心" class="btn btn-warning">查账</a>
+          <!-- <button class="btn btn-danger"><i class="fa fa-cogs fa-lg"></i></button>  -->
+        </div>
+    </div>
+     <ul class="nav nav-list">
+        <li id="Index"><a href="/MQ/indexCha.html"><i class="fa fa-dashboard fa-lg"></i><span class="menu-text">查账首页</span></a></li>
+        <li>
+            <a href="#" class="dropdown-toggle"><i class="fa fa-desktop fa-lg"></i><span class="menu-text">网吧管理</span><b class="arrow fa fa-angle-down fa-lg"></b></a>
+            <ul class="submenu">
+               
+                <li id="Vipcard"><a href="/MQ/vipcard.html"><i class="fa fa-angle-double-right fa-lg"></i>会员管理</a></li>
+               
+            </ul>
+        </li>
+        
+        <li>
+            <a href="#" class="dropdown-toggle"><i class="fa fa-file-text-o fa-lg"></i><span class="menu-text">账目明细</span><b class="arrow fa fa-angle-down fa-lg"></b></a>
+            <ul class="submenu">
+                <li id="shift"><a href="/MQ/shift.html"><i class="fa fa-angle-double-right"></i>交班明细</a></li>       
+                <li id="addmoney"><a href="/MQ/addmoney.html"><i class="fa fa-angle-double-right"></i>加钱明细</a></li>
+                 <li id="logs"><a href="/MQ/logs.html"><i class="fa fa-angle-double-right"></i>上机明细</a></li>  
+                 <li id="jfdh"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Change/index.html"><i class="fa fa-angle-double-right"></i>积分兑换</a></li>               
+                                
+            </ul>
+        </li>
+        <li>
+            <a href="#" class="dropdown-toggle"><i class="fa fa-pie-chart fa-lg"></i><span class="menu-text">经营分析</span><b class="arrow fa fa-angle-down fa-lg"></b></a>
+            <ul class="submenu">
+                <li id="income"><a href="/MQ/income.html"><i class="fa fa-angle-double-right fa-lg"></i>收入分析</a></li>
+                <li id="business"><a href="/MQ/business.html"><i class="fa fa-angle-double-right fa-lg"></i>经营分析</a></li>
+                <li id="vip"><a href="/MQ/vip.html"><i class="fa fa-angle-double-right fa-lg"></i>会员分析</a></li>
+                <li id="ranking"><a href="/MQ/ranking.html"><i class="fa fa-angle-double-right fa-lg"></i>消费排行</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#" class="dropdown-toggle"><i class="fa fa-credit-card fa-lg"></i><span class="menu-text">其他支付</span><b class="arrow fa fa-angle-down fa-lg"></b></a>
+            <ul class="submenu">
+                <li id="weixin"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Wx/wxpay.html"><i class="fa fa-angle-double-right fa-lg"></i>微信支付</a></li>
+                <li id="alipay"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Zfb/alipay.html"><i class="fa fa-angle-double-right fa-lg"></i>支付宝支付</a></li>
+                <li id="gzh"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Gzh/gzhpay.html"><i class="fa fa-angle-double-right fa-lg"></i>公众号支付</a></li>
+            </ul>
+        </li>
+           <li>
+            <a href="#" class="dropdown-toggle"><i class="fa fa-money fa-lg"></i><span class="menu-text">提现管理</span><b class="arrow fa fa-angle-down fa-lg"></b></a>
+            <ul class="submenu">
+                <li id="addcard"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/cash/addcard.html"><i class="fa fa-angle-double-right fa-lg"></i>添加银行卡</a></li>
+                <li id="cash"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/cash/cash.html
+"><i class="fa fa-angle-double-right fa-lg"></i>提现</a></li>
+               <li id="showtxinfo"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/cash/showtxinfo.html
+"><i class="fa fa-angle-double-right fa-lg"></i>提现明细</a></li>
+
+            </ul>
+        </li>
+         <li>
+            <a href="#" class="dropdown-toggle"><i class="fa fa-gift fa-lg"></i><span class="menu-text">商品管理</span><b class="arrow fa fa-angle-down fa-lg"></b></a>
+            <ul class="submenu">
+                <li id="set"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Goods/set.html"><i class="fa fa-angle-double-right fa-lg"></i>收银ID设置</a></li>
+                <li id="jhtj"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Goods/jhtj.html"><i class="fa fa-angle-double-right fa-lg"></i>进货统计</a></li>
+                <li id="xstj"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Goods/xstj.html"><i class="fa fa-angle-double-right fa-lg"></i>销售统计</a></li>
+                <li id="jxc"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Goods/kclog.html"><i class="fa fa-angle-double-right fa-lg"></i>商品库存</a></li>
+                <li id="jh_detail"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Goods/jhlog.html"><i class="fa fa-angle-double-right fa-lg"></i>进货日志</a></li>
+                <li id="xs_detail"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Goods/xslog.html"><i class="fa fa-angle-double-right fa-lg"></i>出货日志</a></li>
+            </ul>
+        </li>
+        <li id="log"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/admin/log.html"><i class="fa fa-cog fa-lg"></i><span class="menu-text">操作日志</span></a></li>
+    </ul>
+    <div class="sidebar-collapse" id="sidebar-collapse">
+        <i class="fa fa-angle-double-left fa-lg icon-" data-icon1="fa fa-angle-double-left fa-lg" data-icon2="fa fa-angle-double-right fa-lg"></i>
+    </div>
+    <script>
+        $('#business').addClass('active').parent().closest('li').addClass('active open');
+
+    </script>
+</div>
+
+<!-- sidebar --end -->
+
+        <div class="main-content">
+            <div class="breadcrumbs" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li><i class="fa fa-home home-icon"></i><a href="/mq/indexCha.html">查账中心</a></li>
+					<li>经营分析</li>
+                </ul>
+            </div>
+            <div class="page-content">
+                <div class="page-header">
+                   <h1>经营分析</h1>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+
+						  <!-- content---start -->
+  <div id="search" class="clearfix">
+	<form onsubmit="return checkform()">
+     <div>时间 <input type="text" class="daterange" id="daterange" style="width:300px;" value=""/></div>
+	 <div><button class="btn btn-primary btn-sm" type="button"onclick="go()">查询</button></div>
+	 </form>
+  </div>
+    <div class="tabbable">
+        <ul class="nav nav-tabs">
+		     <li class="active"><a data-toggle="tab" href="#rate" title="上座率=实际上机时间/理论总时间">上座率</a></li>
+            <li><a data-toggle="tab" href="#count" title="上机人次=客户端登录人次">上机人次</a></li>
+            <li><a data-toggle="tab" href="#time" title="上机时长=某时段内的实际上机分钟数">上机时长</a></li>
+            
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="rate">
+                <div id="rate_chart"></div>
+            </div>
+            <div class="tab-pane " id="count">
+                <div id="count_chart"></div>
+                <div class="tip">总上机人次：<span id="count_sj">0</span></div>
+                <div class="tip">总会员上机人次：<span id="count_hysj">0</span></div>
+    
+            </div>
+            <div class="tab-pane" id="time">
+                <div id="time_chart"></div>
+                <div class="tip">总上机时长：<span id="time_h">0</span>小时<span id="time_min">0</span>分钟</div>
+            </div>
+        </div>
+    </div>
+						  <!-- content---end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+		<!-- setting_box---start -->
+     <div class="ace-settings-container" id="ace-settings-container">
+    <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn"><i class="fa fa-cog bigger-150"></i></div>
+    <div class="ace-settings-box" id="ace-settings-box">
+        <div>
+            <div class="pull-left">
+                <select id="skin-colorpicker" class="hide">
+                    <option data-skin="default" value="#438EB9">#438EB9</option>
+                    <option data-skin="skin-1" value="#222A2D">#222A2D</option>
+                    <option data-skin="skin-2" value="#C6487E">#C6487E</option>
+                    <option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>
+                </select>
+            </div>
+            <span>&nbsp; 选择皮肤</span>
+        </div>
+        <div>
+            <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-navbar" />
+            <label class="lbl" for="ace-settings-navbar">固定导航条</label>
+        </div>
+        <div>
+            <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-sidebar" />
+            <label class="lbl" for="ace-settings-sidebar">固定滑动条</label>
+        </div>
+        <div>
+            <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-breadcrumbs" />
+            <label class="lbl" for="ace-settings-breadcrumbs">固定面包屑</label>
+        </div>
+        <div>
+            <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-rtl" />
+            <label class="lbl" for="ace-settings-rtl">切换到左边</label>
+        </div>
+        <div>
+            <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-add-container" />
+            <label class="lbl" for="ace-settings-add-container">
+                切换窄屏 <b></b>
+            </label>
+        </div>
+    </div>
+</div>
+   <!-- setting_box---end -->
+
+    </div>
+</div>
+<!-- body---end -->
+
+<!-- footer---start -->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="bootstrap/js/bootstrap-ie.js"></script>
+<![endif]-->
+<!-- footer---end -->
+<!-- script---start -->
+    <script>
+        var rate_chart = {
+            title:{
+                text:null
+            },
+            credits:{
+                enabled:false
+            },
+            xAxis:{
+				categories: [],
+                labels: {
+                  step:1,
+                  staggerLines: 1
+              }
+            },
+            yAxis:{
+                title:{
+                    text:'百分比(%)'
+                }
+            },
+            tooltip:{
+			    shared: true,
+				 xDateFormat: '%Y-%m-%d',
+                 valueSuffix: '%'
+            },
+      //       plotOptions:{
+			   // line:{
+			   //      dataLabels: {
+      //                   enabled: true
+      //               }
+			   //  },
+      //       },
+            legend: {
+                align:'',
+                verticalAlign: 'top'
+            },
+            series:[
+			]
+        };
+        var count_chart = {
+            title:{
+                text:null
+            },
+            credits:{
+                enabled:false
+            },
+            xAxis:{
+                categories: [],
+                labels: {
+                  step:1,
+                  staggerLines: 1
+              }
+            },
+            yAxis:{
+                title:{
+                    text:'人次'
+                }
+            },
+            tooltip:{
+                shared: true,
+				 xDateFormat: '%Y-%m-%d',
+                 valueSuffix: '人次'
+            },
+       //      plotOptions:{
+			    // line:{
+			    //     dataLabels: {
+       //                  enabled: true
+       //              }
+			    // },
+       //      },
+            legend: {
+                align:'',
+                verticalAlign: 'top'
+            },
+            series:[]
+        };
+        var time_chart = {
+            title:{
+                text:null
+            },
+            credits:{
+                enabled:false
+            },
+            xAxis:{
+                categories: [],
+                labels: {
+                  step:1,
+                  staggerLines: 1
+              }
+            },
+            yAxis:{
+                title:{
+                    text:'上机时长（分钟）'
+                }
+            },
+            tooltip:{
+                shared: true,
+				 xDateFormat: '%Y-%m-%d',
+                 valueSuffix: '分钟'
+            },
+       //      plotOptions:{
+			    // line:{
+			    //     dataLabels: {
+       //                  enabled: true
+       //              }
+			    // },
+       //      },
+            legend: {
+                align:'',
+                verticalAlign: 'top'
+            },
+            series:[]
+        };
+        
+        $(function(){
+
+            //解决窗口改变大小后tab切换，highcharts大小异常的问题
+            $('.nav-tabs>li>a').click(function(e){
+                $(this).tab('show');
+                $('#'+$(this).attr('href').substr(1)+'_chart').highcharts().reflow();
+                return false;
+            });
+            $('.daterange').daterangepicker({
+                format:'YYYY/MM/DD hh:mm:ss',
+				timePicker: true,
+				timePickerIncrement: 1,
+				timePickerSeconds:true,
+				startDate:moment().startOf('day'),  
+                endDate: moment(),
+                timePicker12Hour:false,			
+                ranges: {  
+                           '今天': [moment().startOf('day'), moment().endOf('day')],  
+                           '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+                           '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+                           '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+                           '本月': [moment().startOf('month'), moment().endOf('month')],  
+                           '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+                        },				
+                locale:{
+                    applyLabel:'确定',
+                    cancelLabel:'取消',
+                    fromLabel:'从',
+                    toLabel:'至',
+                    daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+                    monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+					customRangeLabel: '自定义',
+					firstDay : 1
+                }
+
+            },function(start,end,label){//格式化日期显示框
+			$('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+			});
+			
+			$('#daterange').val(moment().startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+
+        });
+	var r_chart,c_chart,t_chart;	
+function go()
+	 {	
+
+	  $.ajax(
+	  {
+	    url:"business.php",
+	    type:"post",
+		dataType:"text",
+		data:{daterange:$("#daterange").val()},
+		success:function(data)
+		{ 
+        var aa=data.indexOf("flower123");
+       if(aa!=(-1)){
+              window.location.href="/mq/login.html" ;
+
+       }else{
+	   var json=eval("("+data+")"); 
+       if(json.xAxis.length>47){
+        rate_chart.xAxis.labels.step=4;
+        count_chart.xAxis.labels.step=4;
+        time_chart.xAxis.labels.step=4;
+        }else if(json.xAxis.length>20){
+        rate_chart.xAxis.labels.step=2;
+        count_chart.xAxis.labels.step=2;
+        time_chart.xAxis.labels.step=2;
+
+        }
+	 var lines=json.rate.length;
+	 for(var i=0;i<lines;i++){
+	    rate_chart.series[i]=new Object();
+        rate_chart.series[i].name=json.rate[i].name;
+		rate_chart.series[i].data=json.rate[i].data;
+	 }
+	 rate_chart.xAxis.categories=json.xAxis;
+	  
+    for(var i=0;i<lines;i++){
+	    count_chart.series[i]=new Object();
+        count_chart.series[i].name=json.count[i].name;
+		count_chart.series[i].data=json.count[i].data;
+	 }
+	 count_chart.xAxis.categories=json.xAxis;
+
+    for(var i=0;i<lines;i++){
+	    time_chart.series[i]=new Object();
+        time_chart.series[i].name=json.time[i].name;
+		time_chart.series[i].data=json.time[i].data;
+	 }
+	 time_chart.xAxis.categories=json.xAxis;
+	  
+	  $("#count_sj").html(json.count_sj);
+	  $("#count_hysj").html(json.count_hysj);
+	  $("#count_womensj").html(json.count_womensj);
+	  $("#count_js").html(json.count_js);
+	  
+	  $("#time_h").html(json.time_h);
+	  $("#time_min").html(json.time_min);
+	 
+     $('#rate_chart').highcharts(rate_chart);
+     $('#count_chart').highcharts(count_chart);
+     $('#time_chart').highcharts(time_chart);
+     r_chart = $('#rate_chart').highcharts();
+     c_chart = $('#count_chart').highcharts();
+     t_chart = $('#time_chart').highcharts();
+     }
+	   },
+	 })
+	 }
+	 go(); 
+    </script>
+	<script>
+ function checkform(){
+    var daterange=$("#daterange").val();
+	if(daterange==""||daterange=="请选择日期"){
+	   alert("请选择日期");
+	   return false;
+	}
+  return true;
+ }
+    </script>
+
+<!-- script---end -->
+</body>
+</html>
+

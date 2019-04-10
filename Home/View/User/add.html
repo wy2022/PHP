@@ -1,0 +1,120 @@
+<extend name="Public/base" />
+
+<block name="content">
+<form action="" class="form-horizontal" id="user_add" method="post">
+	<div class="form-group">
+		<label class="col-sm-3 control-label">账号*</label>
+		<input type="text" class="col-sm-3" name="user_name" id="user_name" placeholder="账号" required />
+		<span class="label label-success arrowed hidden" style="margin-left:20px;"><i class="fa fa-check"></i></span>
+		<span class="label label-danger arrowed hidden" style="margin-left:20px;"></span>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label">密码*</label>
+		<input type="password" class="col-sm-3" name="password" id="password" placeholder="密码" required />
+		<span class="label label-success arrowed hidden" style="margin-left:20px;"><i class="fa fa-check"></i></span>
+		<span class="label label-danger arrowed hidden" style="margin-left:20px;"></span>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label">重复密码*</label>
+		<input type="password" class="col-sm-3" name="repassword" id="repassword" placeholder="重复密码" required />
+		<span class="label label-success arrowed hidden" style="margin-left:20px;"><i class="fa fa-check"></i></span>
+		<span class="label label-danger arrowed hidden" style="margin-left:20px;"></span>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label">真实姓名*</label>
+		<input type="text" class="col-sm-3" name="realname" placeholder="真实姓名" required />
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label">手机号</label>
+		<input type="text" class="col-sm-3" name="phone" placeholder="手机号" />
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label">Email</label>
+		<input type="email" class="col-sm-3" name="email" placeholder="Email" />
+	</div>
+	<hr />
+	<div class="form-group">
+		<label class="col-sm-3 control-label">用户角色*</label>
+		<select name="roleid" id="roleid">
+			<option value="0">--请选择--</option>
+			<volist name="role_list" id="role">
+				<option value="{$role.role_id}">{$role.role_name}</option>
+			</volist>
+		</select>
+	</div>
+	<div class="clearfix form-actions">
+		<div class="col-sm-9 col-sm-offset-3">
+			<button class="btn btn-info" type="submit"><i class="fa fa-check"></i> 提交</button>
+		</div>
+	</div>
+</form>
+</block>
+
+<block name="script">
+<script>
+$(function(){
+	$('#user_name').change(function(){
+		if($(this).val().length > 0){
+			$.get("{:U('User/chkUserName')}",{user_name:$(this).val()},function(data){
+				if(data.status){
+					$('#user_name').next().removeClass('hidden');
+					$('#user_name').next().next().addClass('hidden');
+				}else{
+					$('#user_name').next().addClass('hidden');
+					$('#user_name').next().next().removeClass('hidden');
+					$('#user_name').next().next().text(data.info);
+				}
+			})
+		}else{
+			$('#user_name').nextAll('span').addClass('hidden');
+		}
+	});
+	$('#password').change(function(){
+		if($(this).val().length > 0){
+			if($(this).val().length < 6){
+				$('#password').next().addClass('hidden');
+				$('#password').next().next().removeClass('hidden');
+				$('#password').next().next().text('密码不能小于6位');
+			}else{
+				$('#password').next().removeClass('hidden');
+				$('#password').next().next().addClass('hidden');
+			}
+		}else{
+			$('#password').nextAll('span').addClass('hidden');
+		}
+		$('#repassword').change();
+	});
+	$('#repassword').change(function(){
+		if($(this).val().length > 0){
+			if($(this).val() != $('#password').val()){
+				$('#repassword').next().addClass('hidden');
+				$('#repassword').next().next().removeClass('hidden');
+				$('#repassword').next().next().text('两次密码不一致');
+			}else{
+				$('#repassword').next().removeClass('hidden');
+				$('#repassword').next().next().addClass('hidden');
+			}
+		}else{
+			$('#repassword').nextAll('span').addClass('hidden');
+		}
+	});
+
+	
+	$('#user_add').submit(function(){
+		var isreturn = false;
+		$('.label-danger').each(function(){
+			if(!$(this).hasClass('hidden')){
+				event.preventDefault();
+				shakealert($(this));
+				isreturn = true;
+			}
+		})
+		if(isreturn)	return false;
+		if($('#roleid').val()==0){
+			alert('未选择用户角色！');
+			return false;
+		}
+	})
+})
+</script>
+</block>

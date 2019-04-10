@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>百果树</title>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/Home/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/Home/assets/css/font-awesome.min.css" />
+<!--[if IE 7]>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/Home/assets/css/font-awesome-ie7.min.css" />
+<![endif]-->
+<!--[if lt IE 9]>
+<script type="text/javascript" src="__PUBLIC__/Home/js/html5shiv.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/Home/js/respond.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="__PUBLIC__/Home/js/jquery-1.11.2.js"></script>
+<script type="text/javascript" src="__PUBLIC__/Home/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/Home/assets/js/ace-extra.min.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/Home/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+<script type="text/javascript" src="__PUBLIC__/Home/bootstrap/daterangepicker/moment.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/Home/bootstrap/daterangepicker/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/Home/assets/css/ace.min.css" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/Home/assets/css/ace-skins.min.css" />
+<!--[if lt IE 9]>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/Home/assets/css/ace-ie.min.css" />
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/Home/css/common.css" />
+<script type="text/javascript" src="__PUBLIC__/Home/assets/js/ace-elements.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/Home/assets/js/ace.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/Home/js/common.js"></script>
+<script type="text/javascript" src="http://www.wbzzsf.com/mq/getuserinfo.psp"></script>
+<style>
+#search div {
+	float: left;
+	margin-right: 50px;
+	margin-bottom: 15px;
+}
+.wordBreak {
+	word-wrap: break-word;
+	word-break: normal;
+}
+body{
+   font-size:13px;
+}
+.col-xs-2{width:13%;}
+.message-item a{color:#428bca;}
+</style>
+</head>
+<body>
+<!-- header---start -->
+<div class="navbar navbar-default" id="navbar">
+  <div class="navbar-container" id="navbar-container">
+    <div class="navbar-header pull-left"> <a href="http://www.wbzzsf.com/mq/index.html" class="navbar-brand" style="height:auto;"> <small> <i class="fa fa-tree"></i> 百果树</small> </a> </div>
+    <div class="navbar-header pull-right" role="navigation">
+      <ul class="nav ace-nav">
+        <li class="light-blue"> <a href="#" data-toggle="dropdown" class="dropdown-toggle"> <img class="nav-user-photo" src="__PUBLIC__/Home/assets/avatars/avatar.png" /> <span class="user-info" id="username"></span><i class="fa fa-caret-down"></i> 
+          <script type="text/javascript">
+                            function getusername(data){
+                                document.getElementById("username").innerHTML="<small>欢迎光临</small>"+data.username;
+                            };
+                            var s=document.createElement("script"); 
+                            s.src="http://www.wbzzsf.com/mq/getuserinfo.psp?callback=getusername";
+                            document.body.appendChild(s);
+                        </script> 
+          </a>
+          <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+            <li><a href="http://www.wbzzsf.com/mq/editpassword.html"><i class="fa fa-cog"></i>修改密码</a></li>
+            <!-- <li><a href="{:U('Public/logout')}"><i class="fa fa-power-off"></i>退出</a></li> -->
+            <li><a href="http://www.wbzzsf.com/mq/logout.psp"><i class="fa fa-power-off"></i>退出</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- header---end --> 
+<!--  body---start -->
+<div class="main-container" id="main-container">
+  <div class="main-container-inner"> <a class="menu-toggler" id="menu-toggler" href="#"> <span class="menu-text"></span> </a> 
+    
+    <!-- sidebar ---start -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-shortcuts" id="sidebar-shortcuts">
+        <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large"> <a href="http://www.wbzzsf.com/mq/index.html" title="网站首页" class="btn btn-success" >首页</a> <a href="http://www.wbzzsf.com/mq/message.html" title="用户中心" class="btn btn-info">用户</a> <a href="http://www.wbzzsf.com/mq/indexCha.html" title="查账中心" class="btn btn-warning">查账</a> 
+          <!-- <button class="btn btn-danger"><i class="fa fa-cogs fa-lg"></i></button>  --> 
+        </div>
+      </div>
+      <ul class="nav nav-list">
+        <li id="Index"><a href="http://www.wbzzsf.com/mq/indexCha.html"><i class="fa fa-dashboard fa-lg"></i><span class="menu-text">查账首页</span></a></li>
+        <li> <a href="#" class="dropdown-toggle"><i class="fa fa-desktop fa-lg"></i><span class="menu-text">网吧管理</span><b class="arrow fa fa-angle-down fa-lg"></b></a>
+          <ul class="submenu">
+            <li id="Vipcard"><a href="http://www.wbzzsf.com/mq/vipcard.html"><i class="fa fa-angle-double-right fa-lg"></i>会员管理</a></li>
+          </ul>
+        </li>
+        <li> <a href="#" class="dropdown-toggle"><i class="fa fa-file-text-o fa-lg"></i><span class="menu-text">账目明细</span><b class="arrow fa fa-angle-down fa-lg"></b></a>
+          <ul class="submenu">
+            <li id="shift"><a href="http://www.wbzzsf.com/mq/shift.html"><i class="fa fa-angle-double-right"></i>交班明细</a></li>
+            <li id="addmoney"><a href="http://www.wbzzsf.com/MQ/addmoney.html"><i class="fa fa-angle-double-right"></i>加钱明细</a></li>
+            <li id="logs"><a href="http://www.wbzzsf.com/mq/logs.html"><i class="fa fa-angle-double-right"></i>上机明细</a></li> 
+          </ul>
+        </li>
+        <li>
+            <a href="#" class="dropdown-toggle"><i class="fa fa-pie-chart fa-lg"></i><span class="menu-text">经营分析</span><b class="arrow fa fa-angle-down fa-lg"></b></a>
+            <ul class="submenu">
+                <li id="income"><a href="http://www.wbzzsf.com/mq/income.html"><i class="fa fa-angle-double-right fa-lg"></i>收入分析</a></li>
+                <li id="business"><a href="http://www.wbzzsf.com/mq/business.html"><i class="fa fa-angle-double-right fa-lg"></i>经营分析</a></li>
+                <li id="vip"><a href="http://www.wbzzsf.com/mq/vip.html"><i class="fa fa-angle-double-right fa-lg"></i>会员分析</a></li>
+                <li id="ranking"><a href="http://www.wbzzsf.com/mq/ranking.html"><i class="fa fa-angle-double-right fa-lg"></i>消费排行</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#" class="dropdown-toggle"><i class="fa fa-credit-card fa-lg"></i><span class="menu-text">其他支付</span><b class="arrow fa fa-angle-down fa-lg"></b></a>
+            <ul class="submenu">
+                <li id="weixin"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Wx/wxpay.html"><i class="fa fa-angle-double-right fa-lg"></i>微信支付</a></li>
+                <li id="alipay"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Zfb/alipay.html"><i class="fa fa-angle-double-right fa-lg"></i>支付宝支付</a></li>
+                <li id="gzh"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Gzh/gzhpay.html"><i class="fa fa-angle-double-right fa-lg"></i>公众号支付</a></li>
+            </ul>
+        </li>
+           <li>
+            <a href="#" class="dropdown-toggle"><i class="fa fa-money fa-lg"></i><span class="menu-text">提现管理</span><b class="arrow fa fa-angle-down fa-lg"></b></a>
+            <ul class="submenu">
+                <li id="addcard"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/cash/addcard.html"><i class="fa fa-angle-double-right fa-lg"></i>添加银行卡</a></li>
+                <li id="cash"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/cash/cash.html
+"><i class="fa fa-angle-double-right fa-lg"></i>提现</a></li>
+               <li id="showtxinfo"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/cash/showtxinfo.html
+"><i class="fa fa-angle-double-right fa-lg"></i>提现明细</a></li>
+
+            </ul>
+        </li>
+         <li>
+            <a href="#" class="dropdown-toggle"><i class="fa fa-gift fa-lg"></i><span class="menu-text">商品管理</span><b class="arrow fa fa-angle-down fa-lg"></b></a>
+            <ul class="submenu">
+                <li id="goods_detail"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Goods/kclog.html"><i class="fa fa-angle-double-right fa-lg"></i>库存日志</a></li>
+                <li id="jh_detail"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Goods/jhlog.html"><i class="fa fa-angle-double-right fa-lg"></i>进货日志</a></li>
+                <li id="xs_detail"><a href="http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Goods/xslog.html"><i class="fa fa-angle-double-right fa-lg"></i>出货日志</a></li>
+            </ul>
+        </li>
+      </ul>
+      <div class="sidebar-collapse" id="sidebar-collapse"> <i class="fa fa-angle-double-left fa-lg icon-" data-icon1="fa fa-angle-double-left fa-lg" data-icon2="fa fa-angle-double-right fa-lg"></i> </div>
+
+      <script>
+        $('#goods_detail').addClass('active').parent().closest('li').addClass('active open');
+    </script> 
+    </div>
+    
+    <!-- sidebar --end -->
+    
+    <div class="main-content">
+      <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+          <li><i class="fa fa-home home-icon"></i><a href="http://www.wbzzsf.com/mq/indexCha.html">查账中心</a></li>
+          <li>库存日志</li>
+        </ul>
+      </div>
+      <div class="page-content">
+        <div class="page-header">
+          <h1>库存日志</h1>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="alert alert-warning bolder">总收入金额<span class="orange" id="dai_tx_je">0.00</span> 元&nbsp;&nbsp;&nbsp;已提现金额 <span class="orange" id="yi_tx_je">0.00</span>元 </div>
+            <!-- content---start -->
+            <div id="search" class="clearfix">
+              <form method="post" id="form_showtxifo"  onsubmit="return checkform()">
+                <input type="hidden" name="SessionSave" value="showtxinfo">
+                <div>时间
+                  <input type="text" name="daterange" id="daterange" class="daterange" style="width:300px;"  placeholder="请选择日期" required/>
+                </div>
+                <div>卡号
+                    <input type="text" name="bankcardno" id="bankcardno" style="width:150px;"/>
+                </div>
+                <div>支付状态
+                  <select id="tx_status" name="tx_status">
+                    <option value="">所有类型</option>
+                    <option value="2">待处理</option>
+                    <option value="1">已提现</option>
+                  </select>
+                </div>
+
+				<input type="hidden" id="hiddenNowPage" name="hiddenNowPage" value=""/>
+                <div>
+                  <button class="btn btn-primary btn-sm" id="btnAjaxSubmit" onclick="show()" type="button">查询</button>
+                </div>
+              </form>
+			  
+              <script type="text/javascript">
+    function getCondition(data)
+    {   if($.isEmptyObject(data)){
+        return false;
+    }else{
+        document.getElementById("daterange").value=data.daterange;
+    }
+       
+    }
+      var s=document.createElement("script"); 
+      s.src="http://www.wbzzsf.com/mq/SessionDB.psp?callback=getCondition&varName=alipay";
+      document.body.appendChild(s);
+ 
+     </script> 
+            </div>
+            
+            <!-- PAGE CONTENT BEGINS -->
+
+
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="tabbable">
+                  <div class="tab-content no-border no-padding">
+                    <div class="tab-pane in active">
+                      <div class="message-container">
+                        <div id="id-message-list-navbar" class="message-navbar ">
+                          <div  style="min-height:28px;">
+                            <div class="row">
+                           <!--    <div class="col-xs-1">日期</div> -->
+                              <div class="col-xs-2">商品名称</div>                           
+                              <div class="col-xs-2">初始数量</div>
+                              <div class="col-xs-2">总进货数量</div>
+                              <div class="col-xs-2">总出货数量</div>
+                              <div class="col-xs-2">商品规格</div>
+                              <div class="col-xs-2">商品单位</div>
+                         
+                              <!-- <div class="col-xs-1">原金额</div> -->
+                              
+                              <!-- <div class="col-xs-1">银行卡号</div> -->
+                              <!-- <div class="col-xs-2">完成时间</div> -->
+                             <!--  <div class="col-xs-1">提现状态</div>   -->
+                            <!--   <div class="col-xs-1">操作</div>   -->                       
+                            </div>
+                          </div>
+                        </div>
+                        <div class="message-list-container">
+                          <div class="message-list" id="message-list"> 
+                            
+<!--                             <div class="message-item">
+																
+									<div class="row wordBreak">
+										          <div class="col-xs-1">申请网吧</div>
+                              <div class="col-xs-1">申请人</div>
+                              <div class="col-xs-2">申请时间</div>
+                              <div class="col-xs-1">申请金额</div>
+                              <div class="col-xs-1">原金额</div>
+                              <div class="col-xs-1">电话</div>
+                              <div class="col-xs-1">开户行</div>
+                              <div class="col-xs-1">银行卡号</div>
+                              <div class="col-xs-1">完成时间</div>
+                              <div class="col-xs-1">提现状态</div>
+                              <div class="col-xs-1"><a href="#">操作</a></div>
+									</div>
+									</div>  -->
+                          </div>
+                        </div>
+                        <!-- /.message-list-container -->
+                        
+                        <div class=" message-footer message-footer-style2 clearfix">
+                          <div class="text-center">
+                            <div class="inline middle"> 第<span id="nowPage"></span>页&nbsp;&nbsp;共<span id="total"></span>页 </div>
+                            &nbsp; &nbsp;
+                            <ul class="pagination middle">
+                              <li> <a href="javascript:void(0)" onclick="prev()" id="leftBtn"> <i class="fa fa-angle-left bigger-150"></i> </a> </li>
+                              <li> <a href="javascript:void(0)" onclick="next()" id="rightBtn"> <i class="fa fa-angle-right bigger-150"></i> </a> </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- /.message-container --> 
+                    </div>
+                    <!-- /.tab-pane --> 
+                  </div>
+                  <!-- /.tab-content --> 
+                </div>
+                <!-- /.tabbable --> 
+              </div>
+              <!-- /.col --> 
+            </div>
+            <!-- /.row --> 
+            
+            <!-- PAGE CONTENT ENDS --> 
+            
+          </div>
+          <!-- content---end --> 
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- setting_box---start -->
+  <div class="ace-settings-container" id="ace-settings-container">
+    <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn"><i class="fa fa-cog bigger-150"></i></div>
+    <div class="ace-settings-box" id="ace-settings-box">
+      <div>
+        <div class="pull-left">
+          <select id="skin-colorpicker" class="hide">
+            <option data-skin="default" value="#438EB9">#438EB9</option>
+            <option data-skin="skin-1" value="#222A2D">#222A2D</option>
+            <option data-skin="skin-2" value="#C6487E">#C6487E</option>
+            <option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>
+          </select>
+        </div>
+        <span>&nbsp; 选择皮肤</span> </div>
+      <div>
+        <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-navbar" />
+        <label class="lbl" for="ace-settings-navbar">固定导航条</label>
+      </div>
+      <div>
+        <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-sidebar" />
+        <label class="lbl" for="ace-settings-sidebar">固定滑动条</label>
+      </div>
+      <div>
+        <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-breadcrumbs" />
+        <label class="lbl" for="ace-settings-breadcrumbs">固定面包屑</label>
+      </div>
+      <div>
+        <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-rtl" />
+        <label class="lbl" for="ace-settings-rtl">切换到左边</label>
+      </div>
+      <div>
+        <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-add-container" />
+        <label class="lbl" for="ace-settings-add-container"> 切换窄屏 <b></b> </label>
+      </div>
+    </div>
+  </div>
+  <!-- setting_box---end --> 
+  
+</div>
+</div>
+<!-- body---end --> 
+
+<!-- footer---start --> 
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="bootstrap/js/bootstrap-ie.js"></script>
+<![endif]--> 
+<!-- footer---end --> 
+<!-- script---start --> 
+<script>
+
+            $('#daterange').val(moment().startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));        
+            $('.daterange').daterangepicker({
+                format:'YYYY/MM/DD hh:mm:ss',
+                timePicker: true,
+                timePickerIncrement: 1,
+                timePickerSeconds:true,
+                startDate:moment().startOf('day'),  
+                endDate: moment(),
+                timePicker12Hour:false,         
+                ranges: {  
+                           '今天': [moment().startOf('day'), moment().endOf('day')],  
+                           '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+                           '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+                           '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+                           '本月': [moment().startOf('month'), moment().endOf('month')],  
+                           '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+                        },              
+                locale:{
+                    applyLabel:'确定',
+                    cancelLabel:'取消',
+                    fromLabel:'从',
+                    toLabel:'至',
+                    daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+                    monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+                    customRangeLabel: '自定义',
+                    firstDay : 1
+                }
+
+  
+            },function(start,end,label){
+            $('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+            });
+
+
+    </script> 
+<script>
+ function checkform(){
+    var daterange=$("#daterange").val();
+	if(daterange==""||daterange=="请选择日期"){
+	   alert("请选择日期");
+	   return false;
+	}
+  return true;
+ }
+
+
+</script> 
+<script>
+
+  function show()
+  {
+  var param = $("#form_showtxifo").serialize();
+  $.ajax({
+    url:'{:U("getjxcinfo")}',
+  type:"post",
+  dataType:"json",
+  data:param,
+  success:function(data){                              
+    function showList(data){
+         var text='';
+         var s_status='';
+
+        for(var i=0;i<data.rows.length;i++)
+        {
+          
+          // var  tx_status=data['rows'][i]['tx_status'];    
+          // if(tx_status==1)
+          // {
+          //     s_status="已提现";
+          // }
+          // else if(tx_status==0)
+          // {
+          //    s_status="待处理";
+          // }  
+
+
+            // <div class="col-xs-2">商品名称</div>                           
+            //                   <div class="col-xs-2">初始数量</div>
+            //                   <div class="col-xs-2">总进货数量</div>
+            //                   <div class="col-xs-2">总出货数量</div>
+            //                   <div class="col-xs-2">商品规格</div>
+            //                   <div class="col-xs-2">商品单位</div>
+
+          text+="<div class=\"message-item\">";
+          text+="<div class=\"row wordBreak\" id=\"showlist\">";
+          text+="<div class=\"col-xs-2\">"+data['rows'][i]['goodsname']+"</div>";
+          text+="<div class=\"col-xs-2\">"+data['rows'][i]['cssl']+"</div>";
+          text+="<div class=\"col-xs-2\">"+data['rows'][i]['jhsl']+"</div>";
+          text+="<div class=\"col-xs-2\">"+data['rows'][i]['xssl']+"</div>";
+          text+="<div class=\"col-xs-2\">"+data['rows'][i]['unit']+"</div>";
+          text+="<div class=\"col-xs-2\">"+data['rows'][i]['guige']+"</div>";  
+          // text+="<div class=\"col-xs-1\">"+s_status+"</div>";
+          
+          // text+="<div class=\"col-xs-1\"><a href="{:U('Admin/edit',array('id'=>0))}"></a></div>";
+        // U('Blog/cate','cate_id=1&status=1')
+          
+         // text+="<div class=\"col-xs-1\"><a href=\"{:U('Admin/edit',array('id'=>0))}\">操作</a></div>";
+         // text+="<div class=\"col-xs-1\"><a href=\"{:U('Admin/edit',array('id'=>0))}\">操作</a></div>";
+        //  text+="<div class=\"col-xs-1\"><a href=\"http://www.wbzzsf.com:81/www_ght/bgtree/web/index.php/Home/Admin/edit.html?id="+data['rows'][i]['id']+"\">操作</a></div>";
+          
+          text+="</div>";
+          text+="</div>";
+          }
+        $("#message-list").empty().append(text);
+        }
+    showList(data);
+    
+    $("#nowPage").html(data['nowPage']);
+    $("#total").html(data['total']);
+    $("#hiddenNowPage").val(data['nowPage']);
+    $("#dai_tx_je").html(data['dai_tx_je']);
+    $("#yi_tx_je").html(data['yi_tx_je']);
+    // $("#dai_tx_je").html(10);
+    // $("#yi_tx_je").html(formatfloat2(data['yi_tx_je'],2));
+    // $("#sumtx").html(formatfloat2(data['sumtx']),2);
+  }
+  }) 
+  
+  }
+
+
+
+function prev(){
+           var goPage=parseInt($("#hiddenNowPage").val())-1;
+           $("#hiddenNowPage").val(goPage);
+      show();
+}
+
+function next(){
+           var goPage=parseInt($("#hiddenNowPage").val())+1;
+           $("#hiddenNowPage").val(goPage);
+       show();
+}
+</script>
+<script>
+$(document).ready(function(){ $('#btnAjaxSubmit').trigger('click'); });
+</script>
+<!-- script---end -->
+</body>
+</html>

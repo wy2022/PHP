@@ -1,0 +1,127 @@
+<extend name="Public/base" />
+<block name="head">
+<js href="__PUBLIC__/layer/layer.js" />
+<js href="__PUBLIC__/layer/myalert.js" />
+<css href="__PUBLIC__/layer/myalert.css"/>
+</block>
+<block name="content">
+<form action="" class="form-horizontal" id="user_edit" method="post">
+<!-- 	<div class="form-group">
+		<label class="col-sm-3 control-label">网吧账号*</label>
+		<input type="text" class="col-sm-3" name="user_name" value="{$user.WbAccount}" placeholder="登录帐号" readonly="readonly" required />
+		<span class="label label-warning" style="margin-left:10px;"></span>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label">网吧名称*</label>
+		<input type="text" class="col-sm-3" placeholder="真实姓名" name="realname" id="realname" value="{$wbinfo.WbName}" readonly="readonly"  required />
+	</div> -->
+	<div class="form-group">
+		<label class="col-sm-3 control-label">网吧地址</label>
+		<input type="text" class="col-sm-3" placeholder="网吧地址" name="address" id="address" value="{$wbinfo.addr}"   />
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label">负责人姓名</label>
+		<input type="text" class="col-sm-3" placeholder="负责人姓名" name="WBManager" id="WBManager" value="{$wbinfo.WBManager}" />
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label">负责人电话</label>
+		<input type="text" class="col-sm-3" placeholder="手机号码" name="WBTel" id="WBTel" value="{$wbinfo.WBTel}"   />
+	</div>
+
+<!-- 	<div class="form-group">
+		<label class="col-sm-3 control-label">机器台数</label>
+		<input type="text" class="col-sm-3" placeholder="手机号码" name="CpCount" value="{$wbinfo.CpCount}" readonly="readonly"  />
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label">最后登录时间</label>
+		<input type="text" class="col-sm-3" placeholder="最后登录时间" name="LastDateTime" value="{$wbinfo.LastDateTime}" readonly="readonly"  />
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label">到期时间</label>
+		<input type="text" class="col-sm-3" placeholder="到期时间" name="EndTime" value="{$wbinfo.EndTime}" readonly="readonly"  />
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label">版本</label>
+		<input type="text" class="col-sm-3" placeholder="版本" name="VerNo" value="{$wbinfo.VerNo}" readonly="readonly"  />
+	</div> -->
+
+
+
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label">邮箱</label>
+		<input type="text" class="col-sm-3" placeholder="邮箱" name="EMail" value="{$wbinfo.EMail}" />
+	</div>
+
+
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label">身份证号</label>
+		<input type="text" class="col-sm-3" placeholder="身份证号" name="Card" id="Card" value="{$wbinfo.Card}" />
+	</div>
+
+
+
+
+
+	<hr />
+<!-- 	<div class="form-group">
+		<label class="col-sm-3 control-label">用户角色*</label>
+		<select name="role_id">
+			<volist name="role_list" id="role">
+				<eq name="role.role_id" value="$user.role_id">
+					<option value="{$role.role_id}" selected="selected">{$role.role_name}</option>
+				<else />
+					<option value="{$role.role_id}">{$role.role_name}</option>
+				</eq>
+			</volist>
+		</select> 请为该用户分配一个与登录权限匹配的系统角色
+	</div> -->
+	<div class="clearfix form-actions">
+		<div class="col-md-9 col-md-offset-3">
+			<button class="btn btn-info" type="submit">
+				<i class="fa fa-check"></i>提交
+			</button>
+		</div>
+	</div>
+</form>
+</block>
+<block name="script">
+<script>
+var mobile = /^(13[0-9]{9})|(18[0-9]{9})|(14[0-9]{9})|(17[0-9]{9})|(15[0-9]{9})$/;
+$('#user_edit').submit(function(event){
+if($('#address').val() == ''){
+	 myalertdanger('网吧地址不能为空');
+	 $('#address').focus();
+	return false;
+}
+if($('#WBManager').val() == ''){
+	 myalertdanger('负责人姓名不能为空');
+	 $('#WBManager').focus();
+	return false;
+}
+var WBTel=$('#WBTel').val();
+if(WBTel == ''){
+	 myalertdanger('负责人电话不能为空');
+	 $('#WBTel').focus();
+	return false;
+}else if(!(WBTel.length==11&&mobile.test(WBTel))){
+     myalertdanger('手机号码格式输入错误');
+	 $('#WBTel').focus();
+	 return false;
+}
+
+if($('#Card').val() == ''){
+     $('#Card').focus();
+	 myalertdanger('身份证号不能为空');
+	return false;
+}
+
+})
+
+
+</script>
+</block>

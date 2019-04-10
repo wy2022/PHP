@@ -1,0 +1,355 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+	<js href="__PUBLIC__/layer/layer.js" />
+
+
+
+
+
+
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+
+
+  #td_detail tr td {
+      width: auto;
+      font-size: 14px;
+      padding: 10px 30px 20px 0px;
+  }
+
+
+
+	</style>
+</block>
+
+<block name="content">
+      <h3 style="font-size:18px;font-weight:bold;">本班详情（上班留下押金：{$keepje}元）<a href="#">返回>></a></h3>
+      <div id="jqgrid0">
+        <table id="grid-table0"></table>
+       <div id="grid-pager0"></div>
+      </div> 
+      <div style="color:#666;padding:10px 0;">
+      <p>实交=会员卡开卡加钱收入+商品销售现金收入+其它收入支出+欠账金额+还账金额+上班留下金额-商品进货支出-本班留下金额</p>
+      <p>应交=会员卡开卡加钱收入+商品销售现金收入+其它收入支出+欠账金额+还账金额+上班留下金额-商品进货支出</p>
+      </div>
+
+      <input type="hidden" id="wbid" name="wbid" value="{$wbid}"/>
+      <input type="hidden" id="zjNo" name="zjNo" value="{$zjNo}"/>
+
+
+
+
+
+        <div class="tabbable">
+            <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4" style="font-size:12px;">
+              <li class="active">
+                <a data-toggle="tab" href="#hykjq" >会员加钱明细</a>
+              </li>
+
+              <li>
+                <a data-toggle="tab" href="#lskjq"  >临时卡加钱明细</a>
+              </li>
+
+              
+              <li>
+                  <a data-toggle="tab" href="#lskzl">临时卡找零明细明细</a>
+              </li>
+         
+              <li>
+                  <a data-toggle="tab" href="#jfdh">积分兑换明细</a>
+              </li>
+ 
+            </ul>
+
+            <div class="tab-content" >
+              <div id="hykjq" class="tab-pane in active">
+                <div id="jqgrid">
+                    <table id="grid-table"></table>
+                     <div id="grid-pager"></div>
+                    </div> 
+                </div>
+
+                <div id="lskjq" class="tab-pane">
+                 <div id="jqgrid1">
+                    <table id="grid-table1"></table>
+                    <div id="grid-pager1"></div>
+                  </div>                
+               </div>
+
+              
+<!--               <div id="Sp" class="tab-pane">
+                <div id="jqgrid3">
+                  <table id="grid-table3"></table>
+                  <div id="grid-pager3"></div>
+                </div>
+             </div>  -->
+ <!--             <div id="sj" class="tab-pane">
+                <div id="jqgrid2">
+                    <table id="grid-table2"></table>
+                    <div id="grid-pager2"></div>
+                </div> 
+              </div>   -->
+            <div id="lskzl" class="tab-pane">
+                <div id="jqgrid2">
+                  <table id="grid-table2"></table>
+                  <div id="grid-pager2"></div>
+                </div>
+             </div>  
+             <div id="jfdh" class="tab-pane">
+                <div id="jqgrid3">
+                  <table id="grid-table3"></table>
+                  <div id="grid-pager3"></div>
+                </div>
+             </div>  
+          </div>  
+    </div>
+
+
+</block>
+
+
+
+
+<block name="script">
+
+
+
+ <script>
+ // 单条会员交班明细开始
+        $(function(){
+            $('#grid-table0').jqGrid({
+                url:'{:U("getoneshiftlist")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colModel:[
+                    {label:'收银端',name:'SyId',width:70,},
+                    {label:'交班人',name:'cName',width:80},
+                    // {label:'接班时间',name:'BeginTime',width:220},
+                    {label:'交班时间',name:'cTime',width:220},
+
+                    {label:'接班时间-时间戳',name:'BeginTime_shijianchuo',hidden:true},
+                    {label:'交班时间-时间戳',name:'cTime_shijianchuo',hidden:true},
+
+                    // {label:'接班人',name:'nName',width:80},
+                    {label:'实交金额',name:'inje',width:80},
+                    {label:'留给下班',name:'keepje',width:80},
+                    {label:'应交金额',name:'YjJe',width:80},
+                    {label:'临时卡收入',name:'TemCardJe',width:80},
+                    {label:'会员收入',name:'Hyje',width:80},
+                    {label:'商品收入',name:'Spje',width:80},
+                    <!-- {label:'临时卡押金',name:'TempYj',width:80}, -->
+                    {label:'备注',name:'bz',width:80},
+                ],
+                styleUI : 'Bootstrap',
+                rowNum:1,
+                viewrecords: false,
+
+            });
+            $('#grid-table0').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+         $(window).resize(function(){
+                $('#grid-table0').jqGrid('setGridWidth', $(window).width()*0.8, true);
+          });
+        });
+// 单条会员交班明细结束
+// 会员加钱明细开始
+
+               $(function(){
+            $('#grid-table').jqGrid({
+                url: '{:U("getshiftlist_hyaddmoney_detail")}',
+                datatype: "json",
+                mtype: "get",
+                height:"100%",
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[ 
+                     {label:'收银端',name:'SyId'},
+                     {label:'卡号',name:'cardNo'},
+                     {label:'会员等级',name:'hylevel'},
+                     {label:'姓名',name:'hyname'},
+                     {label:'充值金额',name:'je'}, 
+                     {label:'奖励金额',name:'jlJe'}, 
+                     {label:'分期金额',name:'fqje'}, 
+                     {label:'分期期数',name:'FqCount'},
+                     {label:'日期',name:'cTime'},
+                     {label:'收银员',name:'Operation'}
+                 ],     
+                 styleUI : 'Bootstrap',
+                rowNum:20,
+                viewrecords: true,
+                pager:'#grid-pager',
+                loadError:function(xhr,status,error)
+                {  
+                      }, 
+            });
+              $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+        $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $(window).width()*0.8, true);
+            }); 
+       });
+	   
+	   
+
+// 会员加钱明细结束
+
+
+// 临时卡加钱明细开始
+       $(function(){
+            $('#grid-table1').jqGrid({
+                url: '{:U("getshiftlist_lskaddmoney_detail")}',
+                datatype: "json",
+                mtype: "GET",
+                height:"100%",
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[
+                    {label:'收银端',name:'SyId',width:200},
+                    {label:'卡号',name:'cardNo',width:200},
+                    {label:'金额',name:'je',width:200},
+                    {label:'日期',name:'cTime',width:200},
+                    {label:'收银员',name:'Operation',width:200}
+                ],
+                styleUI : 'Bootstrap',
+                rowNum:20,
+                viewrecords: true,
+                pager:'#grid-pager1',
+                loadError:function(xhr,status,error){  
+                      }, 
+        
+            });
+      
+       $('#grid-table1').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+         $(window).resize(function(){
+                $('#grid-table1').jqGrid('setGridWidth', $(window).width()*0.8, true);
+          });
+       
+  });  
+
+  // 临时卡找零明细     
+ 
+        $(function(){
+            $('#grid-table2').jqGrid({
+                url: '{:U("getshiftlist_lskzhaoling_detail")}',
+                datatype: "json",
+                mtype: "GET",
+                height:"100%",
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[
+                    {label:'收银端',name:'SyId',width:200},
+                    {label:'卡号',name:'cardNo',width:200},
+                    {label:'金额',name:'je',width:200},
+                    {label:'日期',name:'cTime',width:200},
+                    {label:'收银员',name:'Operation',width:200}
+                ],
+                styleUI : 'Bootstrap',
+                rowNum:20,
+                viewrecords: true,
+                pager:'#grid-pager2',
+                loadError:function(xhr,status,error){  
+                        }, 
+            });
+       $('#grid-table2').jqGrid('setGridWidth',$('#jqgrid').width(), true);
+         $(window).resize(function(){
+                $('#grid-table2').jqGrid('setGridWidth', $(window).width()*0.8, true);
+          });
+
+        });
+
+		
+  $(function(){
+            $('#grid-table3').jqGrid({
+                url:'{:U("getshiftSpChangeinfo")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                 colModel:[
+                     {label:'收银端',name:'syid',width:70},
+                    {label:'网吧id',name:'wbid',hidden:true},
+                    {label:'会员卡号',name:'HyCardNo',width:120,},
+                    {label:'兑换积分',name:'Integral',width:70},
+                    {label:'兑换类型',name:'Lx',width:70},
+                    {label:'兑换网费',name:'Je',width:70,hidden:true},
+                    {label:'兑换物品',name:'sp',width:70},
+                    {label:'兑换商品',name:'SpName',hidden:true},
+                    {label:'兑换商品数量',name:'SpSl',hidden:true},
+                   
+                    {label:'操作人',name:'Operate',width:70},
+                    {label:'时间',name:'cTime',width:120},
+                ],
+                rowNum:20,
+                viewrecords: true,
+                sortorder: "desc",
+                pager:'#grid-pager3',
+
+
+                gridComplete: function()
+                {
+                    var ids = $("#grid-table3").jqGrid('getDataIDs');
+                    var aa;
+                    for(var i=0;i < ids.length;i++)
+                    {
+
+                      var getRow = $('#grid-table3').getRowData(ids[i]);//获取当前的数据行  
+                      var Lx = getRow.Lx;
+                      var SpName=getRow.SpName;
+                      var SpSl=getRow.SpSl;
+                      var Je=getRow.Je
+                      var sp='';
+                      if(!(SpName=='')){
+
+                           sp='<span style="padding-right:20px;">'+SpName+'</span>数量：'+SpSl;
+                      }
+                      sp+=Je;
+           
+                     if(Lx=='0')
+                      {
+                        aa='<span class="label label-sm label-primary arrowed-in">网费</span>';          
+                      }
+                      else if(Lx=='1')
+                      {
+                        aa='<span class="label label-sm label-pink arrowed-in">商品</span>';
+                      }
+                          
+                      $("#grid-table3").jqGrid('setRowData',ids[i],{Lx:aa});  
+                      $("#grid-table3").jqGrid('setRowData',ids[i],{sp:sp});        
+                       
+
+                    }
+
+                }
+            }).jqGrid('navGrid','#grid-pager3',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+            $('#grid-table3').jqGrid('setGridWidth',$('#jqgrid').width(), true);
+         $(window).resize(function(){
+                $('#grid-table3').jqGrid('setGridWidth', $(window).width()*0.8, true);
+          });
+        });
+ 
+    </script>
+
+
+</block>

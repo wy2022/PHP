@@ -1,0 +1,479 @@
+
+<block name="head">
+<include file="Public/head" />
+  <css href="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.min.css" />
+  <js href="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.min.js" />
+  <js href="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.zh-CN.js" /> 
+  <js href="__PUBLIC__/layer/layer.js" />
+  <js href="__PUBLIC__/layer/myalert.js" />
+  <css href="__PUBLIC__/layer/myalert.css"/>
+   <style>
+      body{background:#fff;}
+   </style>
+
+</block>
+
+<block name="content">
+                <form class="form-horizontal" id="editaward">
+                    <div class="modal-body">
+
+                        <input class="hidden" type="text" name="district" id="district" value="{$district}" />
+                        <input class="hidden" type="text" id="hytype_ght" value="{$oneFixedRateInfo.OwnerHyLxGuid}"/>
+                        <input class="hidden" type="text" name="bianhao"  id="bianhao" value="{$bianhao}"/>
+
+                            <!-- <div class="form-group">
+                                <label class="control-label col-sm-5">名称：</label>
+                                <input type="text" class="col-sm-4" name="name" required/><label class="control-label"></label>
+                            </div> -->
+               <div class="form-group">
+                            <label class="control-label col-sm-4">会员卡类型：</label>
+                <div class="col-sm-7"style="padding-left:0px;">
+                     <volist name="viptypelist" id="viplevel">
+                       <label style="padding-right:10px;padding-top:4px;"><input type="checkbox" name="viplevel" id="viplevel_yz" value="{$viplevel.id}"/> {$viplevel.Name}</label>
+                      </volist>
+                
+                </div>
+                           
+                        </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">价格设置：</label>
+                                <input type="text" class="col-sm-4" name="price" id="price" onkeyup="priceValidate('price','价钱设置不能为空','价钱输入格式有误')" value="{$oneFixedRateInfo.je}" required/><label class="control-label">&nbsp;元</label>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">开始时间：</label>
+                                <input type="text" class="col-sm-4 datetime-picker" name="start" id="start" value="{$oneFixedRateInfo.BeginTime}" required/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">结束时间：</label>
+                                <input type="text" class="col-sm-4 datetime-picker" name="end" id="end" value="{$oneFixedRateInfo.EndTime}" required/>
+                            </div>
+              <div class="form-group">
+                                <label class="control-label col-sm-4">机时：</label>
+                                <input type="number" class="col-sm-4" name="time" value="{$oneFixedRateInfo.TimeSize}" required/><label class="control-label">&nbsp;分钟</label>
+                            </div>
+              <div class="form-group">
+                <div class="col-sm-offset-4">
+                <input type="checkbox" name="bfq" id="bfq" <if condition="$oneFixedRateInfo.Lx eq 1"> checked="checked" </if> />
+                <label id="label_bfq">不分区包时<span style="color:#999;">（即所有区域都可以登录）</span></label>
+               </div>
+               </div>
+               <div class="form-group">
+                <div class="col-sm-offset-4">
+                  <input type="checkbox" name="autogotobs" id="autogotobs" <if condition="$oneFixedRateInfo.AutoChange eq 1"> checked="checked" </if>/>
+                <label id="label_autogotobs">允许自动进入包时<span style="color:#999;">(定点包时可用)</span></label>
+               </div>
+               </div>
+  <!--              <div class="form-group">
+                <div class="col-sm-offset-5">
+                <input type="checkbox" name="hybs" />
+                <label>允许会员卡自动进入包时</label>
+               </div>
+               </div> -->
+                    </div>
+					
+					<div class="col-sm-offset-1"  style="color:red;font-size:14px;" >
+
+							   说明：如果设置固定时段，00:00 请设置为 00:01 或者 23:59
+					 </div>
+                    <div class="modal-footer" style="text-align:center;">
+                        <button type="button" onclick="submitEditAward();" class="btn btn-primary">修改</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="exit()">取消</button>
+                    </div>
+                </form>
+           
+   
+
+ 
+
+</block>
+
+<block name="script">
+
+
+
+
+
+<script type="text/javascript">
+
+     $("#editaward input[name='bfq']").click(function(){
+	     if($("#editaward input[name='autogotobs']").prop("checked")){
+		
+		 layer.tips('不分区进入包时和自动进入包时不能同时选中', '#label_bfq');
+		   return false;
+		 }
+	 })
+	 
+     $("#editaward input[name='autogotobs']").click(function(){
+	     if($("#editaward input[name='bfq']").prop("checked")){
+		
+		layer.tips('不分区进入包时和自动进入包时不能同时选中', '#label_autogotobs');
+		   return false;
+		 }
+	 })
+	 
+          $('.datetime-picker').datetimepicker({
+                format:'hh:ii',
+                autoclose:true,
+                startView:1,
+                //todayBtn:true,
+                //todayHighlight:true,
+                minView:'hour',
+                language:'zh-CN'
+            });
+
+
+
+        
+         var s = $('#hytype_ght').val(); 
+        
+         var flavors,flavors1,flavors2;
+
+
+
+         flavors = s.split(",");
+        for(var i=0;i<flavors.length-1;i++)
+        { 
+         if(flavors[i]!=''){		
+          $("#editaward input[name='viplevel'][value="+flavors[i]+"]").prop("checked", true);        }                                                   
+        }    
+
+    $('#editaward input[name="end"]').change(function(){
+	if($('#editaward input[name="end"]').val()!==''){
+		 if($('#editaward input[name="start"]').val()!==''){
+		   autobaoshi();
+		   timelength();
+		 }else{
+			return false;
+		 }
+	 }else{
+	     $('#editaward input[name="time"]').val("");
+	 }
+    });
+	$('#editaward input[name="start"]').change(function(){
+	if($('#editaward input[name="start"]').val()!==''){
+		 if($('#editaward input[name="end"]').val()!==''){
+		   autobaoshi();
+		   timelength();
+		 }else{
+		   return false;
+		 }
+	 }else{
+	     $('#editaward input[name="time"]').val("");
+	 }
+    });
+	function timelength(){
+	   var start_val=$('#editaward input[name="start"]').val();
+       var end_val=$('#editaward input[name="end"]').val();
+       var start_array=start_val.split(':');
+	   var end_array=end_val.split(':');
+	   var start_array0=start_array[0].split("");
+	   var end_array0=end_array[0].split("");
+	   if(start_array0[0]==0){
+	      var start_h=Number(start_array0[1]);
+	   }else{
+	      var start_h=Number(start_array[0]);
+	   }
+
+	   if(end_array0[0]==0){
+	      var end_h=Number(end_array0[1]);
+	   }else{
+	      var end_h=Number(end_array[0]);
+	   }
+
+	   if(start_h<end_h){
+	        start_m=start_h*60+Number(start_array[1]);
+			end_m=end_h*60+Number(end_array[1]);
+			time=end_m-start_m;
+	   }else if(start_h>end_h){
+	      start_m=start_h*60+Number(start_array[1]);
+		  end_m=(24+end_h)*60+Number(end_array[1]);
+		  time=end_m-start_m;
+		
+	   }else if(start_h==end_h){
+	      if(Number(start_array[1])<=Number(end_array[1])){
+		    time=Number(end_array[1])-Number(start_array[1]);
+
+		  }else if(Number(start_array[1])>Number(end_array[1])){
+		     time=24*60-(Number(start_array[1])-Number(end_array[1]));
+		  }
+	   }
+
+	    $('#editaward input[name="time"]').val(time);
+	
+	}
+autobaoshi()
+function autobaoshi(){
+    var start=$('#editaward input[name="start"]').val();
+	var end=$('#editaward input[name="end"]').val();
+	if(start==end){
+	    $("#editaward input[name='autogotobs']").prop("disabled", true);  	
+	}else{
+	    $("#editaward input[name='autogotobs']").prop("disabled", false); 
+	}
+}
+	
+//判断多选框有没有被选中的
+ function checkcheckbox(name)
+ {
+     var count=0;
+     var checkArry=document.getElementsByName(name);
+     for(var i=0;i<checkArry.length;i++){
+         if(checkArry[i].checked==true){
+             count++;
+         }
+     }
+     if(count==0)
+     {
+         return false;
+     }
+     else
+     {
+      return true;
+     }
+ }
+//判断文本框是否为空
+function checktext(id){
+    if(document.getElementById(id).value.length==0){
+      document.getElementById(id).focus();
+      return false;
+    }else{
+      return true;
+    }
+}
+//判断输入是否为金额格式
+function isMoney(id){
+  var val=document.getElementById(id).value;
+   var a=/^([1-9][0-9]{0,7}|0)(\.[0-9]{0,2})?$/;
+  if(!a.test(val))
+  {
+    document.getElementById(id).focus();
+    return false;
+  }else{
+    return true;
+  }
+}
+
+
+function timeValidate(id,msg1,msg2){
+<!-- var num=/^\d*$/; -->
+var num=/^[0-9]{1,5}$/
+var value=$('#'+id).val();
+   if(value.length==0){ 
+     layer.tips(msg1, '#'+id);
+   }else if(!(num.test(value)))
+	{
+	   $('#'+id).val("");
+	  $('#'+id).focus();
+      layer.tips(msg2, '#'+id);
+	}
+}
+
+function dateValidate(id,msg1,msg2){
+var num=/^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/;
+var value=$('#'+id).val();
+   if(value.length==0){ 
+     layer.tips(msg1, '#'+id);
+	 return 1;
+   }else if(!(num.test(value)))
+	{
+	   $('#'+id).val("");
+	  $('#'+id).focus();
+      layer.tips(msg2, '#'+id);
+	 return 2;
+	}
+}
+
+function priceValidate(id,msg1,msg2)
+{ 
+    num=/^([1-9][0-9]{0,7}|0)(\.[0-9]{0,2})?$/;
+	var value=$('#'+id).val();
+	if(value.length==0){
+	 layer.tips(msg1, '#'+id);
+	 return 1;
+	  
+	}else if(!(num.test(value)))
+	{
+	  $('#'+id).val("");
+	  $('#'+id).focus();
+      layer.tips(msg2, '#'+id);
+	  return 2;
+	}				
+}
+
+  function submitEditAward()
+  {
+          var bviplevel=checkcheckbox('viplevel');
+          if(bviplevel==false)
+           {
+              layer.tips('会员卡类型不能为空！', '#viplevel_yz',{tips:3});
+              return false;
+           }
+
+           var price=priceValidate('price','价钱设置不能为空','价钱输入格式有误');
+		  
+		   if(price==1){
+		      layer.tips('价钱设置不能为空！', '#price');
+			  return false;
+		   }else if(price==2){
+		    layer.tips('价钱输入格式有误！', '#price');
+			 return false;
+		   }
+		   
+		   var start=dateValidate('start','开始时间不能为空！','开始时间输入格式有误！');
+			
+			if(start==1){
+		       layer.tips('开始时间不能为空！', '#start');
+			   return false;
+		   }else if(start==2){
+		       layer.tips('开始时间输入格式有误！', '#start');
+			   return false;
+		   }
+		   
+		    var end=dateValidate('end','开始时间不能为空！','开始时间输入格式有误！');
+			if(end==1){
+		       layer.tips('开始时间不能为空！', '#end');
+			   return false;
+		   }else if(end==2){
+		       layer.tips('开始时间输入格式有误！', '#end');
+			   return false;
+		   }
+
+          
+		   <!-- timelength(); -->
+
+             var json_str,hytype_str,time_str,price_str,bfq_str,start_str,end_str,autogotobs_str,district_str,bianhao_str ='';     
+
+             json_str='';
+            $("#editaward input[name='viplevel']:checkbox:checked").each(function()
+            {
+                if(hytype_str==undefined)
+               {
+                 json_str=$(this).val();
+                 hytype_str=json_str+',';
+               }
+               else
+               {
+                hytype_str=$(this).val()+","+hytype_str;
+               }                 
+            })
+
+    
+
+            start_str  =$('#editaward input[name="start"]').val();
+            end_str    =$('#editaward input[name="end"]').val();
+            time_str   =$('#editaward input[name="time"]').val();
+            price_str   =$('#editaward input[name="price"]').val();
+
+
+            // bfq_str    =$('#editaward input[name="bfq"]').val();
+          
+            // lsbs_str   =$('#editaward input[name="lsbs"]').val();
+            // hybs_str   =$('#editaward input[name="hybs"]').val();
+            // autogotobs_str  =$('#editaward input[name="autogotobs"]').val();
+			
+			
+
+          //  if($("#editaward input[name='autogotobs']:checkbox:checked"))
+          //  {
+          //     autogotobs_str=1;
+          //  }
+         //   else
+          //  {
+          //    autogotobs_str=0;
+         //   }  
+
+          //  if($("#editaward input[name='bfq']:checkbox:checked"))
+           // {
+            //   bfq_str=1;
+           // }
+           // else
+           // {
+           //   bfq_str=0;
+           // }  
+			
+			 var autogotobs_Chk_object = document.getElementById('autogotobs');  
+            if(autogotobs_Chk_object.checked)
+            {
+              autogotobs_str=1;
+            } 
+            else 
+            {         
+              autogotobs_str=0;
+            }
+
+            var bfq_Chk_object = document.getElementById('bfq');
+       
+            if(bfq_Chk_object.checked)
+            {        
+              bfq_str=1;
+            } 
+            else 
+            {         
+              bfq_str=0;
+            }
+    
+            bianhao_str=$('#bianhao').val();
+            
+         
+
+            $.ajax({
+                url: "{:U('edit_fixedrate_set')}",//请求数据的php链接
+                type: 'post',//传输数据格式 get/post
+                dataType : 'text', //回调类型 text/json/...
+                data: {'hytype':hytype_str,'bianhao':bianhao_str,'start':start_str,'end':end_str,'time':time_str,'price':price_str,'bfq':bfq_str,'autogotobs':autogotobs_str},
+                success: function(data)
+                {
+                    var mybangobj=eval("("+data+")");                
+
+                    if(mybangobj.result==1)  
+                    {  
+                      layer.msg('修改成功', {
+                                  offset: 0,
+                                  shift: 6,
+                                  icon: 1,
+                                },function(){ 
+                                  parent.location.reload();
+                                  parent.layer.closeAll();
+                              });
+
+                    } 
+                        
+                      
+                    else if(mybangobj.result==0)//未绑定微博  
+                    {  
+
+                        layer.msg('修改失败', {
+                              offset: 0,
+                              shift: 6,
+                              icon: 2,
+                            });
+                    }    
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) 
+                {
+                     layer.msg('error', {
+                              offset: 0,
+                              shift: 6,
+                              icon: 2,
+                            });
+                }
+            });
+
+            
+        }
+  function exit(){
+        parent.layer.closeAll();
+   }       
+
+</script>
+
+
+
+
+
+
+
+    
+
+</block>

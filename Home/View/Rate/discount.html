@@ -1,0 +1,75 @@
+<extend name="Public/base" />
+
+<block name="content">
+    <div class="tabbable">
+        <include file="nav" />
+        <div class="tab-content">
+            <div class="tab-pane active">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4 class="header">折扣率 <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#adddiscount">添加</button></h4>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>连续上机时长</th>
+                                    <th>上级费率折扣（%）</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1小时</td>
+                                    <td>100</td>
+                                    <td>修改 删除</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h4 class="header">选择允许折扣的卡类型</h4>
+                        <form id="discountcardtype">卡类型：
+                            <label><input type="checkbox" name="type-0" checked/>普通类型</label>
+                            <label><input type="checkbox" name="type-1" checked/>黄金会员</label>
+                            <label><input type="checkbox" name="type-2" checked/>钻石会员</label>
+                            <label><input type="checkbox" name="type-3" checked/>工作人员</label>
+                            <label><input type="checkbox" name="type-4" checked/>临时卡</label></form>
+                        <button class="btn btn-success btn-sm" onclick="setDiscountCardType();">保存允许的折扣卡类型</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="adddiscount" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title">添加累计优惠</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">上网折扣费：<input type="text" name="discount" style="width:50px;margin-bottom:15px;" value="100"/> %</div>
+                    <p>本功能目的是鼓励【标准上机】用户长时间上机，网吧根据用户上机时间(以小时为单位）的长短，给予一定的上机费折扣，比如消费1个小时后，上机费按9.5折计算，消费够两个小时后，上机费按9.0折计算，依次类推（转消费模式、跨区域换机按操作后时间计算）。</p>
+                    <p>建立您使用优惠包时就不要使用累计优惠。累计优惠将会在上机费用计算（包括优惠包时）完成后，再做折扣处理。</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" onclick="submitAddDiscount();" class="btn btn-primary">添加</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script>
+        function setDiscountCardType(){
+            $.post("setDiscountCardType",$('#discountcardtype').serialize(),function(data){
+                console.log(data);
+            })
+        }
+        function submitAddDiscount(){
+            $.post("setDiscount",{discount:$('#adddiscount input[name="discount"]').val()},function(data){
+                console.log(data);
+                $('#adddiscount').modal('hide');
+            })
+        }
+    </script>
+</block>

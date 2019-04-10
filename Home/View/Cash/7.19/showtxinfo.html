@@ -1,0 +1,266 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+    <js href="__PUBLIC__/layer/layer.js" />
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+    .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+	</style>
+</block>
+
+<block name="content">
+<div class="row search-bar" >
+　<div class="col-sm-12">
+   <div class="alert alert-warning bolder">总收入金额<span class="orange" id="summoney">0.00</span> 元&nbsp;&nbsp;&nbsp;总退款金额 <span class="orange" id="refund">0.00</span>元</div>  
+   </div>
+	<form >
+
+      <span class="mgb15 biaodan" style="width:450px;"><span style="float:left;line-height:34px;padding-right:5px;">申请时间</span>
+              <span class="input-group" >
+                <input class="form-control daterange" name="daterange" id="daterange" type="text" placeholder="请选择日期"  value="" />
+                <span class="input-group-addon">
+                  <i class="fa fa-calendar"></i>
+                </span>
+              </span>
+     </span>
+
+      <span class="mgb15 biaodan" >
+               <input name="sContent" id="sContent" type="text" class="form-control"  placeholder="订单号" />
+               
+     </span>
+
+
+      <span class="mgb15 biaodan" >
+              <select id="trade_status" name="trade_status" class="form-control">
+                <option value=" ">所有类型</option>
+                <option value="100" selected="selected">已支付</option>
+                <option value="2">已取消</option>
+                <option value="3">已退款</option>
+              </select> 
+    </span>
+
+    <span class="mgb15 biaodan" style="width:300px;">提现金额
+      <input type="text" name="min_amount" id="min_amount"  style="width:85px;" />
+      <span style="padding:0 4px;">至</span>
+      <input type="text" name="max_amount" id="max_amount"  style="width:85px;" />
+    </span>
+
+    <span class="mgb15 biaodan" ><button type="button" class="btn btn-purple btn-sm" onclick="doSearch()">搜索<i class="fa fa-search"></i></button></span>
+    <span class="mgb15 biaodan" ><a class="btn btn-sm btn-primary" id="print" onclick="doPrint()" href="" >导出<i class="fa fa-print" style="font-size:16px;"></i></a></span>
+    <script>
+    function doPrint(){
+    var daterange=$('#daterange').val();
+	var sContent=$('#sContent').val();
+    var trade_status=$('#trade_status').val();
+	var min_amount=$('#min_amount').val();
+    var max_amount=$('#max_amount').val();
+    $("#print").attr('href',"{:U('Api/expshowtxinfo')}?daterange="+daterange+"&sContent="+sContent+"&trade_status="+trade_status+"&min_amount="+min_amount+"&max_amount="+max_amount);
+    }
+
+    </script>
+  </form>
+</div>
+<div id="jqgrid">
+    <table id="grid-table"></table>
+    <div id="grid-pager"></div>
+</div>
+
+
+</block>
+
+
+
+
+ 
+
+<block name="script">
+    <script>
+        $(function(){
+            $('#grid-table').jqGrid({
+                url:'{:U("gettxinfo")}',
+                datatype:'json',
+                height:"100%",
+                autowidth:true,
+                colNames:['订单号','申请网吧','申请人','申请时间','申请金额(元)','电话','开户行','银行卡号','备注','完成时间','提现状态','体现状态'],
+                colModel:[
+                    {name:'orderno',editable:true,},               
+                    {name:'WbName',editable:true},
+                    {name:'farenname',editable:true},
+                    {name:'time_post',editable:true},
+                    {name:'qqtx_je',editable:true},
+                    
+                    {name:'phonenum',editable:true},                
+                    {name:'kh_hang',editable:true}, 
+                    {name:'bankcardno',editable:true}, 
+                    {name:'beizhu',editable:true}, 
+                    {name:'time_end',editable:true}, 
+                    {name:'tx_status',hidden:true}, 
+					 {name:'operate',editable:true},
+                ],
+                rowNum:15,
+                viewrecords: true,
+				sortorder: "desc",
+                pager:'#grid-pager',
+
+                onCellSelect:function(rowid,index,contents,event)
+                {
+				 		  						  
+				},
+
+                gridComplete: function()
+                {
+                    var ids = $("#grid-table").jqGrid('getDataIDs');
+                    var add,edit,save,del,aa = '';          
+                    for(var i=0;i < ids.length;i++)
+                    {
+                        // var cl = ids[i];
+
+                        var  getRow = $('#grid-table').getRowData(ids[i]);//获取当前的数据行  
+				        var  colVal = getRow.orderno;
+				        var  status = getRow.tx_status;
+                        var  wbid   = getRow.wbid;
+
+										
+						 
+						if(status==1)
+				          {
+				            aa='<span class="label label-sm label-success">已提现</span>';
+                            		            
+				          }
+				          else if(status==2)
+				          {
+				            aa='<span class="label label-sm label-warning">未提现</span>';   
+                     
+				          }                 
+
+                        $("#grid-table").jqGrid('setRowData',ids[i],{operate:aa});
+                    }
+
+                }
+            }).jqGrid('navGrid','#grid-pager',{
+                add:false,
+                edit:false,
+                del:false,
+                refresh:false,
+                // searchtext:'高级搜索',
+                // searchtitle:'高级搜索'
+            },{},{},{},{
+                multipleSearch:true
+            });
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+		
+	$('#daterange').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+	$('.daterange').daterangepicker({
+		format:'YYYY-MM-DD hh:mm:ss',
+		timePicker: true,
+		timePickerIncrement: 1,
+		timePickerSeconds:true,
+		startDate:moment().startOf('day'),  
+		endDate: moment(),
+		timePicker12Hour:false,			
+		ranges: {  
+				   '今天': [moment().startOf('day'), moment().endOf('day')],  
+				   '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+				   '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+				   '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+				   '本月': [moment().startOf('month'), moment().endOf('month')],  
+				   '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+				},				
+		locale:{
+			applyLabel:'确定',
+			cancelLabel:'取消',
+			fromLabel:'从',
+			toLabel:'至',
+			daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+			monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+			customRangeLabel: '自定义',
+			firstDay : 1
+		}
+
+	},function(start,end,label){
+	$('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+	}).next().click(function(){$(this).prev().focus();});
+
+    function doSearch(){
+    $('#grid-table').jqGrid('setGridParam',{
+        postData:{
+             daterange:$('#daterange').val(),
+            sBarName:$('#sBarName').val(),
+            sContent:$('#sContent').val(),
+            nOnlineStatus:$('#nOnlineStatus').val(),
+            nBusinessStatus:$('#nBusinessStatus').val(),
+            sBossPhone:$('#sBossPhone').val(),
+
+                     
+            province:$('#province').val(),
+            city:$('#city').val(),
+            area:$('#area').val()           
+        }
+    }).trigger('reloadGrid');
+   }
+
+
+   function delRowData(row){
+
+            var rowData = $('#grid-table').jqGrid('getRowData',row);
+            if(confirm('确定要删除“'+rowData['sBarName2']+'”吗？'))
+            {
+                $.post("{:U('bar_delete')}",{wbid:rowData['wbid']},function(data)
+                {   
+
+                    if(data.status==1)
+                    {
+                        // alert('删除成功');
+                        // $('#grid-table').trigger('reloadGrid');
+                                layer.msg('删除成功，点击“确定”将自动刷新页面', {
+                                  offset: 0,
+                                  shift: 6
+                                },function(){ $('#grid-table').trigger('reloadGrid');});
+                    }
+                    else if(data.status==-1)
+                    {
+                        // alert('删除失败');
+                                   layer.msg('删除失败', {
+                              offset: 0,
+                              shift: 6
+                            });
+                    }
+                });
+            }
+        }
+	
+		$('#province').change(function(){
+			show_areas($(this).val(),'city');
+		});
+		$('#city').change(function(){
+			show_areas($(this).val(),'area');
+		});
+		function show_areas(pid,type){
+			$.get("{:U('Common/getAreaListHtmlById')}",{id:pid},function(data){
+				if(data.status){
+					$('#'+type).html('<option value=0>-请选择-</option>'+data.info);
+				}
+			});
+		}
+
+
+
+
+   </script>
+</block>

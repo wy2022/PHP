@@ -1,0 +1,248 @@
+<block name="head">
+<include file="Public/head" />
+       <css href="__PUBLIC__/jquery-ui-1.10.3/themes/base/jquery.ui.all.css" />
+	 <js href="__PUBLIC__/jquery-ui-1.10.3/jquery-1.9.1.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.core.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.widget.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.position.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.menu.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.autocomplete.js" />
+	 <css href="__PUBLIC__/jquery-ui-1.10.3/demos/demos.css" /> 
+	
+	
+    <js href="__PUBLIC__/layer/layer.js" />
+    <js href="__PUBLIC__/layer/myalert.js" />
+     <css href="__PUBLIC__/layer/myalert.css"/>
+	<style>
+	  body{background:#fff;min-height:0;font-size:13px;}
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+     .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+		 .fontsize12{font-size:12px;}
+		 .pd15{padding:15px;}
+	.search-bar input,.search-bar select{
+		display:inline-block;
+		height:30px;
+		font-size:14px;
+		line-height:
+		color:#555555;
+		vertical-align:middle;
+		-webkit-border-radius:4px !important;
+		-moz-border-radius:4px !important;
+		border-radius:4px !important;
+		border-color:#a4bed4;
+		text-align:left;
+		padding:4px 6px;
+		width:200px;
+	 }
+	 .search-bar input{width:200px;}
+	 .search-bar select{width:100px;}
+	 .btn1{
+		    font-size:12px;	
+			height:30px;
+			 width:90px;
+			-webkit-border-radius:2px;
+			-moz-border-radius:2px;
+			border-radius:2px;
+			border:0;
+			text-shadow:none;
+			background-image:none;
+			vertical-align:middle;
+			color:#ffffff;
+		 }
+	</style>
+</block>
+
+<block name="content">
+<div class="pd15">
+<div class="row search-bar" >
+	<form >
+<!--
+       <span class="mgb15 biaodan">
+			<input type="text" class="form-control" placeholder="检索商品" id="project"> 
+      </span>
+
+		 <span class="mgb15 biaodan">库存位置
+		<select id="position" name="position">
+		   <option value="0">全部</option>
+		   <option value="1">仓库</option>
+		   <option value="2">货架</option>
+
+		</select>
+		</span>
+
+		<span class="mgb15 biaodan"> <button type="button" class="btn1 btn-purple btn-sm" onclick="doSearch()">搜索<i class="fa fa-search"></i></button></span> -->
+
+	</form>
+</div>
+<table id='tab' class='table table-striped'>
+			<thead>
+				<tr>
+					<th>
+						商品分类
+					</th>
+					<th>
+						商品名称
+					</th>
+					<th>
+						进货前仓库数量
+					</th>
+					<th>
+						进货前货架数量
+					</th>
+					<th>
+						进货数量
+					</th>
+					
+					<th>
+						进货后仓库数量
+					</th>
+					<th>
+						进货后货架数量
+					</th>					
+				</tr>
+			</thead>
+	
+		<table>
+</div>
+
+</block>
+
+
+
+	
+
+<block name="script">
+      <script>
+		 getgoodslist();	 
+	function  getgoodslist()
+	{
+	
+	   	$.ajax({
+				type:"get",
+				url: '{:U("getjch_mx_listByMap")}',
+				async:true,
+				success:function(data)
+				{
+				   $('tbody').remove();
+					showallgoodslist(data)
+				}
+			});
+	
+	}
+	  
+	
+	
+		
+	  function  showallgoodslist(data)
+	  {
+	    var html="";
+		
+		//console.log(data)
+        for (var i = 0; i <data.length; i++) 
+		{		
+			
+			
+
+				var goods=data[i];
+				var position=goods.position;
+				// console.log(zuhedata)
+				var hj_num=Number(goods.hj_num);
+				var ck_num=Number(goods.ck_num);
+				var num=Number(goods.num);
+				var ck_hou_num=ck_num+num;
+				var hj_hou_num=hj_num+num;
+				if(position==0){
+					html+='<tbody id=tb'+goods.goods_id+'>';
+					html+='	<tr>';
+					html+='     <td>'+goods.type_name+'</td>';
+					html+='		<td><span>'+goods.goods_name+'</span></td>';
+					html+='		<td><span>'+goods.ck_num+'</span></td>';
+					html+='		<td><span>'+goods.hj_num+'</span></td>';					
+					html+='		<td><span>'+goods.num+'</span>（进仓库）</td>';				
+					html+='		<td><span>'+ck_hou_num+'</span></td>';
+					html+='		<td><span>'+goods.hj_num+'</span></td>';
+					html+='	</tr>';
+					html+='</tbody>';
+				}else{
+					if(goods.is_zuhe==0 || goods.is_zuhe==1)
+					{	
+						html+='<tbody id=tb'+goods.goods_id+'>';
+						html+='	<tr>';
+						html+='     <td>'+goods.type_name+'</td>';
+						//html+='		<td><span>'+position+'</span></td>';
+						html+='		<td><span>'+goods.goods_name+'</span></td>';
+						html+='		<td><span>'+goods.ck_num+'</span></td>';
+						html+='		<td><span>'+goods.hj_num+'</span></td>';					
+						html+='		<td><span>'+goods.num+'</span>（进货架）</td>';				
+						html+='		<td><span>'+goods.ck_num+'</span></td>';
+						html+='		<td><span>'+hj_hou_num+'</span></td>';
+						html+='	</tr>';
+						html+='</tbody>';
+					}
+					else  if(goods.is_zuhe==2)  //显示组合商品
+					{
+					   //有实际的组合商品
+						 var zuhedata=goods.zuhelist;
+						// console.log(zuhedata)
+						 if(zuhedata.length>0)
+						 {
+							html+='<tbody id=tb'+goods.goods_id+'>';
+							html+='	<tr>';
+							html+='     <td>'+goods.type_name+'</td>';
+							//html+='		<td><span>'+position+'</span></td>';
+							html+='		<td><span class="red">'+goods.goods_name+'</span></td>';
+							html+='		<td><span>--</span></td>';	
+							html+='		<td><span>'+goods.hj_num+'</span></td>';					
+							html+='		<td><span>'+goods.num+'</span></td>';
+							html+='		<td><span>'+goods.ck_num+'</span></td>';
+							html+='		<td><span>'+hj_hou_num+'</span></td>';
+							html+='	</tr>';
+							 for(var j=0;j<zuhedata.length;j++)
+							 {	var posit=zuhedata[j].position;
+								var is_where;
+								if(posit==0){
+									is_where='（进仓库）'
+								}else{
+									is_where='（进货架）'
+								}
+								html+='	<tr>';
+								html+='     <td></td>';
+								//html+='		<td></td>';
+								html+='		<td><span>'+zuhedata[j].goods_name+'</span></td>';
+								html+='		<td><span>'+zuhedata[j].ck_num+'</span></td>';	
+								html+='		<td></td>';					
+								html+='		<td><span>'+zuhedata[j].num+'</span>'+is_where+'</td>';
+								html+='		<td></td>';
+								html+='		<td></td>';
+								html+='	</tr>';
+								
+							 }
+							 html+='</tbody>';
+						 }
+					}	
+				}
+				
+				
+				
+			
+        
+		}; 
+         $(" .table-striped").append(html);	
+	  }	
+    			
+      
+
+
+</script>
+
+
+
+
+</block>

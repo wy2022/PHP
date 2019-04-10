@@ -1,0 +1,81 @@
+<extend name="Public/base" />
+
+<block name="content">
+<form action="" class="form-horizontal" id="user_edit" method="post">
+	<div class="form-group">
+		<label class="col-sm-3 control-label">网吧账号*</label>
+		<input type="text" class="col-sm-3" name="user_name" value="{$user.WbAccount}" placeholder="登录帐号" readonly="readonly" required />
+		<span class="label label-warning" style="margin-left:10px;"><i class="fa fa-warning"></i><a href="?action=resetpwd&user_id={$user.userid}" onclick="return confirm('请确认此操作，重置后密码为123456');" style="color:white;">为该帐号重置密码&nbsp;</a></span>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label">网吧名称*</label>
+		<input type="text" class="col-sm-3" placeholder="真实姓名" name="realname" id="realname" value="{$wbinfo.WbName}" readonly="readonly"  required />
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label">联系方式</label>
+		<input type="text" class="col-sm-3" placeholder="手机号码" name="WBTel" value="{$wbinfo.WBTel}" readonly="readonly"  />
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label">邮箱</label>
+		<input type="text" class="col-sm-3" placeholder="邮箱" name="Email" value="{$wbinfo.Email}" />
+	</div>
+
+    <div class="form-group">
+		<label class="col-sm-3 control-label">老板姓名</label>
+		<input type="text" class="col-sm-3" placeholder="老板姓名" name="WBManager" value="{$wbinfo.WBManager}" />
+	</div>
+
+    <div class="form-group">
+		<label class="col-sm-3 control-label">QQ号</label>
+		<input type="text" class="col-sm-3" placeholder="QQ号" name="QQ" value="{$wbinfo.QQ}" />
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label">身份证号</label>
+		<input type="text" class="col-sm-3" placeholder="身份证号" name="Card" value="{$wbinfo.Card}" />
+	</div>
+
+
+
+
+
+
+
+
+
+
+	<hr />
+	<div class="form-group">
+		<label class="col-sm-3 control-label">用户角色*</label>
+		<select name="role_id">
+			<volist name="role_list" id="role">
+				<eq name="role.role_id" value="$user.role_id">
+					<option value="{$role.role_id}" selected="selected">{$role.role_name}</option>
+				<else />
+					<option value="{$role.role_id}">{$role.role_name}</option>
+				</eq>
+			</volist>
+		</select> 请为该用户分配一个与登录权限匹配的系统角色
+	</div>
+	<div class="clearfix form-actions">
+		<div class="col-md-9 col-md-offset-3">
+			<button class="btn btn-info" type="submit">
+				<i class="fa fa-check"></i>提交
+			</button>
+		</div>
+	</div>
+</form>
+</block>
+<block name="script">
+<script>
+$('#user_edit').submit(function(event){
+
+	if(!$('#realname').val()){
+		alert('真实姓名不能为空');
+		return false;
+	}
+})
+
+
+</script>
+</block>

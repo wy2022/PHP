@@ -1,0 +1,383 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+	  <script type="text/javascript" src="__PUBLIC__/highcharts/highcharts.js"></script>
+    <js href="__PUBLIC__/layer/layer.js" />
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+	</style>
+</block>
+
+<block name="content">
+
+
+       
+     
+<div>
+    <input type="hidden" id="loginguid" name="loginguid" value="{$loginguid}"> 
+   </div>
+
+              <!-- content---start -->
+ <div id="search" class="clearfix">
+  <form onsubmit="return checkform()" class="mgb15">
+    <span> 时间 <input type="text" class="daterange" id="daterange" style="width:300px;" value=""/></span>
+    <span><button class="btn btn-primary btn-sm" type="button" id="chaxun" onclick="go()">查询</button></span>
+  </form>
+  </div>
+  
+<div class="tabbable">
+	<ul class="nav nav-tabs">
+	 <li class="active"><a data-toggle="tab" href="#rate" title="上座率=实际上机时间/理论总时间">上座率</a></li>
+		<li><a data-toggle="tab" href="#count" title="上机人次=客户端登录人次">上机人次</a></li>
+		<li><a data-toggle="tab" href="#time" title="上机时长=某时段内的实际上机分钟数">上机时长</a></li>
+		
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane active" id="rate">
+			<div id="rate_chart"></div>
+		</div>
+		<div class="tab-pane " id="count">
+			<div id="count_chart"></div>
+			<div class="tip">总上机人次：<span id="count_sj">0</span></div>
+			<div class="tip">总会员上机人次：<span id="count_hysj">0</span></div>
+
+		</div>
+		<div class="tab-pane" id="time">
+			<div id="time_chart"></div>
+			<div class="tip">总上机时长：<span id="time_h">0</span>小时<span id="time_min">0</span>分钟</div>
+		</div>
+	</div>
+</div>
+              <!-- content---end -->
+
+
+</block>
+
+
+
+
+<block name="script">
+
+      <script>
+	  
+        $('#daterange').val(moment().subtract('days', 29).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+  $('.daterange').daterangepicker({
+    format:'YYYY-MM-DD hh:mm:ss',
+    timePicker: true,
+    timePickerIncrement: 1,
+    timePickerSeconds:true,
+    startDate:moment().startOf('day'),  
+    endDate: moment(),
+    timePicker12Hour:false,     
+    ranges: {  
+           '今天': [moment().startOf('day'), moment().endOf('day')],  
+           '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+           '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+           '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+           '本月': [moment().startOf('month'), moment().endOf('month')],  
+           '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+        },        
+    locale:{
+      applyLabel:'确定',
+      cancelLabel:'取消',
+      fromLabel:'从',
+      toLabel:'至',
+      daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+      monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+      customRangeLabel: '自定义',
+      firstDay : 1
+    }
+
+  },function(start,end,label){
+  $('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+  }).next().click(function(){$(this).prev().focus();});
+  
+
+		
+	   var rate_chart = {
+            title:{
+                text:null
+            },
+            credits:{
+                enabled:false
+            },
+            xAxis:{
+               // type:'datetime',
+                //labels:{
+                    //format:'{value:%m/%d}'
+                //}
+        categories: [],
+                labels: {
+                  step:1,
+                  staggerLines: 1
+              }
+            },
+            yAxis:{
+                title:{
+                    text:'百分比'
+                }
+            },
+            tooltip:{
+                shared: true,
+         xDateFormat: '%Y-%m-%d',
+                 valueSuffix: ''
+        
+            },
+            plotOptions:{
+          line:{
+              dataLabels: {
+                        enabled: false
+                    }
+          },
+              //  series:{
+                    //pointStart:Date.UTC(day.getUTCFullYear(),day.getUTCMonth(),day.getUTCDate()),
+                    //pointInterval:24*3600000
+                //}
+            },
+            legend: {
+                align:'',
+                verticalAlign: 'top'
+            },
+            series:[]
+        };
+
+
+		
+		
+		
+     var count_chart = {
+            title:{
+                text:null
+            },
+            credits:{
+                enabled:false
+            },
+            xAxis:{
+               // type:'datetime',
+                //labels:{
+                    //format:'{value:%m/%d}'
+                //}
+        categories: [],
+                labels: {
+                  step:1,
+                  staggerLines: 1
+              }
+            },
+            yAxis:{
+                title:{
+                    text:'人数'
+                }
+            },
+            tooltip:{
+                shared: true,
+         xDateFormat: '%Y-%m-%d',
+                 valueSuffix: ''
+        
+            },
+            plotOptions:{
+          line:{
+              dataLabels: {
+                        enabled: false
+                    }
+          },
+              //  series:{
+                    //pointStart:Date.UTC(day.getUTCFullYear(),day.getUTCMonth(),day.getUTCDate()),
+                    //pointInterval:24*3600000
+                //}
+            },
+            legend: {
+                align:'',
+                verticalAlign: 'top'
+            },
+            series:[]
+        };
+
+		
+		
+     var time_chart = {
+            title:{
+                text:null
+            },
+            credits:{
+                enabled:false
+            },
+            xAxis:{
+               // type:'datetime',
+                //labels:{
+                    //format:'{value:%m/%d}'
+                //}
+        categories: [],
+                labels: {
+                  step:1,
+                  staggerLines: 1
+              }
+            },
+            yAxis:{
+                title:{
+                    text:'分钟'
+                }
+            },
+            tooltip:{
+                shared: true,
+         xDateFormat: '%Y-%m-%d',
+                 valueSuffix: ''
+        
+            },
+            plotOptions:{
+          line:{
+              dataLabels: {
+                        enabled: false
+                    }
+          },
+              //  series:{
+                    //pointStart:Date.UTC(day.getUTCFullYear(),day.getUTCMonth(),day.getUTCDate()),
+                    //pointInterval:24*3600000
+                //}
+            },
+            legend: {
+                align:'',
+                verticalAlign: 'top'
+            },
+            series:[]
+        };
+		
+		
+
+        
+        $(function(){
+
+            //解决窗口改变大小后tab切换，highcharts大小异常的问题
+            $('.nav-tabs>li>a').click(function(e){
+                $(this).tab('show');
+                $('#'+$(this).attr('href').substr(1)+'_chart').highcharts().reflow();
+                return false;
+            });
+
+        });
+  var r_chart,c_chart,t_chart;  
+    function go()
+   {   
+        var loginguid_str=$('#loginguid').val();
+		var StartData_str=$("#daterange").val();
+       // var url_str='http://www.wbzzsf.com:8081/FenXi?Cmd=1&sLoginGuid='+loginguid_str+'&StartData=2017-07-03+00:00:00+-+2017-07-03+14:54:00';
+	
+		var url_str='http://www.wbzzsf.com:8081/FenXi';
+        $.ajax(
+        {
+          url:url_str,
+          type:"get",
+          dataType:"text",
+		  beforeSend:function(){ 
+          <!-- $("#chaxun").attr("disabled",true);		   -->
+		   <!-- layer.load(2); -->
+		  }, 
+          data:{Cmd:1,sLoginGuid:loginguid_str,StartData:StartData_str},
+          success:function(data)
+          { 
+		  
+              
+            var json=eval("("+data+")"); 
+  
+             if(json.xAxis.length>47)
+             {
+                 rate_chart.xAxis.labels.step=6;
+				 count_chart.xAxis.labels.step=6;
+				 time_chart.xAxis.labels.step=6;
+             }
+             else if(json.xAxis.length>20)
+             {
+                rate_chart.xAxis.labels.step=2;
+				count_chart.xAxis.labels.step=2;
+				time_chart.xAxis.labels.step=2;
+             } 
+			 else if(json.xAxis.length>1)
+             {
+                rate_chart.xAxis.labels.step=1;
+				count_chart.xAxis.labels.step=1;
+				time_chart.xAxis.labels.step=1;
+             }
+			 
+			 
+			 
+			var lines=json.Line.length;
+		   for(var i=0;i<lines;i++)
+		   {
+			  rate_chart.series[i]=new Object();
+			  rate_chart.series[i].name=json.Group[i].GroupName;
+			  rate_chart.series[i].data=json.LineRatio[i] ;
+		   }
+		   
+		   rate_chart.xAxis.categories=json.xAxis;
+		   		   
+			for(var i=0;i<lines;i++)
+			{
+			   count_chart.series[i]=new Object();
+			   count_chart.series[i].name=json.Group[i].GroupName;
+			   count_chart.series[i].data=json.LineCount[i];
+			}
+			count_chart.xAxis.categories=json.xAxis;
+			
+		 	
+			  for(var i=0;i<lines;i++)
+			  {
+				time_chart.series[i]=new Object();
+				time_chart.series[i].name=json.Group[i].GroupName;
+				time_chart.series[i].data=json.Line[i];
+			   }
+			   time_chart.xAxis.categories=json.xAxis;
+   
+   		   
+               $('#rate_chart').highcharts(rate_chart);
+			   $('#count_chart').highcharts(count_chart);
+			   $('#time_chart').highcharts(time_chart);
+			   
+               r_chart= $('#rate_chart').highcharts();
+			   c_chart= $('#count_chart').highcharts();
+			   t_chart= $('#time_chart').highcharts();
+           
+         },
+		 complete:function(){ 
+		    $("#chaxun").attr("disabled",false);
+			layer.closeAll('loading');
+		   },
+		error: function(XMLHttpRequest, textStatus, errorThrown) 
+		{
+			alert(XMLHttpRequest.status); 
+		}
+       })
+   }
+   
+    
+   go(); 
+    </script>
+  <script>
+ function checkform(){
+    var daterange=$("#daterange").val();
+  if(daterange==""||daterange=="请选择日期")
+  {
+     // alert("请选择日期");
+                  layer.msg('删除失败', {
+                              offset: 0,
+                              shift: 6
+                            });
+     return false;
+  }
+  return true;
+ }
+    </script>
+    
+</block>

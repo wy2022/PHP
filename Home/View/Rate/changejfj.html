@@ -1,0 +1,207 @@
+<extend name="Public/base" />
+<block name="head">
+<js href="__PUBLIC__/layer/layer.js" />
+    <js href="__PUBLIC__/layer/myalert.js" />
+  <css href="__PUBLIC__/layer/myalert.css"/>
+   <script src="__PUBLIC__/register/validate/jquery.validate.js"></script>
+  <style>
+  .tips_color{
+   color:#a94442;
+}
+  </style>
+</block>
+<block name="content">
+
+
+     
+      <div class="alert alert-success" style="display:none" id="success1">
+        <i class="fa fa-hand-o-right"></i>
+          变更计费机成功！
+      </div>
+      <div class="alert alert-warning" style="display:none" id="error1">
+        <i class="fa fa-hand-o-right"></i>
+          变更计费机失败！
+      </div>
+
+
+
+ <form class="form-horizontal" role="form" id="changejfj" method="post" >
+
+
+     <div class="form-group">
+           <button type="button" class="btn btn-primary btn-sm"  onclick="restart_server()" style="float:right;">更新重启网吧服务端</button>
+      
+        </div>
+
+        <div class="form-group">
+           <label class="col-sm-3 control-label no-padding-right" for="Card">老板手机号</label>
+         <div class="col-sm-9">
+                  <input type="text" id="phone" name="phone" value="{$wbinfo.WBTel}" class="col-xs-10 col-sm-5"  readonly="readonly"/>
+                  <span class="help-inline col-xs-12 col-sm-7 tips_color">  </span> 
+          </div>
+        </div>
+
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="yzm">验证码</label>
+                <div class="col-sm-9">
+                   <div class="row">
+                    <div class="col-xs-10 col-sm-5" >
+                     <input type="text" id="yzm" name="yzm" placeholder=""  />
+                     <input type="button" id="get_yzm" onclick="showtime(120)" class="btn btn-primary btn-sm" value="获取手机验证码" >
+                    </div>
+           
+                  <span class="help-inline col-xs-12 col-sm-7 tips_color"> </span> </div>
+               </div>
+              </div>
+
+              <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                  <button class="btn btn-info" type="submit"> <i class="icon-ok bigger-110"></i>变更</button>
+                  &nbsp; &nbsp; &nbsp;
+                  <button class="btn" type="reset"> <i class="icon-undo bigger-110"></i>取消</button>
+                </div>
+              </div>
+            </form>
+
+
+</block>
+<block name="script">
+
+
+<script>
+ $().ready(function(){
+   $("#changejfj").validate({
+  rules:{
+
+    yzm:{
+      required:true,
+      remote:{
+         type:"post",
+       url:"{:U("changejfj_yzm")}",
+       datType:"text",
+       data:{
+          yzm:function()
+          {
+           return $("#yzm").val();
+        }
+       }
+      }
+    },
+
+    },
+messages:{    
+    yzm:{
+      required:"请输入验证码",
+      remote:"验证码输入有误或超时",
+    },
+  },
+     
+       errorPlacement: function(error, element) {    
+          //错误信息位置设置方法  
+             error.appendTo( element.closest(".form-group").find(".tips_color"));  //这里的element是录入数据的对象  
+          },
+submitHandler: function(form) 
+{  //通过之后回调
+     var param=$("#changejfj").serialize();
+     $.ajax({
+      url : "{:U("changejfj_set")}",
+      type : "post",
+      dataType : "json",
+      data: param,
+      success : function(data) {
+     if(data.result=="1")
+     {
+        myalertsuccess('变更计费机成功！');
+  
+       }else if(data.result =="-1"){
+         myalertdanger('变更计费机失败！');
+     }
+    },//success结束
+  error:function()
+  {
+    // window.location.href="/mq/login.html";
+  }
+ });//ajax结束
+},
+   invalidHandler: function(form, validator) {  //不通过回调
+       return false;
+   },
+});
+});//validate结束
+
+</script>
+<script>
+//向服务器发送“获取验证码的请求”
+$(function()
+{
+  $('#get_yzm').click(function()
+  {
+     $.ajax({
+      type:"post",
+    url:"{:U("getPhoneVerifycode")}",
+    dataType:"json",
+    data:"Get verification code",
+    success:function(data)
+    {
+        if(data.data==0)
+        {
+          
+        }  
+    },
+    error:function(data){
+      // window.location.href="/mq/login.html";
+    }
+   })
+  })
+})
+
+
+
+
+
+</script>
+
+<script>
+//获取验证码
+   function showtime(t){
+      $("#get_yzm").addClass("disabled");
+    for(i=1;i<=t;i++){
+       setTimeout("update_p("+i+","+t+")",i*1000);
+    }
+   }
+   function update_p(num,t){
+      if(num==t){
+    $("#get_yzm").val("重新发送");
+     $("#get_yzm").removeClass("disabled");
+    }else{
+       var printnr=t-num;
+    $("#get_yzm").val("("+printnr+")秒后重新发送");
+
+    }
+   }
+
+
+
+function restart_server()
+{
+       
+    $.post("{:U('post_restart_server')}",{tablename:'WB_Info'},function(data)
+    {
+        if(data.result==1)
+        {
+
+             myalertsuccess('重启成功');
+
+
+        }
+        else if(data.result==-1)
+        {
+            myalertdanger('重启失败');
+        }
+    });                   
+}
+
+</script>
+
+</block>

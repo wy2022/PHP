@@ -1,0 +1,116 @@
+<extend name="Public/base" />
+<block name="head">
+<js href="__PUBLIC__/layer/layer.js" />
+    <js href="__PUBLIC__/layer/myalert.js" />
+  <css href="__PUBLIC__/layer/myalert.css"/>
+</block>
+
+<block name="content">
+
+<form class="form-horizontal" id="form_gongneng">
+                <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="chosecard">是否开启公众号</label>
+                <div class="col-sm-9" id="bank">
+                 <div class="row" style="margin-left:0;">
+                  <div class="radio col-xs-10 col-sm-5" >                        
+                  <label>
+                  <input name="gzh_isvalid" type="radio" class="ace" value="1" <?php if($wbinfo['isValid']==1) echo 'checked'; ?>/>
+                   <span class="lbl">开启</span>     
+                   </label>
+                    <label>
+                  <input name="gzh_isvalid" type="radio" class="ace" value="0" <?php if($wbinfo['isValid']==0) echo 'checked'; ?> />
+                   <span class="lbl">不开启</span>
+                   </label>
+    
+                  </div>
+                 </div>
+                    <span class="help-inline col-xs-12 col-sm-7 tips_color"></span>
+                   </div>
+              </div>
+		<!-- 	  <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="chosecard">选择下载类型</label>
+                <div class="col-sm-9" id="bank">
+                 <div class="row" style="margin-left:0;">
+				   <div class="col-xs-3">
+                    <select name="ewm_xl" class="form-control" id="ewm_xl">
+					   <option value="1">1</option>
+					   <option value="2">2</option>
+					   <option value="3">3</option>
+					</select>	
+                  </div>					
+                 </div>
+                    <span class="help-inline col-xs-12 col-sm-7 tips_color"></span>
+                   </div>
+              </div> -->
+	<!-- 		  <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="chosecard">下载微信支付宝二维码</label>
+                <div class="col-sm-9" id="bank">
+                 <div class="row" style="margin-left:0;">
+
+                     <div class="col-xs-3 ">
+						<a href="#" class="thumbnail">
+					
+						  <img src="{$wxcode_url}" alt="..." width="400" height="400">
+						  
+						 </a>
+					  </div>	
+					  
+                     <div class="col-xs-3 col-xs-offset-1">
+						<a href="#" class="thumbnail">
+						 <img src="{$zfbcode_url}" alt="..." width="400" height="400">
+						 </a>
+					  </div>					  
+                 </div>
+                    <span class="help-inline col-xs-12 col-sm-7 tips_color"></span>
+                   </div>
+              </div>
+ -->
+              <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                  <button class="btn btn-info" type="button" id="submit1"> <i class="icon-ok bigger-110"></i> 提交 </button>
+                  &nbsp; &nbsp; &nbsp;
+                  <button class="btn" type="reset" id="submit_cancel"> <i class="icon-undo bigger-110"></i> 取消 </button>
+                </div>
+              </div> 
+
+            </form>
+
+
+</block>
+<block name="script">
+
+
+<script>
+$("#submit1").click(function(){
+
+     var param = $("#form_gongneng").serialize();
+     $.ajax({
+      url : "{:U("fujia_set")}",
+      type : "post",
+      dataType : "json",
+      data: param,
+      success : function(data) 
+      {
+      if(data.data=="1")
+      {
+
+         myalertsuccess('设置成功');
+         location.href="{:U('rate/index')}";
+  
+    }else if(data.data =="-1"){
+
+       myalertdanger('设置失败');
+    }
+    },//success完成
+ });
+
+}); 
+
+
+$("#ewm_xl").change(function(){
+  alert($("#ewm_xl").val());
+})
+
+</script>
+
+</block>

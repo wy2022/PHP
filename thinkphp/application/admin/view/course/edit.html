@@ -1,0 +1,28 @@
+{extend name="teacher/base" /}
+
+
+
+{block name="body"}
+
+
+<form action="{:url('course/save')}" method="post">
+
+    <input type="hidden" name="id" value="{$course.id}">
+   课程名称： <input type="text" name="name" value="{$course.name}">
+    <input type="submit" value="提交">
+
+
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+{/block}

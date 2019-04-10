@@ -1,0 +1,466 @@
+<block name="head">
+<include file="Public/head" />
+<css href="__PUBLIC__/tree/css/jquery-ui-1.7.1.custom.css" />
+<css href="__PUBLIC__/tree/css/common.css" />
+<js href="__PUBLIC__/tree/js/common.js" />
+<js href="__PUBLIC__/layer/layer.js" />
+<style>
+   
+   body{background:#fff;}
+   .dba
+    {
+        color: Black;
+    }
+    .divtreewidth
+    {
+        width:210px; height:300px; overflow-y:scroll; padding-left: 1px;
+    }
+    .divappwidth
+    {
+        width:160px; height:300px; overflow-y:scroll; padding-left: 1px;
+    }
+</style>
+</block>
+
+<block name="content">
+<form id="form_add_ygz">
+<div id="tmain">
+	<div class="queryItem">
+	    <div class="inTitle fl">员工组名称</div>
+	    <div class="inElmt fl">
+	        <label id="lblgroupname" class="displayNone"></label>
+	        <input type="text" id="txtGroupname1" value = "" class="w170 required" name="groupname" />
+	    </div>
+	</div>
+
+
+
+     <div id="divgroup">
+	<div class="fl">
+		<div class="inTitle fl">软件权限</div>
+        <div class="clear"></div>
+        <div class="inElmt">
+        	<div class="divtreewidth" style="width:220px;">
+			<div class="fontb">
+				<img alt="可展开或关闭" onclick="tanchu('a')" id="img1" src="__PUBLIC__/tree/img/child.gif" />
+				<input id="1" type="checkbox" onclick="checkAlls(1,'glrj')" />
+				<a ondblclick="tanchu('a')" href="javascript:void(0);" class="dba">
+					<label class="menuname fontb">管理软件</label>
+				</a>
+           </div>
+		   <div id="glrj" class="marLef30">
+				<div><input  type="checkbox" name="rj_lbcz" value="2089"/> <label class="menuname">老板查账</label></div>
+				<div><input  type="checkbox" name="rj_zlcccl" value="2153"/><label class="menuname">货柜机找零出错处理</label></div>
+				<!-- <div><input  type="checkbox" name="rj_jrlbms" value=""/><label class="menuname">进入老板模式</label></div> -->
+				<div><input  type="checkbox" name="rj_ghczy" value="2057"/><label class="menuname">更换操作员</label></div>
+				<!-- <div><input  type="checkbox" name="rj_flset" value=""/><label class="menuname">费率设置</label></div> -->
+				<!-- <div><input  type="checkbox" name="rj_xtset" value=""/><label class="menuname">系统设置</label></div> -->
+				<div><input  type="checkbox" name="rj_jfq" value="2208"/><label class="menuname">允许加负钱修改奖励金额</label></div>
+				<!-- <div><input  type="checkbox" name="rj_czyset" value=""/><label class="menuname">操作员设置</label></div> -->
+				<!-- <div><input  type="checkbox" name="rj_editczypassword" value=""/><label class="menuname">修改操作员登录密码</label></div> -->
+			</div>
+			<div class="fontb">
+				<img alt="可展开或关闭" onclick="tanchu('b')" id="img2" src="__PUBLIC__/tree/img/child.gif" />
+				<input id="2" type="checkbox" onclick="checkAlls(2,'hygl')" />
+				<a ondblclick="tanchu('b')" href="javascript:void(0);" class="dba">
+					<label class="menuname fontb">会员管理</label>
+				</a>
+           </div>
+		   <div id="hygl" class="marLef30">
+				<div><input  type="checkbox" name="hy_hyjq" value="2229"/><label class="menuname">会员减钱</label></div>
+				<div><input  type="checkbox" name="hy_delhy" value="2069"/><label class="menuname">删除会员</label></div>
+				<div><input  type="checkbox" name="hy_bgkh" value="2172"/><label class="menuname">变更卡号</label></div>
+				<div><input  type="checkbox" name="hy_czpassword" value="2119"/><label class="menuname">重置密码</label></div>
+				<div><input  type="checkbox" name="hy_hytq" value="2141"/><label class="menuname">会员退钱</label></div>
+				<div><input  type="checkbox" name="hy_hytk" value="2147"/><label class="menuname">会员退卡</label></div>
+				<div><input  type="checkbox" name="hy_hybj" value="2076"/><label class="menuname">会员编辑</label></div>
+				<div><input  type="checkbox" name="hy_hyjfdh" value="2223"/><label class="menuname">会员积分兑换</label></div>
+			</div>
+
+    
+			   <div class="fontb">
+				<img alt="可展开或关闭" onclick="tanchu('d')" id="img4" src="__PUBLIC__/tree/img/child.gif" />
+				<input id="4" type="checkbox" onclick="checkAlls(4,'cxgl')" />
+				<a ondblclick="tanchu('d')" href="javascript:void(0);" class="dba">
+					<label class="menuname fontb">查询管理</label>
+				</a>
+           </div>
+		   <div id="cxgl" class="marLef30">
+				<div><input  type="checkbox" name="cx_hygl" value="2065"/><label class="menuname">会员卡管理</label></div>
+				<!-- <div><input  type="checkbox" name="cx_lskgl" value="2071"/><label class="menuname">临时卡管理</label></div> -->
+				<div><input  type="checkbox" name="cx_ckjb" value="2072"/><label class="menuname">查看交班详情</label></div>
+				
+			</div>
+			
+			  <div class="fontb">
+				<img alt="可展开或关闭" onclick="tanchu('e')" id="img5" src="__PUBLIC__/tree/img/child.gif" />
+				<input id="5" type="checkbox" onclick="checkAlls(5,'spgl')" />
+				<a ondblclick="tanchu('e')" href="javascript:void(0);" class="dba">
+					<label class="menuname fontb">商品管理</label>
+				</a>
+           </div>
+		   <div id="spgl" class="marLef30">
+				<div><input  type="checkbox" name="sp_jh" value="2102"/><label class="menuname">进货管理</label></div>
+				<div><input  type="checkbox" name="sp_xs" value="2109"/><label class="menuname">销售商品</label></div>
+				<div><input  type="checkbox" name="sp_xsmx" value="2116"/><label class="menuname">销售商品明细</label></div>
+				
+			</div>
+
+			
+
+                </div><!-- //.divtreewidth -->
+        </div>
+	</div>
+	<div class="fl marLef10">
+		<div class="inTitle fl">一般应用权限</div>
+        <div class="clear"></div>
+        <div class="inElmt">
+        	<div id="divtree" class="divappwidth" style="width:190px;">
+        	 <div class="fontb">
+				<img alt="可展开或关闭" onclick="tanchu('c')" id="img3" src="__PUBLIC__/tree/img/child.gif" />
+				<input id="3" type="checkbox" onclick="checkAlls(3,'ybyy')" />
+				<a ondblclick="tanchu('c')" href="javascript:void(0);" class="dba">
+					<label class="menuname fontb">一般应用</label>
+				</a>
+           </div>
+		   <div id="ybyy" class="marLef30">
+				<!-- <div><input  type="checkbox" name="yy_editpassword" value="2087"/><label class="menuname">修改登录密码</label></div> -->
+				<div><input  type="checkbox" name="yy_addmoney" value="2050"/><label class="menuname">加钱</label></div>
+				<div><input  type="checkbox" name="yy_addmoneycx" value="2168"/><label class="menuname">最近加钱查询</label></div>
+				<div><input  type="checkbox" name="yy_sj" value="2092"/><label class="menuname">上机</label></div>
+				<div><input  type="checkbox" name="yy_jz" value="2031"/><label class="menuname">结账</label></div>
+				<div><input  type="checkbox" name="yy_exitlsk" value="2100"/><label class="menuname">退临时卡</label></div>
+				<div><input  type="checkbox" name="yy_jhlsk" value="2099"/><label class="menuname">激活临时卡</label></div>
+				<div><input  type="checkbox" name="yy_xfmszh" value="2095"/><label class="menuname">消费模式转换</label></div>
+				<div><input  type="checkbox" name="yy_sp" value="2047"/><label class="menuname">锁屏</label></div>
+				<div><input  type="checkbox" name="yy_js" value="2048"/><label class="menuname">解锁</label></div>
+				<div><input  type="checkbox" name="yy_hj" value="2053"/><label class="menuname">换机</label></div>
+				<div><input  type="checkbox" name="yy_jb" value="2059"/><label class="menuname">交班</label></div>
+				<div><input  type="checkbox" name="yy_kj" value="2060"/><label class="menuname">开机</label></div>
+				<div><input  type="checkbox" name="yy_gj" value="2051"/><label class="menuname">关机</label></div>
+				<div><input  type="checkbox" name="yy_qkgjsmm" value="2237"/><label class="menuname">清空挂机锁密码</label></div>
+				<div><input  type="checkbox" name="yy_bbsjmxjl" value="2073"/><label class="menuname">本班上机明细记录</label></div>
+				<div><input  type="checkbox" name="yy_cxqd" value="2049"/><label class="menuname">重新启动</label></div>
+				<div><input  type="checkbox" name="yy_yckz" value="2061"/><label class="menuname">远程控制</label></div>
+				<div><input  type="checkbox" name="yy_fgqb" value="2028"/><label class="menuname">发送信息给全部</label></div>
+				<div><input  type="checkbox" name="yy_gbsywjfdn" value="2046"/><label class="menuname">关闭所有未计费电脑</label></div>
+			</div>
+        	
+        	
+        	</div>
+        </div>   
+	</div>
+	</div>
+	
+	
+	<div id="divnewweb">
+	
+	<div class="fl marLef10">
+		<div class="inTitle fl">网吧超市</div>
+        <div class="clear"></div>
+        <div class="inElmt">
+        	<div id="divtapp" class="divappwidth" style="width:170px;" >
+
+			
+ 			  <div class="fontb">
+				<img alt="可展开或关闭" onclick="tanchu('tc')" id="img16" src="__PUBLIC__/tree/img/child.gif" />
+				<input id="16" type="checkbox" value="216" onclick="checkAlls(16,'tmpcardmanage')" />
+				<a ondblclick="tanchu('tc')" href="javascript:void(0);" class="dba">
+					<label class="menuname fontb">商品管理</label>
+				</a>
+           </div>
+		   <div id="tmpcardmanage" class="marLef30">
+				<div><input  type="checkbox" name="cs_goods" value="217"/><label class="menuname">商品/原料</label></div>
+				<div><input  type="checkbox" name="cs_jch" value="218"/><label class="menuname">进货/出货</label></div>
+				<div><input  type="checkbox" name="cs_sxj" value="219"/><label class="menuname">上架/下架</label></div>
+				<div><input  type="checkbox" name="cs_kc" value="220"/><label class="menuname">查看库存</label></div>
+				<div><input  type="checkbox" name="cs_pd" value="221"/><label class="menuname">盘点</label></div>
+				<div><input  type="checkbox" name="cs_dj" value="222"/><label class="menuname">单据中心</label></div>
+				<div><input  type="checkbox" name="cs_xs" value="223"/><label class="menuname">销售</label></div>
+				<div><input  type="checkbox" name="cs_jb" value="224"/><label class="menuname">交班</label></div>
+
+				
+				
+			</div> 
+			</div><!-- //.divappwidth -->
+    	</div> 
+	</div>
+	
+	
+ 	<div class="fl marLef10">
+		<div class="inTitle fl">网站管理权限</div>
+        <div class="clear"></div>
+        <div class="inElmt">
+
+
+        	<div id="divweb" class="divappwidth">
+
+
+
+<!-- 			  <div class="fontb">
+				<img alt="可展开或关闭" onclick="tanchu('f')" id="img6" src="__PUBLIC__/tree/img/child.gif" />
+				<input id="6" type="checkbox" value="219" onclick="checkAlls(6,'web_spxsgl')" />
+				<a ondblclick="tanchu('f')" href="javascript:void(0);" class="dba">
+					<label class="menuname fontb">商品销售管理</label>
+				</a>
+              </div>
+		      <div id="web_spxsgl" class="marLef30">
+				<div><input  type="checkbox" name="web_jhgl" value="220"/><label class="menuname">进货管理</label></div>
+				<div><input  type="checkbox" name="web_xssp" value="221"/><label class="menuname">销售商品</label></div>
+				<div><input  type="checkbox" name="web_xsspmx" value="222"/><label class="menuname">销售商品明细</label></div>
+				
+			 </div> -->
+
+
+
+
+			    <div class="fontb">
+					<img alt="可展开或关闭" onclick="tanchu('g')" id="img7" src="__PUBLIC__/tree/img/child.gif" />
+					<input id="7" type="checkbox" name="web_wbgl" value="173" onclick="checkAlls(7,'web_wbgl')" />
+					<a ondblclick="tanchu('g')" href="javascript:void(0);" class="dba">
+						<label class="menuname fontb">网吧管理</label>
+					</a>
+	           </div>
+			   <div id="web_wbgl" class="marLef30">
+					<div><input  type="checkbox" name="web_hygl" value="174"/><label class="menuname">会员管理</label></div>
+					<div><input  type="checkbox" name="web_czrz" value="213"/><label class="menuname">操作日志</label></div>								
+				</div>
+
+
+			    <div class="fontb">
+					<img alt="可展开或关闭" onclick="tanchu('h')" id="img8" src="__PUBLIC__/tree/img/child.gif" />
+					<input id="8" type="checkbox" name="web_zmmx" value="175" onclick="checkAlls(8,'web_zmmx')" />
+					<a ondblclick="tanchu('h')" href="javascript:void(0);" class="dba">
+						<label class="menuname fontb">账目明细</label>
+					</a>
+	           </div>
+			   <div id="web_zmmx" class="marLef30">
+					<div><input  type="checkbox" name="web_jbmx" value="176"/><label class="menuname">交班明细</label></div>
+					<div><input  type="checkbox" name="web_jqmx" value="177"/><label class="menuname">加钱明细</label></div>
+					<div><input  type="checkbox" name="web_sjmx" value="178"/><label class="menuname">上机明细</label></div>
+					<div><input  type="checkbox" name="web_jfdh" value="179"/><label class="menuname">积分兑换</label></div>								
+				</div>
+
+				 <div class="fontb">
+					<img alt="可展开或关闭" onclick="tanchu('i')" id="img9" src="__PUBLIC__/tree/img/child.gif" />
+					<input id="9" type="checkbox" name="web_jyfx" value="180" onclick="checkAlls(9,'web_jyfx')" />
+					<a ondblclick="tanchu('i')" href="javascript:void(0);" class="dba">
+						<label class="menuname fontb">经营分析</label>
+					</a>
+	           </div>
+			   <div id="web_jyfx" class="marLef30">
+					<div><input  type="checkbox" name="web_srfx" value="181"/><label class="menuname">收入分析</label></div>
+					<div><input  type="checkbox" name="web_jyfx2" value="182"/><label class="menuname">经营分析</label></div>
+					<div><input  type="checkbox" name="web_hyfx" value="183"/><label class="menuname">会员分析</label></div>
+					<div><input  type="checkbox" name="web_xfph" value="184"/><label class="menuname">消费排行</label></div>								
+				</div>
+
+
+
+				<div class="fontb">
+					<img alt="可展开或关闭" onclick="tanchu('j')" id="img10" src="__PUBLIC__/tree/img/child.gif" />
+					<input id="10" type="checkbox" name="web_qtzf" value="185"  onclick="checkAlls(10,'web_qtzf')" />
+					<a ondblclick="tanchu('j')" href="javascript:void(0);" class="dba">
+						<label class="menuname fontb">其他支付</label>
+					</a>
+	           </div>
+			   <div id="web_qtzf" class="marLef30">
+					<div><input  type="checkbox" name="web_wxzf" value="186"/><label class="menuname">微信支付</label></div>
+					<div><input  type="checkbox" name="web_zfbzf" value="187"/><label class="menuname">支付宝支付</label></div>
+					<div><input  type="checkbox" name="web_gzhzf" value="188"/><label class="menuname">公众号支付</label></div>
+								
+				</div>
+
+
+				<div class="fontb">
+					<img alt="可展开或关闭" onclick="tanchu('k')" id="img11" src="__PUBLIC__/tree/img/child.gif" />
+					<input id="11" type="checkbox" name="web_txgl" value="189" onclick="checkAlls(11,'web_txgl')" />
+					<a ondblclick="tanchu('k')" href="javascript:void(0);" class="dba">
+						<label class="menuname fontb">提现管理</label>
+					</a>
+	           </div>
+			   <div id="web_txgl" class="marLef30">
+					<div><input  type="checkbox" name="web_tjyhk" value="190"/><label class="menuname">添加银行卡</label></div>
+					<div><input  type="checkbox" name="web_tx" value="191"/><label class="menuname">提现</label></div>
+					<div><input  type="checkbox" name="web_txmx" value="192"/><label class="menuname">提现明细</label></div>
+								
+				</div>
+
+
+				<div class="fontb">
+					<img alt="可展开或关闭" onclick="tanchu('l')" id="img12" src="__PUBLIC__/tree/img/child.gif" />
+					<input id="12" type="checkbox" name="web_spgl" value="193" onclick="checkAlls(12,'web_spgl')" />
+					<a ondblclick="tanchu('l')" href="javascript:void(0);" class="dba">
+						<label class="menuname fontb">商品管理</label>
+					</a>
+	           </div>
+			   <div id="web_spgl" class="marLef30">
+					<div><input  type="checkbox" name="web_sydsz" value="194"/><label class="menuname">收银端ID设置</label></div>
+					<div><input  type="checkbox" name="web_jhtj" value="195"/><label class="menuname">进货统计</label></div>
+					<div><input  type="checkbox" name="web_xstj" value="196"/><label class="menuname">销售统计</label></div>
+					<div><input  type="checkbox" name="web_spkc" value="197"/><label class="menuname">商品库存</label></div>
+					<div><input  type="checkbox" name="web_jhrz" value="198"/><label class="menuname">进货日志</label></div>
+					<div><input  type="checkbox" name="web_chrz" value="199"/><label class="menuname">出货日志</label></div>
+								
+				</div>
+
+
+
+
+				<div class="fontb">
+					<img alt="可展开或关闭" onclick="tanchu('m')" id="img13" src="__PUBLIC__/tree/img/child.gif" />
+					<input id="13" type="checkbox" name="web_yhgl" value="200"  onclick="checkAlls(13,'web_yhgl')" />
+					<a ondblclick="tanchu('m')" href="javascript:void(0);" class="dba">
+						<label class="menuname fontb">用户管理</label>
+					</a>
+	           </div>
+			   <div id="web_yhgl" class="marLef30">
+					<div><input  type="checkbox" name="web_sh" value="201"/><label class="menuname">用户</label></div>
+					<div><input  type="checkbox" name="web_xgmm" value="204"/><label class="menuname">修改密码</label></div>
+					<div><input  type="checkbox" name="web_wdzl" value="210"/><label class="menuname">我的资料</label></div>
+								
+				</div>
+
+
+
+				<div class="fontb">
+					<img alt="可展开或关闭" onclick="tanchu('n')" id="img14" src="__PUBLIC__/tree/img/child.gif" />
+					<input id="14" type="checkbox" name="web_xtsz" value="207" onclick="checkAlls(14,'web_xtsz')" />
+					<a ondblclick="tanchu('n')" href="javascript:void(0);" class="dba">
+						<label class="menuname fontb">系统设置</label>
+					</a>
+	           </div>
+			   <div id="web_xtsz" class="marLef30">
+					<div><input  type="checkbox" name="web_flsz" value="208"/><label class="menuname">费率设置</label></div>
+					<div><input  type="checkbox" name="web_fwdsz" value="209"/><label class="menuname">服务端设置</label></div>
+					<div><input  type="checkbox" name="web_fjsz" value="211"/><label class="menuname">附加设置</label></div>
+					<div><input  type="checkbox" name="web_bgjfj" value="212"/><label class="menuname">变更计费机</label></div>
+					<div><input  type="checkbox" name="web_ygsz" value="214"/><label class="menuname">员工设置</label></div>	
+                    <div><input  type="checkbox" name="web_tgsz" value="215"/><label class="menuname">托管设置</label></div>						
+				</div>
+			</div>
+
+
+
+
+    	</div> 
+	</div> 
+	
+	
+	
+	
+	</div>
+	<div class="clear"></div>
+	<div class="sysLine"> </div>
+	<div class="layFooter">
+		 
+        <button type="button" onclick="submitAddYgz();" class="btn btn-primary">确定</button>
+		<button type="button" class="btn btn-default" onclick="exit()">取消</button>
+    </div>
+
+</div>
+</form>
+</block>
+
+<block name="script">
+<script>
+
+  //判断文本框是否为空
+function checktext(id){
+    if(document.getElementById(id).value.length==0){
+      document.getElementById(id).focus();
+      return false;
+    }else{
+      return true;
+    }
+}
+
+	function submitAddYgz()
+	{
+		var groupname=checktext('txtGroupname1');
+          if(groupname==false)
+           {
+           	layer.tips('新增员工组名称不能为空！', '#txtGroupname1');
+              // myalertdanger('新增员工组名称不能为空！');
+              return false;
+           }
+
+
+		var groupqx_str,webqx_str,groupname_str,json_str='';
+       $("#divnewweb input:checkbox:checked").each(function() 
+	   { 
+		    if(webqx_str==undefined)
+               {
+                 json_str=$(this).val();
+                 webqx_str=json_str+',';
+               }
+               else
+               {
+                webqx_str=$(this).val()+","+webqx_str;
+               }                 		   
+        });  
+
+       $('#divgroup input:checkbox:checked').each(function() 
+	   { 		        
+		       if(groupqx_str==undefined)
+               {
+                 json_str=$(this).val();
+                 groupqx_str=json_str+',';
+               }
+               else
+               {
+                groupqx_str=groupqx_str+$(this).val()+',';
+               }
+		    
+        });  
+ 
+       groupname_str=$('#txtGroupname1').val();
+
+
+
+			var param = $("#form_add_ygz").serialize();
+			 $.ajax({
+			  url : "{:U("add_yg_group_set")}",
+			  type : "post",
+			  dataType : "json",
+			  data: {'webqx':webqx_str,'groupqx':groupqx_str,'groupname':groupname_str},
+			  success : function(data) 
+			  { 
+			  	  if(data.result==1)
+			  	  {
+			  	  	// alert('新增成功');
+			  	  	// parent.location.reload();
+
+	  	  	              layer.msg('新增员工组成功', {
+                          offset: 0,
+                          shift: 6,
+                          icon: 1,
+                        },function(){ 
+                           parent.location.reload();
+                           parent.layer.closeAll();
+                      });
+			  	  }
+			  	  else
+			  	  {
+                     // alert(data.message);
+                          layer.msg(data.message, {
+                              offset: 0,
+                              shift: 6,
+                              icon:2,
+                            });
+			  	  }				  	                   
+			  },//success完成
+			  error: function(data) 
+			  { 
+               alert('新增失败');		  	                   
+			  },//success完成
+		 });	
+				
+}
+   function exit(){
+        parent.layer.closeAll();
+   }
+   
+
+</script>
+</block>

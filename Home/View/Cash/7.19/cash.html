@@ -1,0 +1,295 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+	<js href="__PUBLIC__/register/validate/jquery.validate.js" />
+	<js href="__PUBLIC__/layer/layer.js" />
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+		.tips_color{
+          color:#a94442;
+        }
+		.layer_notice{
+		   width:350px;background:#5FB878;color:#ffffff;font-size:16px;padding:20px;text-align:center;
+		}
+	</style>
+</block>
+
+<block name="content">
+<div style="display:none" class="layer_notice">
+	  需到“添加银行卡”页面提交资料且审核通过后，才能提现
+</div>
+<div class="row search-bar" >
+
+          <div class="col-xs-12"> 
+
+        
+
+      <div class="alert alert-success" style="display:none" id="success">
+        <i class="fa fa-hand-o-right"></i>
+          提交成功！
+      </div>
+      <div class="alert alert-warning" style="display:none" id="error2">
+        <i class="fa fa-hand-o-right"></i>
+          提交失败！
+      </div>
+
+
+      <div class="alert alert-success" style="display:none" id="success3">     
+          提交成功！
+      </div>
+      <div class="alert alert-warning" style="display:none" id="error3">    
+          提交失败！
+      </div>
+
+      <div class="alert alert-info" style="display:none" id="error0">
+        <i class="fa fa-hand-o-right"></i>
+          可用余额不足！
+      </div>
+    
+  
+
+          <div class="alert alert-warning bolder">可提现金额<span class="orange" id="sum_ky_je"> {$money.sum_ky_je} </span> 元  
+              &nbsp;&nbsp;&nbsp;&nbsp;待处理金额<span class="orange" id="dai_tx_je"> {$money.sum_dai_je} </span> 元  
+         
+         </div>
+
+        <div class="row">
+        <div class="col-sm-6">
+         <div class="panel panel-default">
+            <div class="panel-heading">账户资金情况</div>
+            <div class="panel-body">
+              <p><span class="w180">账户总收入</span>{$money.sum_je}元</p>
+              <p><span class="w180">支付宝总收入</span>{$money.sum_zfb_in}元</p>
+              <p><span class="w180">微信总收入</span>{$money.sum_wx_in}元</p>
+              <p><span class="w180">公众号总收入</span>{$money.sum_gzh_in}元</p>
+            </div>
+          </div>
+         </div>
+         <div class="col-sm-6">
+         <div class="panel panel-default">
+            <div class="panel-heading">提现信息</div>
+            <div class="panel-body">
+              <p><span class="w180">总申请提现金额</span>{$money.sum_qq_je}元</p>
+              <p><span class="w180">待处理金额</span>{$money.sum_dai_je}元</p>
+              <p><span class="w180">已成功提现金额</span>{$money.sum_ytx_je}元</p>
+            </div>
+         </div>
+         </div>
+        </div>
+       <div class="row">
+         <div class="col-sm-12">
+         <div class="panel panel-default">
+            <div class="panel-heading">提现操作
+			<!-- <span style="color:red">（注：申请提现微信、支付宝收取1%的手续费，比如：100元手续费1元，用户实际支付为101元）</span> -->
+			</div>
+            <div class="panel-body">
+            <form class="form-horizontal" role="form" id="form_cash" action=""  method="post" style="margin-top:30px;">
+              <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="chosecard">选择银行卡</label>
+                <div class="col-sm-9" id="bank">
+                 <div class="row" style="margin-left:0;">
+                  <div class="radio col-xs-10 col-sm-5" style="border:1px solid #ddd;padding:10px 0;">
+                  <label>
+                  <input name="bankcardno" type="radio" class="ace" value="中国银行"/>
+                   <span class="lbl">{$bankinfo.kh_hang}&nbsp;&nbsp;&nbsp;&nbsp;尾号:{$bankinfo.bankcardno}</span>
+                   </label>
+    
+                  </div>
+                 </div>
+                    <span class="help-inline col-xs-12 col-sm-7 tips_color"></span>
+                   </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="qqtx_je">提现金额</label>
+                <div class="col-sm-9">
+                  <input type="text" id="qqtx_je" name="qqtx_je" onchange="if(!/^[1-9]\d*00$/.test(value)){value='';alert('提现金额需为100的倍数!');}"  placeholder="" class="col-xs-5 col-sm-2" /><label class="control-label" style="float:left;">元</label>
+                  <span class="help-inline col-xs-12 col-sm-7" style="line-height:34px;"> 注：提现金额需为100的倍数</span> 
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="yf_je">应付金额</label>
+                <div class="col-sm-9">
+                  <input type="text" id="yf_je" name="yf_je"  placeholder="" class="col-xs-5 col-sm-2"  readonly="readonly" /><label class="control-label" style="float:left;">元</label>
+                </div>
+              </div>
+              <script type="text/javascript">
+
+                 $("#qqtx_je").blur(function()
+				 {
+                    var qqtx_je=$("#qqtx_je").val();
+                   $("#yf_je").val(qqtx_je*1.00);
+
+                 })
+              </script>
+                <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="beizhu">备注</label>
+                <div class="col-sm-9">
+                  <textarea id="beizhu" name="beizhu" placeholder="" class="col-xs-5 col-sm-2" /></textarea>
+                  <span class="help-inline col-xs-12 col-sm-7 tips_color"> </span> </div>
+              </div>
+              <input type="hidden" name="shenhe" id="shenhe" 
+              <?php if($bankinfo['isValid']==1)
+                    { 
+                     echo 'value="1"';
+                   }else
+                   {
+                     echo 'value="2"';
+                   }
+
+              ?>/>
+              <div style="padding-bottom:20px;display:none;" id="shenhetishi" >
+                 <div class="col-sm-offset-3 col-sm-9 tips_color" >
+                   需审核通过后，才能提现
+                </div>
+              </div>
+
+              <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                  <button class="btn btn-info" type="submit" id="submit2"> <i class="icon-ok bigger-110"></i> 提交</button>
+                  &nbsp; &nbsp; &nbsp;
+                  <button class="btn" type="reset" id="submit_cancel"> <i class="icon-undo bigger-110"></i> 取消 </button>
+                </div>
+              </div>        
+       </form>
+            </div>
+         </div>
+         </div>
+        </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    
+</block>
+
+
+
+
+<block name="script">
+
+
+
+
+<script>
+
+   var shenhe=$("#shenhe").val();
+  if(shenhe=="2"){
+    $("#submit2").attr("disabled",true);
+    $("#shenhetishi").css("display","block");
+	
+	layer.open({
+	  type: 1,
+	  shade: 0.3,
+	  title: false, 
+	  content:$('.layer_notice'),
+	});
+
+  }
+  
+ $().ready(function(){
+$("#form_cash").validate({
+ rules:{
+        bankcardno:{
+          required:true,
+       },
+         qqtx_je:{
+          required:true,
+		      number:true,
+         },
+       },
+messages:{
+       bankcardno:{
+          required:"请选择银行卡",
+       },
+       qqtx_je:{
+          required:"请输入提现金额",
+		      number:"请输入正确的金额",
+         },
+    },
+     
+       errorPlacement: function(error, element) {    
+          //错误信息位置设置方法  
+            error.appendTo( element.closest(".form-group").find(".tips_color") ); //这里的element是录入数据的对象  
+          },
+	  submitHandler: function(form) { 
+
+     var param = $("#form_cash").serialize();
+     $.ajax({
+      url : "{:U('addcashinfo')}",
+      type : "post",
+      dataType : "json",
+      data: param,
+      success : function(data) 
+      {
+    
+  	    if(data.data=="1")
+        {
+    		   $("#success").show(500,function()
+           {
+    		     setTimeout(' $("#success").hide(1000)',1000)
+    		     window.location.href= "<?php echo U('Home/cash/showtxinfo'); ?>";          
+    		   });
+    		}
+        else if(data.data =="0")
+        {
+    		    $("#error0").show(200,function()
+            {
+    		      setTimeout(' $("#error0").hide(200)',1000)
+    		    });
+    		}
+        else if(data.data =="2")
+        {
+            $("#error2").show(500,function()
+            {
+              setTimeout(' $("#error2").hide(500)',1000)
+            });
+        }
+        else if(data.data =="3")
+        {
+
+      
+
+            $("#error3").html(data.msg);
+
+            $("#error3").show(500,function()
+            {
+              setTimeout(' $("#error3").hide(500)',1000)
+            });
+        }
+        else if(data.data =="4")
+        {
+            $("#error3").html(data.msg);
+            $("#error3").show(500,function()
+            {
+              setTimeout(' $("#error3").hide(500)',1000)
+            });
+        }
+
+
+    }
+	//success结束
+ });
+},
+   invalidHandler: function(form, validator) { 
+       return false;
+          }
+
+}); 
+})
+</script>
+</block>

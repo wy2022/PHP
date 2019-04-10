@@ -1,0 +1,177 @@
+<extend name="Public/base" />
+
+<block name="head">
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+    <js href="__PUBLIC__/layer/layer.js" />
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+     .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+		 .fontsize12{font-size:12px;}
+		 .fl{float:left;};
+		 .fr{float:right};
+		 .text-right{text-align:right;}
+		 .btn1{
+		    font-size:12px;
+			height:28px;
+			line-height:28px;
+			width:90px;
+			-webkit-border-radius:2px;
+			-moz-border-radius:2px;
+			border-radius:2px;
+			border:0;
+			padding:6px 8px;
+			text-shadow:none;
+			background-image:none;
+		 }
+		 a:hover{text-decoration:none;}
+	</style>
+</block>
+
+<block name="content">
+<div class="tabbable">
+	<ul class="nav nav-tabs">
+		<li id="jinchuhuo"><a href="{:U('chaoshi/shangjia')}">上架</a></li>
+		<li id="chuhuo"><a href="{:U('chaoshi/xiajia')}">下架</a></li>
+	</ul>
+<script>
+    $('.nav li#{$Think.const.ACTION_NAME}').addClass('active');
+
+</script>
+  <div class="tab-content">
+
+        <div class="fl" id="js-multi-term-wp"><span class="lable_for_header">超市收银端</span>
+            <select class="input-small" id="js-multi-term">
+                <option>loading...</option>
+            </select>
+        </div>
+
+        <div class="fl" style="padding-top: 4px; padding-left: 6px;">
+
+            <span>进出货方式:</span>
+            <label><input type="radio" name="unit" value="pices" checked />按件</label>
+            <label><input type="radio" name="unit" value="pice"  />按个</label> 
+
+        </div>
+
+        <div class="fr text-right">
+            
+            <input type="text" placeholder="检索商品" id="js-search-products"> 
+         <!--   <ul class="span3 dropdown-menu text-left" id="js-result-list" role="menu"  aria-labelledby="dLabel"></ul> -->
+            <a href="javascript:void(0);" class="btn1 btn-primary " id="js-import-products" style="vertical-align:top;" data-toggle="modal" data-target="#addexchangemoney" onclick="addExchangeMoney();">批量进货</a>
+            <!-- <a data-toggle="modal" href="../../barshop/statics/helpxml/inventory_inout-form.html" data-target="#modal-question" class="help_btn"><i class="icon-question-circle mt5 ml20" title="网吧超市帮助"></i></a> -->
+        </div>
+
+
+<div class="page_body">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover" id="js-table-grid">
+            <thead>
+            <tr>
+                <th>操作</th>
+                <th class="text-left">名称</th>
+                <th>每件规格</th>
+                <th>进货件数</th>
+                <th class="hide">单价</th>
+                <th>每件价格</th>
+                <th>进货数量</th>
+                <th class="last">入库方式</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="nothing">
+                <td colspan="7" class="text-center muted td_tip" id="js_in_tip">若不想检索商品，您可以点击右上角 <strong id="js-import-products2">批量进货</strong></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="foot-container" id="js-foot-container">
+        <div class="row">
+            <div class="ml20">
+
+                <span class="js-t-out">应付</span>：<span id="js-actual-amount">0.00</span>元，<span
+                    class="js-r-out">实付</span> <input type="text" class="input-small js-autodecimal js-autoselect"
+                                                      value="0.00" id="js-out-pocket" tabindex="-1" disabled/> 元
+                &nbsp;&nbsp;&nbsp;&nbsp;<span>支付方式</span>
+                <label class="radio inline">
+                    <input type="radio" name="status" value="2" tabindex="-1" checked> 挂账
+                </label>
+                <label class="radio inline">
+                    <input type="radio" name="status" value="1" tabindex="-1"> 现金支付
+                </label>
+
+
+                <span class="text-warning ml20">注意：选择现金支付，该单进货/出货金额影响当班收入，挂账则不影响。</span>
+
+
+            </div>
+            <div class="ml20  mt10 text-left">
+                备注&nbsp;&nbsp;<input type="text" class="js-note" maxlength="200" tabindex="-1" >
+            </div>
+            <div class="ml20  text-center mt10">
+                <button class="btn btn-primary js-btn-save" type="button" tabindex="-1">保存</button>
+                <button class="btn btn-inverse js-btn-cancel" type="button" tabindex="-1">取消</button>
+
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+  </div>
+</div>
+    <div class="modal fade" id="addexchangemoney" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title">普通商品</h4>
+                </div>
+                <div class="modal-body">
+				
+				      <div class="table-responsive">
+						<table class="table table-bordered table-hover" id="js-table-grid">
+							<thead>
+							<tr>
+								<th class="first text-left" style="width:60px;">
+								  <label for="selectall_1">
+								    <input id="selectall_1" type="checkbox"/>全选
+									</label>
+								</th>
+								<th class="text-left">名称</th>
+								<th  class="text-left">分类</th>
+								<th  class="text-left">商品名称</th>
+								<th class="last">仓库库存</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr class="nothing">
+								<td colspan="7" class="text-center muted td_tip" id="js_in_tip">若不想检索商品，您可以点击右上角 <strong id="js-import-products2">批量进货</strong></td>
+							</tr>
+							</tbody>
+						</table>
+					</div><!--//.table-responsive-->
+
+                </div>
+                <div class="modal-footer" style="text-align:center;">
+                    <button type="button" onclick="submitAddExchangeMoney();" class="btn btn-primary">确定</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</block>

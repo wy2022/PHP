@@ -1,0 +1,378 @@
+<extend name="Public/base" />
+
+<block name="head">
+      <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+    <js href="__PUBLIC__/layer/layer.js" />
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+     .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+		.layui-layer{
+		        width: 550px;left: 550px;
+		}
+		.layer_notice{
+		   width:550px;background:#5FB878;color:#ffffff;font-size:22px;padding:20px;text-align:center;
+		}
+	</style>
+</block>
+
+<block name="content">
+
+<!--
+<div style="display:none" class="layer_notice">
+	  存在新版商品超市，是否需要前往新版超市<a href="http://web.wbcat.com/index.php/rate/fujia.html">设置</a>	
+</div>
+-->
+
+<div class="row search-bar" >
+	<form >
+
+             <div class="alert alert-warning bolder" >
+	      总销售金额<span class="orange" id="sumje">0.00</span> 元&nbsp;&nbsp;&nbsp;
+		  收款码<span class="orange" id="sum_xs_je">0.00</span> 元&nbsp;&nbsp;&nbsp;
+		  现金<span class="orange" id="sum_cash_je">0.00</span> 元&nbsp;&nbsp;&nbsp;
+		  其他<span class="orange" id="sum_other_je">0.00</span> 元&nbsp;&nbsp;&nbsp;
+		  
+		 总退款金额 <span class="orange" id="sum_th_je">0.00</span>元&nbsp;&nbsp;&nbsp;
+		 总销售数量 <span class="orange" id="sum_xs_num">0</span>个&nbsp;&nbsp;&nbsp;
+		 总退货数量 <span class="orange" id="sum_th_num">0</span>个&nbsp;&nbsp;&nbsp;
+
+	   </div> 
+      <span class="mgb15 biaodan" style="width:380px;">
+          <span class="input-group" >
+            <input class="form-control daterange" name="daterange" id="daterange" type="text" placeholder="请选择日期"  value="" />
+            <span class="input-group-addon">
+              <i class="fa fa-calendar"></i>
+            </span>
+          </span>
+      </span>
+	  <!--
+	    <span class="input-group" >
+            <div class="control-group"> 
+                <div class="controls">
+                    <div class="input-prepend input-group">
+                        <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+                        <input type="text" style="width: 310px" name="reservation" id="reservationtime" class="form-control" value="08/01/2013 1:00 PM - 08/01/2013 1:30 PM"  class="span4"/>
+                    </div>
+                </div>
+           </div>
+        </span>
+		-->
+	  </span>
+      <span class="mgb15 biaodan">     
+              <input class="form-control" name="sContent" id="sContent" type="text"  placeholder="商品名称" />
+      </span>
+	  
+
+      <span class="mgb15 biaodan">
+            销售类型			
+        <select id="ordertype" name="ordertype">
+          <option value="0">所有</option>        
+          <option value="1">已销售</option>
+		  <option value="2">交班销售</option>
+		  <option value="3">已退货</option>          
+        </select>                    
+       </span>
+	   
+	    <span class="mgb15 biaodan">
+            支付类型			
+        <select id="paytype" name="paytype">
+          <option value="0">所有</option>        
+          <option value="1">现金</option>
+		  <option value="2">收款码</option>
+		  <option value="3">其他</option>          
+        </select>                    
+       </span>
+	   
+	   
+	   	 <span class="mgb15 biaodan">
+            商品类型			
+        <select id="type_id" name="type_id">
+          <option value="0">所有</option>        
+         <volist name="typelist" id="info">
+                    <option value="{$info.type_id}">{$info.type_name}</option>
+          </volist>          
+        </select>                    
+       </span>
+	   
+	    <div class="col-xs-6 col-sm-3 mgb15">操作人
+                <select id="operate" name="operate">
+                  <option value="">全部</option>
+                  <volist name="yglist" id="yginfo">
+                    <option value="{$yginfo.id}">{$yginfo.name}</option>
+                  </volist>
+                </select>
+        </div>
+  <span class="mgb15 biaodan"><button type="button" class="btn btn-purple btn-sm" onclick="doSearch()">搜索<i class="fa fa-search"></i></button></span>
+
+	</form>
+</div>
+
+    <div id="jqgrid">
+        <table id="grid-table"></table>
+        <div id="grid-pager"></div>
+    </div>
+
+
+
+</block>
+
+
+
+<script type="text/javascript">
+                   $(document).ready(function() {
+                       $('#reservationtime').daterangepicker({
+                           timePicker: true,
+                           timePickerIncrement: 30,
+                           format: 'MM/DD/YYYY h:mm A'
+                       }, function(start, end, label) {
+                           console.log(start.toISOString(), end.toISOString(), label);
+                       });
+                   });
+               </script>
+
+
+<block name="script">
+      <script>
+	  // 请求数据填写到页面上
+        $(function(){
+            $('#grid-table').jqGrid({
+                url: '{:U("getxstongjilist_zongzhang")}',
+                datatype: "json",
+                type:"get",
+                height:"100%",
+                autowidth:true,
+                shrinkToFit:true,
+                colModel:[
+                    {label:'编号',name:'id',width:50,},
+                    {label:'商品id',name:'goods_id',width:50,hidden:true,},
+					{label:'订单号',name:'post_order_no',width:100,},
+                    {label:'商品名称',name:'goods_name',width:140,},
+					{label:'商品分类',name:'type_name',width:50,},
+                    {label:'销售数量',name:'xiaoshou_num',width:50},      				
+                    {label:'售价',name:'shou_price',width:50,},
+					{label:'收入',name:'je',width:50,},
+					{label:'订单类型',name:'ordertype',width:50},
+					{label:'支付类型',name:'paytype',width:50},	
+                   	{label:'时间',name:'dtInsertTime',width:100,},
+                    {label:'操作人',name:'operate',width:100,}, 					
+                   
+                ],
+                styleUI : 'Bootstrap',
+                rowNum:12,
+                pager:'#grid-pager',
+                viewrecords: true,
+				sortorder: "desc",
+                loadComplete:function(data)
+                { //完成服务器请求后，回调函数 
+     
+                    $("#shuju").html('');
+                    var text='';
+					   
+					$("#sumje").html(data.sumje);
+					$("#sum_cash_je").html(data.sum_cash_je);
+					$("#sum_nocash_je").html(data.sum_nocash_je);
+					$("#sum_other_je").html(data.sum_other_je);
+					
+									
+					$("#sum_xs_num").html(data.sum_xs_num);
+					$("#sum_th_num").html(data.sum_th_num);			
+					
+					
+                        <!-- for(var i=0;i<data.tongji_count;i++) -->
+                        <!-- { -->
+                          <!-- text+="<tr><td>"+data['tongji_list'][i]['name']+'</td><td>'+data['tongji_list'][i]['count']+'</td><td>'+data['tongji_list'][i]['sum_money']+'</td></tr>' -->
+                        <!-- } -->
+                        <!-- $("#shuju").append(text); -->
+
+                },			
+				gridComplete: function()
+				{
+                    var ids = $("#grid-table").jqGrid('getDataIDs');
+                    var add,edit,save,del,bangding,info_edit,edit2,wbid = '';
+
+                    var end_str,sta_str,jch_type_caption,ordertype;                                             										
+                
+                        for(var i=0;i < ids.length;i++)
+                        {
+                            var getRow = $('#grid-table').getRowData(ids[i]);//获取当前的数据行  
+                            var colVal = getRow.wbid;             
+                            var rownum = ids[i];
+							var ordertype_str= getRow.ordertype;  
+							var paytype_str= getRow.paytype; 
+													
+							
+							if(ordertype_str==1)
+							{
+							  ordertype_str='已销售';			
+							}
+							else if(ordertype_str==2)
+							{
+							   ordertype_str='交班销售';
+							}
+							else if(ordertype_str==3)
+							{
+							   ordertype_str='已退货';
+							}else if(ordertype_str==4)
+							{
+							   ordertype_str='待处理';
+							}else if(ordertype_str==5)
+							{
+							   ordertype_str='已取消';
+							}
+							
+			               
+						   
+							if(paytype_str==1)
+							{
+							  paytype_str='现金';			
+							}
+							else if(paytype_str==2)
+							{
+							   paytype_str='收款码';
+							}
+							else if(paytype_str==3)
+							{
+							   paytype_str='其他';
+							}	 
+							
+							var edit2= '<a href="#" onclick="xiaoshoumx('+rownum+')">查看详情</a>';                     							   							
+						  
+	                           														 
+							$("#grid-table").jqGrid('setRowData',ids[i],{opera:edit2,ordertype:ordertype_str,paytype:paytype_str});													   								
+								
+                        }
+                    
+                    
+                    
+                }, 
+
+    
+            });
+
+
+
+            $(window).resize(function(){
+                $('#grid-table').jqGrid('setGridWidth', $('#jqgrid').width(), true);
+            });
+        });
+
+         $('#daterange').val(moment().subtract('days', 7).startOf('day').format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+            $('.daterange').daterangepicker({
+                format:'YYYY-MM-DD hh:mm:ss',
+                timePicker: true,
+                timePickerIncrement: 1,
+                timePickerSeconds:true,
+                startDate:moment().startOf('day'),  
+                endDate: moment(),
+                timePicker12Hour:false,     
+                ranges: {  
+                           '今天': [moment().startOf('day'), moment().endOf('day')],  
+                           '昨天': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],  
+                           '最近7天': [moment().subtract('days', 6).startOf('day'), moment().endOf('day')],  
+                           '最近30天': [moment().subtract('days', 29).startOf('day'), moment().endOf('day')],  
+                           '本月': [moment().startOf('month'), moment().endOf('month')],  
+                           '上月': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]  
+                        },        
+                locale:{
+                    applyLabel:'确定',
+                    cancelLabel:'取消',
+                    fromLabel:'从',
+                    toLabel:'至',
+                    daysOfWeek:['周日','周一','周二','周三','周四','周五','周六'],
+                    monthNames:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+          customRangeLabel: '自定义',
+          firstDay : 1
+                }
+
+            },function(start,end,label){
+      $('#daterange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+      });
+
+	  
+	  //日期后的搜索框搜索
+        function doSearch(){
+            $('#grid-table').jqGrid('setGridParam',{
+                postData:{
+                    //daterange:$('#daterange').val(),
+                    daterange:$('#reservationtime').val(),
+                    paytype:$('#paytype').val(),
+					ordertype:$('#ordertype').val(),
+					operate:$('#operate').val(),
+                    sContent:$('#sContent').val(),
+                    type_id:$('#type_id').val()
+                   
+                }
+            }).trigger('reloadGrid');
+        }
+
+		
+   function xiaoshoumx(rowNum)
+   {
+      var rowData = $('#grid-table').jqGrid('getRowData',rowNum);
+	  var id_str= rowData['id'];
+      layer.open({
+	  type: 2,
+	  offset: '100px',
+	  title: '销售统计详情',
+	  skin: 'layui-layer-lan',
+	  maxmin: true,
+	  shadeClose: true, //点击遮罩关闭层
+	  area : ['1030px' , '560px'],
+	  content: '{:U("xiaoshoumx")}?id='+id_str,
+	  });
+   } 	
+		
+		
+    </script>
+  
+<script>
+ //function checkform(){
+    //var daterange=$("#daterange").val();
+  //if(daterange==""||daterange=="请选择日期")
+  //{
+     // alert("请选择日期");
+           //layer.msg('请选择日期', {
+                  //offset: 0,
+                  //shift: 6
+                //});
+     //return false;
+  //}
+  //return true;
+ //}
+ 
+ /*
+ layer.open({
+	  type: 1,
+	  shade: 0.3,
+	  title: false, 
+	  content:$('.layer_notice'),
+	});
+ */
+ 
+ function checkform(){
+    var daterange=$("#reservationtime").val();
+  if(daterange==""||daterange=="请选择日期")
+  {
+     // alert("请选择日期");
+           layer.msg('请选择日期', {
+                  offset: 0,
+                  shift: 6
+                });
+     return false;
+  }
+  return true;
+ }
+</script>
+</block>

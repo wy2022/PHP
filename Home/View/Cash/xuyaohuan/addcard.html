@@ -1,0 +1,442 @@
+<extend name="Public/base" />
+
+<block name="head">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/assets/css/ace.min.css">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/assets/css/ace-skins.min.css">
+	<script type="text/javascript" src="__PUBLIC__/jquery-ui-1.10.3/jquery-1.9.1.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/layer/myalert.js"></script>
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/layer/myalert.css" />
+	
+	<script type="text/javascript" src="__PUBLIC__/script/jquery.form.js"></script>
+	 <link href="__PUBLIC__/bootstrap-fileinput/css/fileinput.css" media="all" rel="stylesheet" type="text/css" />
+
+	<script src="__PUBLIC__/bootstrap-fileinput/js/fileinput.js" type="text/javascript"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-fileinput/4.4.1/js/locales/zh.min.js"></script>
+	<script src="__PUBLIC__/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+	   .layer_notice{
+		   width:350px;background:#5FB878;color:#ffffff;font-size:16px;padding:20px;text-align:center;
+		}
+	</style>
+</block>
+
+<block name="content">
+<div class="row search-bar" >
+
+    
+          <div class="col-xs-12"> 
+    <div class="alert alert-info">
+      <p><i class="fa fa-hand-o-right"></i>
+            重要提醒:</p>
+       <p>1.为了保证您的账户及资金安全，请认真填写下表中的所有信息，并保证所填资料的真实性。</p>
+       <p>2.资料审核成功后才能进行“提现”操作！</p>
+	   <p>3.审核时间为1-3个工作日</p>
+  
+      </div>
+
+	  <div style="display:none" class="layer_notice">
+	  {$bz}，请重新填写
+	  </div>
+	  <if condition="$flag neq 0"> 
+	  
+	  <script>
+        layer.open({
+		  type: 1,
+		  shade: 0.3,
+		  title: false, //不显示标题
+		  content:$('.layer_notice'), //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
+		});
+
+  </script>
+
+	  </if> 
+	  
+	  
+            
+      <div class="alert alert-success" style="display:none" id="success">
+        <i class="fa fa-hand-o-right"></i>
+          添加成功！
+      </div>
+      <div class="alert alert-warning" style="display:none" id="error">
+        <i class="fa fa-hand-o-right"></i>
+          添加失败！
+      </div>
+            <!-- content---start -->
+            <form class="form-horizontal" role="form" id="form_addcard" method="post" enctype ="multipart/form-data">
+         <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="frname">姓名</label>
+                <div class="col-sm-9">
+                  <input type="text" id="frname" name="frname"  value="{$bankinfo.farenname}" class="col-xs-10 col-sm-5" />
+                  <span class="help-inline col-xs-12 col-sm-7 tips_color"></span> </div>
+              </div>
+         <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="shenfenzheng">身份证号码</label>
+                <div class="col-sm-9">
+                  <input type="text" id="shenfenzheng" name="shenfenzheng"  value="{$bankinfo.shenfenzheng}" class="col-xs-10 col-sm-5" />
+                  <span class="help-inline col-xs-12 col-sm-7 tips_color"></span> </div>
+              </div>
+        
+         <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="phonenum">手机号码</label>
+                <div class="col-sm-9">
+                  <input type="text" id="Tel" name="Tel" placeholder="" value="{$phonenum_ght}" class="col-xs-10 col-sm-5" readonly="readonly" />
+                  <span class="help-inline col-xs-12 col-sm-7 tips_color"> </span> </div>
+              </div>
+         <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="yzm">验证码</label>
+                <div class="col-sm-9">
+				   <div class="row">
+					  <div class="col-xs-10 col-sm-5" >
+					   <input type="text" id="yzm" name="yzm" placeholder=""  />
+					 <input type="button" id="get_yzm" onclick="getyzm()" class="btn btn-primary btn-sm" value="获取手机验证码" >
+					</div>
+				   
+						  <span class="help-inline col-xs-12 col-sm-7 tips_color"> </span> </div>
+				  </div>
+              </div>
+         <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="kh_name">开户名</label>
+                <div class="col-sm-9">
+                  <input type="text" id="kh_name" name="kh_name"  value="{$bankinfo.kh_name}" class="col-xs-10 col-sm-5" />
+                  <span class="help-inline col-xs-12 col-sm-7 tips_color"> </span> </div>
+              </div>
+         
+        <div class="form-group" >
+                <label class="col-sm-3 control-label no-padding-right" for="khbank">开户行</label>
+                <div class="col-sm-9">           
+                 <select id="kh_bank" name="kh_bank" class="col-xs-10 col-sm-5" >
+                    <volist name="yinhanglist" id="yinhang">
+                      <option value="{$yinhang.mid_value}">{$yinhang.mid_value}</option>
+                    </volist>
+					<script> $('#kh_bank option[value={$bankinfo.kh_hang}]').prop('selected',true); </script>
+                </select>
+                    
+　　　　　　　　　　</div>          
+        </div>
+
+         <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="kh_zhihang">开户支行</label>
+                <div class="col-sm-9">
+                  <input type="text" id="kh_zhihang" name="kh_zhihang" placeholder="如：中国银行郑州嵩山路支行" value="{$bankinfo.kh_zhihang}" class="col-xs-10 col-sm-5" />
+                  <span class="help-inline col-xs-12 col-sm-7 tips_color"> </span> </div>
+              </div>
+         <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="bankcardno">银行卡卡号</label>
+                <div class="col-sm-9">
+                  <input type="text" id="bankcardno" name="bankcardno" value="{$bankinfo.bankcardno}" class="col-xs-10 col-sm-5" />
+                  <span class="help-inline col-xs-12 col-sm-7 tips_color"> </span> </div>
+              </div>
+           <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="sfz">身份证正面照</label>
+                <div class="col-sm-9">
+				  <div class="row" >
+						  <div class="col-xs-10 col-sm-3" >
+						  <input  class="file" type="file" id="sfz" name="sfz" style="width:35%;outline:none;float:left;" value="{$bankinfo.shenfenzheng_image}" accept="image/jpg,image/jpeg,image/png"  >
+						  </div>
+						  <div class="col-xs-10 col-sm-3" >
+							  <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="证件必须是彩色原件电子版；可以是扫描件或者数码相机拍摄照片。" style="float:left;">?</span>
+								  <span style="padding-left:30px;width:120px;display:inline-block"><img src="__PUBLIC__/Home/images/img_sfz.jpg"/><p style="text-align:center;">参照示例</p></span>
+						 </div>
+				   
+				  </div>
+          </div>
+              </div>
+
+        
+           <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="zhizhao">营业执照</label>
+                <div class="col-sm-9">
+				  <div class="row" >
+						  <div class="col-xs-10 col-sm-3" >
+						  <input  class="file" type="file" id="zhizhao" name="zhizhao" style="width:35%;outline:none;float:left;"  value="{$bankinfo.zhizhao_image}" accept="image/jpg,image/jpeg,image/png"   >
+				        </div>
+                        <div class="col-xs-10 col-sm-3" >
+							  <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="证件必须是彩色原件电子版；可以是扫描件或者数码相机拍摄照片。" style="float:left;">?</span>
+						      <span style="padding-left:30px;width:120px;display:inline-block"><img src="__PUBLIC__/Home/images/img_yyzz.jpg"/><p style="text-align:center;">参照示例</p></span>
+						 </div>
+				   
+				  </div>
+          </div>
+              </div>
+
+  <input   type="hidden"  id="sfz1" name ="sfz1" value="{$bankinfo.shenfenzheng_image}" >
+   <input   type="hidden"  id="zhizhao1" name ="zhizhao1" value="{$bankinfo.zhizhao_image}" >
+    <input   type="hidden"  id="shouquanshu1" name ="shouquanshu1" value="{$bankinfo.shouquanshu_image}" >
+	<input   type="hidden"  id="bEdit" name ="bEdit" value="{$bankinfo.bEdit}" >
+	<input   type="hidden"  id="bianhao" name ="bianhao" value="{$bankinfo.id}" >
+	<input   type="hidden"  id="daili_url_zong" name ="daili_url_zong" value="{$daili_url_zong}" >
+	<input   type="hidden"  id="wbid" name ="wbid" value="{$wbid}" >
+			  
+			<div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="shouquanshu">本人与营业执照合照</label>
+                <div class="col-sm-9">
+				  <div class="row" >
+						  <div class="col-xs-10 col-sm-3" >
+						   <input  class="file" type="file" id="shouquanshu" name="shouquanshu" value="{$bankinfo.shouquanshu_image}" style="width:35%;outline:none;float:left;" accept="image/jpg,image/jpeg,image/png"   >
+				         </div>
+						 
+						 <div class="col-xs-10 col-sm-3" >
+							  <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="最好在吧台照" style="float:left;">?</span>
+							  <span style="padding-left:30px;width:120px;display:inline-block"><img src="__PUBLIC__/Home/images/hezhao.jpg"/><p style="text-align:center;">参照示例</p></span>
+						 </div>
+				  </div>
+             </div>
+           </div>
+			  
+			  
+		   <div class="clearfix form-actions">
+			<div class="col-md-offset-3 col-md-9">
+			  <button class="btn btn-info" type="submit"    id="submit2" > <i class="icon-ok bigger-110"></i> 提交 </button>
+			  &nbsp; &nbsp; &nbsp;
+			  <button class="btn" type="reset" id="submit_cancel"> <i class="icon-undo bigger-110"></i> 取消 </button>
+			</div>
+		  </div>  
+		  
+       </form>
+       
+       
+          </div>
+
+	
+</div>
+
+
+
+
+
+
+</block>
+
+
+<block name="script">
+
+
+<script>
+
+ var shouquanshu_image_url = $('#shouquanshu1').val();
+ 
+$('#shouquanshu').fileinput({
+ showUpload : false,
+ showRemove : false,
+ language: 'zh', //设置语言
+ showPreview : true,
+ showClose:false,
+  maxFileSize : 1024,//上传文件最大的尺寸
+ allowedFileExtensions : ['jpg', 'png','jpeg'],
+ initialPreview: [
+ "<img src="+shouquanshu_image_url+ " class='file-preview-image'  style='width:200px;height:150px' />",
+
+],
+});
+
+ var zhizhao_image_url = $('#zhizhao1').val();
+ 
+$('#zhizhao').fileinput({
+ showUpload : false,
+ showRemove : false,
+ language: 'zh', //设置语言
+ showPreview : true,
+ showClose:false,
+ maxFileSize : 1024,//上传文件最大的尺寸
+ allowedFileExtensions : ['jpg', 'png','jpeg'],
+ initialPreview: [
+ "<img src="+zhizhao_image_url+ " class='file-preview-image' style='width:200px;height:150px' />",
+
+],
+});
+
+ var shenfenzheng_image_url = $('#sfz1').val();
+
+$('#sfz').fileinput({
+ showUpload : false,
+ showRemove : false,
+ language: 'zh', //设置语言
+ showPreview : true,
+ showClose:false,
+ maxFileSize : 1024,//上传文件最大的尺寸
+ allowedFileExtensions : ['jpg', 'png','jpeg'],
+ initialPreview: [
+ "<img src="+shenfenzheng_image_url+ " class='file-preview-image' style='width:200px;height:170px' />",
+
+],
+});
+
+
+var  bResult = 0;
+
+$("#submit2").click(function(){
+
+  var  sum_flag=true;
+  var  sum_content='';
+
+	   $("input[type='text']").each(function ()
+	   {
+			if ($(this).val() == "") 
+			{
+			    var info=$(this).parents('.form-group').find('label').text();								
+				sum_content= info+"不能为空！";
+				sum_flag=false;
+				return false;			
+			}			  					
+		})
+		
+		if(sum_flag==false)
+		{
+		  myalertdanger(sum_content);
+		   return false;
+		}
+		
+		
+	  if(bResult==1)
+	   {
+		    
+	   }
+	   else
+	   {
+		  myalertdanger('验证码输入有误，请重新输入');
+		  return false;
+	   }
+		
+		var  daili_url_zong_str= $('#daili_url_zong').val();
+        var  url =daili_url_zong_str+'/index.php/Server/zongaddcardtoDB_hua.html';		
+	    $('#form_addcard').ajaxForm({  
+        dataType: 'json',  	
+        url : url,		
+        data:$('#form_addcard').serialize(),
+        success: processJson  
+    }); 	
+    })
+    function processJson(data)
+    {  
+        
+        if(data.result=="1")
+        {     
+          layer.msg('提交成功', {
+                              offset: 0,
+                              shift: 6,
+                              icon: 1,
+                              time: 1000,
+                            },function(){ 
+                               parent.location.reload();
+                               parent.layer.closeAll();
+                          });
+        }
+        else if(data.result =="-1")
+        {
+          layer.msg('提交失败', {
+                                  offset: 0,
+                                  shift: 6,
+                                  icon: 2,
+                                  time: 1000,
+                                });     
+        }
+       			
+    }	
+	
+
+	
+  $("#yzm").blur(function()
+  {
+  
+        $.ajax({
+           url:"{:U('CheckPhoneyzm')}",
+         type:"post",
+         dataType:"json",
+         data:{'yzm':$('#yzm').val()},
+         success:function(data)
+         {
+              if(data.result=="1")
+              {
+
+                 bResult = 1;
+              }
+              else
+              {
+                   bResult = 0;
+				    myalertdanger('验证码输入有误，请重新输入');
+              }            
+         },
+  });
+
+});
+
+function getyzm(){
+      var tel=$("#Tel").val();
+    var length=tel.length;
+    var mobile = /^(13[0-9]{9})|(18[0-9]{9})|(14[0-9]{9})|(17[0-9]{9})|(15[0-9]{9})$/;
+
+    if(length==11&&mobile.test(tel))
+    {
+       showtime(120);
+    $.ajax({
+      type:"post",
+    url:"{:U('getPhoneVerifycode')}?mobile="+tel,
+    dataType:"json",
+    data:"",
+    success:function(data)
+    {
+
+    }
+   })
+    }else
+    { 
+
+    alert('手机号错误');
+
+    };
+}
+
+
+
+
+//获取验证码
+   function showtime(t)
+   {
+      $("#get_yzm").addClass("disabled");
+    for(i=1;i<=t;i++){
+       setTimeout("update_p("+i+","+t+")",i*1000);
+    }
+   }
+   function update_p(num,t){
+      if(num==t){
+    $("#get_yzm").val("重新发送");
+     $("#get_yzm").removeClass("disabled");
+    }else{
+       var printnr=t-num;
+    $("#get_yzm").val("("+printnr+")秒后重新发送");
+    // <!-- $("#get_yzm").val(printnr); -->
+
+    }
+   }
+
+function testpost()
+{
+   if(bResult==1)
+   {
+      $('#form_addcard').submit();
+   
+   }
+   else
+   {
+      alert('信息错误');
+   }
+}
+
+
+
+
+</script>
+
+
+</block>

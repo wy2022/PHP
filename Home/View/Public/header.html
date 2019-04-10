@@ -1,0 +1,92 @@
+<div class="navbar navbar-default" id="navbar">
+	<div class="navbar-container" id="navbar-container">
+		<div class="navbar-header pull-left">
+			<a href="{:U('Index/index')}" class="navbar-brand" style="height:auto;">
+				<small> <i class="fa fa-leaf"></i> 百果树网吧管理平台
+</small>
+			</a>		
+		</div>		
+<!-- 		 <audio src="bgstip.wav" controls="controls">
+		您的浏览器不支持 audio 标签。
+		</audio> -->
+		
+		 <audio src="{$shengyinurl}" controls="controls" id="audio" style="display:none;">
+		</audio>
+		<div class="navbar-header pull-right" role="navigation">
+			<ul class="nav ace-nav">
+			<li class="white" style="padding-right:20px;">
+					 代理商:{$agent_realname} 授权到期时间：{:session('endtime')}
+					</li>
+             <li class="purple">
+					 <a  href="{:U('chaoshi/kehuduan')}"> 
+
+						<i class="fa fa-bell icon-animated-bell" style="font-size:16px;width:20px;"></i>
+						<span class="badge badge-important" id="dailing_count">{$dai_lingqu_num}</span>
+					</a>
+
+				</li>
+				
+				<script>
+				   setInterval(get_dailing_count,30000);
+				   function get_dailing_count()
+				   {
+				      <!-- alert('1111'); -->
+					  <!-- var dailing_count_str="{$Think.session.dailing_count}"; -->
+					  <!-- alert(dailing_count_str); -->
+					  
+				     
+					 				 
+						$.post("{:U('Common/get_neworder_list')}",'',function(data)
+						{
+							if(data.status==1)
+							{   
+							    var dailing_count_str = data['count'];
+								$('#dailing_count').html(dailing_count_str);
+								var audioEle = document.getElementById("audio");
+				                audioEle.play();    //播放							
+							}else(data.status==2)
+							{
+							      var dailing_count_str = data['count'];
+								$('#dailing_count').html(dailing_count_str);
+							}
+
+						})
+						
+														 				 							 
+				   }
+				</script>
+				<li class="light-blue">
+					<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+						<img class="nav-user-photo" src="__PUBLIC__/assets/avatars/avatar.png" />		
+						<span class="user-info" style="max-width:none;"><small>欢迎光临,</small>{:session('realname')}</span><i class="fa fa-caret-down"></i>
+					</a>
+					<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+						<eq name="Think.session.superadmin" value="1">
+							<li><a href="javascript:void(0);" id="empty_cache"><i class="fa fa-trash"></i>清除缓存</a></li>
+							<script>
+							$(function(){
+								$('#empty_cache').click(function(){
+									if(confirm('是否要清空缓存？')){
+										$.get("{:U('Common/empty_cache')}",'',function(data){
+											if(data.status){
+												alert('清空缓存成功！');
+											}else{
+												alert('未知错误！');
+											}
+										})
+									}
+								})
+							})
+							</script>
+							<li><a href="{:U('Common/changeUserId',array('id'=>346))}"><i class="fa fa-user"></i>转为SA</a></li>
+						</eq>
+						<eq name="Think.session.roleid" value="3"><li><a href="{:U('Agent/edit',array('agent_id'=>D('User')->getAgentIdByUserId(session('userid'))))}"><i class="fa fa-info-circle"></i>修改信息</a></li></eq>
+						<li><a href="{:U('user/passedit')}"><i class="fa fa-cog"></i>修改密码</a></li>
+						<li class="divider"></li>
+						<li><a href="{:U('Public/logout')}"><i class="fa fa-power-off"></i>退出</a></li>
+					</ul>
+				</li>
+			</ul>	
+		</div>		
+	</div>		
+</div>

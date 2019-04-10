@@ -1,0 +1,31 @@
+{extend name="teacher/base"}
+
+{block name="title"}修改信息{/block}
+{block name="body"}
+
+
+<body class="contanier">
+<div class="row">
+    <div class="col-md-12">
+        <form action="{:url('teacher/update')}" method="post">
+            {:token()}
+            <label>姓名:</label>
+            <input type="hidden" name="id" value="{$user.id}" />
+            <input type="text" name="name" value="{$user.name}" />
+            <label>用户名:</label>
+            <input type="text" name="username" value="{$user.username}" />
+            <label>性别:</label>
+            <select name="sex">
+                <option value="0">女</option>
+                <option value="1" selectet="selected"> 男</option>
+            </select>
+            <label>邮箱:</label>
+            <input type="email" name="email" value="{$user.email}" />
+            <button type="submit">保存</button>
+        </form>
+    </div>
+</div>
+
+</body>
+
+{/block}

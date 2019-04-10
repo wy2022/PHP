@@ -1,0 +1,84 @@
+<extend name="Public/base" />
+<block name="head">
+<js href="__PUBLIC__/layer/layer.js" />
+    <js href="__PUBLIC__/layer/myalert.js" />
+  <css href="__PUBLIC__/layer/myalert.css"/>
+</block>
+<block name="content">
+    <div class="tabbable">
+        <include file="nav" />
+        <div class="tab-content">
+            <div class="tab-pane active">
+                <div>女性上机费折扣：<input type="text" value="{$oneserverinfo.m_WomanDiscount}" name="femalerate" id="femalerate" style="width:70px;" onkeyup="integer2Validate('femalerate','女性上机费折扣不能为空','只能输入0-100的数字')" /> % <button class="btn btn-primary btn-sm" onclick="submitSpecialRate();">保存</button></div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script>
+	
+	
+        //判断文本框是否为空
+        function checktext(id){
+            if(document.getElementById(id).value.length==0){
+              document.getElementById(id).focus();
+              return false;
+            }else{
+              return true;
+            }
+        }
+		
+	    //判断输入是否为数字
+    function isNum2(id){
+      var val=document.getElementById(id).value;
+       var a=/^(100|[1-9]\d|\d)$/;
+      if(!a.test(val))
+      {
+        document.getElementById(id).focus();
+        return false;
+      }else{
+        return true;
+      }
+    }
+	
+        function submitSpecialRate(){
+		
+		  var femalerate=checktext('femalerate');
+          if(femalerate==false)
+           {
+              layer.tips('女性上机费折扣不能为空', '#femalerate');
+              return false;
+           }
+           
+		  var femalerate1=isNum2('femalerate');
+          if(femalerate1==false)
+           {
+              layer.tips('只能输入0-100的数字', '#femalerate');
+              return false;
+           }
+		   
+            $.post("{:U('setSpecialRate')}",{femalerate:$('#femalerate').val()},function(data){
+                    if(data.result==1){
+                          myalertsuccess('保存成功，请点击右侧 "更新重启网吧服务端"。');
+                           
+                        }else{
+                          myalertdanger('保存失败,请重新操作');
+                        }
+            });
+        }
+		
+	function integer2Validate(id,msg1,msg2){
+		 var num=/^(100|[1-9]\d|\d)$/;
+		 var value=$('#'+id).val();
+		   if(value.length==0){ 
+			 layer.tips(msg1, '#'+id);
+		   }else if(!(num.test(value)))
+			{
+			   $('#'+id).val("");
+			  $('#'+id).focus();
+			  layer.tips(msg2, '#'+id);
+			}
+		}
+    </script>
+</block>

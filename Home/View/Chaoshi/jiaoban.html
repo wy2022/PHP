@@ -1,0 +1,862 @@
+<extend name="Public/base" />
+
+<block name="head">
+
+          <css href="__PUBLIC__/jquery-ui-1.10.3/themes/base/jquery.ui.all.css" />
+	 <js href="__PUBLIC__/jquery-ui-1.10.3/jquery-1.9.1.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.core.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.widget.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.position.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.menu.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.autocomplete.js" />
+	 <css href="__PUBLIC__/jquery-ui-1.10.3/demos/demos.css" /> 
+	 
+	
+	 <js href="__PUBLIC__/js/jquery.base64.js" />
+	 
+	 
+
+
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+    <js href="__PUBLIC__/layer/layer.js" />
+    <js href="__PUBLIC__/layer/myalert.js" />
+	
+<js href="__PUBLIC__/js/paixu/jquery.tablesorter.js" />
+<js href="__PUBLIC__/js/paixu/jquery.tablesorter.widgets.js" />
+	 <js href="__PUBLIC__/js/TableSorterV2.js" />
+	  
+     <css href="__PUBLIC__/layer/myalert.css"/>
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+     .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+		 .fontsize12{font-size:12px;}
+		 .fl{float:left;};
+		 .fr{float:right};
+		 .text-right{text-align:right;}
+		 .btn1{
+		    font-size:12px;
+			height:28px;
+			line-height:28px;
+			width:90px;
+			-webkit-border-radius:2px;
+			-moz-border-radius:2px;
+			border-radius:2px;
+			border:0;
+			padding:6px 8px;
+			text-shadow:none;
+			background-image:none;
+		 }
+		 a:hover{text-decoration:none;}
+         #tableid td{vertical-align:middle;}
+		 #tableid tr td input[type="text"],#bz{
+		    display:inline-block;
+			height:22px;
+			font-size:14px;
+			line-height:22px;
+			color:#555555;
+			vertical-align:middle;
+			-webkit-border-radius:4px !important;
+			-moz-border-radius:4px !important;
+			border-radius:4px !important;
+			border-color:#a4bed4;
+			text-align:center;
+			padding:0;
+			width:65px;
+		 }
+		 #bz{height:30px;line-height:30px;width:560px;text-align:left;padding:4px 6px;}
+		 .fa-times-circle{cursor:pointer;}
+		 .pdl5{padding-left:5px;}
+		 
+		 .trbg{background-color:#438eb9}
+		 .danger{background-color:#a94442}
+		  #theadid th:nth-child(1){width: 100px;}
+		  #theadid th:nth-child(2){width: 100px;}
+		  #theadid th:nth-child(3){width: 400px;}
+		  #theadid th:nth-child(4){width: 100px;}
+		  #theadid th:nth-child(5){width: 100px;}
+		  #theadid th:nth-child(6){width: 100px;}
+		  #theadid th:nth-child(7){width: 100px;}
+		  #theadid th:nth-child(8){width: 200px;}
+		  #theadid th:nth-child(9){width: 100px;}
+		  #theadid th:nth-child(10){width: 100px;}
+		
+		  
+          table tbody tr td:nth-child(1){width: 100px;}
+		  table tbody tr td:nth-child(2){width: 100px;}
+		  table tbody tr td:nth-child(3){width: 400px;}
+		  table tbody tr td:nth-child(4){width: 100px;}
+		  table tbody tr td:nth-child(5){width: 100px;}
+		  table tbody tr td:nth-child(6){width: 100px;}
+		  table tbody tr td:nth-child(7){width: 100px;}
+		  table tbody tr td:nth-child(8){width: 200px;}
+		  table tbody tr td:nth-child(9){width: 100px;}
+		  table tbody tr td:nth-child(10){width: 100px;}
+		  
+		
+		  
+		  #project {
+				display:inline-block;
+				height:30px;
+				font-size:14px;
+				line-height:
+				color:#555555;
+				vertical-align:middle;
+				-webkit-border-radius:4px !important;
+				-moz-border-radius:4px !important;
+				border-radius:4px !important;
+				border-color:#a4bed4;
+				text-align:left;
+				padding:4px 6px;
+				width:200px;
+			 }
+			 
+			 
+			 .SortDescCss{background-image:url(Desc.gif);background-repeat:no-repeat;background-position:right center;}
+        .SortAscCss{background-image:url(Asc.gif);background-repeat:no-repeat;background-position:right center;}
+	</style>
+
+</block>
+
+<block name="content">
+<div class="tabbable">
+<!-- 	<ul class="nav nav-tabs">
+		<li id="shangjia"><a href="{:U('chaoshi/shangjia')}">上架</a></li>
+		<li id="xiajia"><a href="{:U('chaoshi/xiajia')}">下架</a></li>
+	</ul> -->
+<script>
+    $('.nav li#{$Think.const.ACTION_NAME}').addClass('active');
+
+</script>
+	<input type="hidden"  id="ght_FAllowXiaoshouPrint" value="{$FAllowXiaoshouPrint}"> 
+   <div style="overflow:hidden;margin-bottom:30px;">
+        <div class="fl" style="font-size:18px;"><strong>接班时间</strong>：<span class="red" id="jieban_time">{$jieban_time}</span></div>
+        <div class="fr text-right">
+            <input type="hidden"  id="ght_goodslist" value="{$goodslist}">    
+            <input type="checkbox"  name="show_goods" style="cursor:pointer;" > 只显示有销量的商品			
+            <input type="text" class="form-control" placeholder="检索商品" id="project" > 
+			<input type="hidden"  id="jiaoban_time" value="{$jiaoban_time}"> 
+            <input type="hidden" name="TOKEN" id="TOKEN" value="{:session('TOKEN')}">			
+			
+            <!-- <input type="text" placeholder="检索商品" id="js-search-products">  -->
+         <!--   <ul class="span3 dropdown-menu text-left" id="js-result-list" role="menu"  aria-labelledby="dLabel"></ul> -->
+            <!-- <a href="javascript:void(0);" class="btn1 btn-primary " id="js-import-products" style="vertical-align:top;"  onclick="plch();">选择商品</a> -->
+            <!-- <a data-toggle="modal" href="../../barshop/statics/helpxml/inventory_inout-form.html" data-target="#modal-question" class="help_btn"><i class="icon-question-circle mt5 ml20" title="网吧超市帮助"></i></a> -->
+        </div>
+    </div>
+
+	
+    <div class="table-responsive" style="height:500px;overflow:auto;margin-top:-20px;border-bottom:1px solid #c0dcea;">
+        <table class="table table-bordered table-hover" id="tableid">
+            <thead>
+            <tr id="theadid">
+				<th class="hide">操作</th>
+                <th style='width:80px;'>商品分类</th>
+				<th >商品名称</th>
+                <th style='width:160px;'>接班时货架库存</th>
+				<th>上架数量</th>
+				<th>下架数量</th>
+				<th>售价</th>
+				<th>当前货架库存</th>
+				<th>销售数量</th>
+				<th>商品收入</th>
+            </tr>
+            </thead>
+            <tbody id="shangjia_text" >
+
+            </tbody>
+        </table>
+    </div> 
+
+
+    <div class="foot-container" id="js-foot-container" style="margin-top:15px;padding-top:15px">
+           <div class="mgb15">
+
+               所有商品收入：<span id="goodstotal">0.00</span>元
+			   客户端微信：<span id="wx_sum_money_khd">{$wx_sum_money_khd}</span>元
+			   客户端支付宝<span id="zfb_sum_money_khd">{$zfb_sum_money_khd}</span>元
+			   客户端现金：<span id="cash_sum_money_khd">{$cash_sum_money_khd}</span>元
+			   吧台现金：<span id="cash_sum_money_bt">0.00</span>元
+			   吧台微信：<span id="wx_sum_money_bt">{$wx_sum_money_bt}</span>元
+			   吧台支付宝<span id="zfb_sum_money_bt">{$zfb_sum_money_bt}</span>元
+			   
+			   
+            </div>
+            <div class="text-left mgb15">
+			    
+                备注&nbsp;&nbsp;<input type="text" name="bz" id="bz" maxlength="200" >
+            </div>
+			<input id="flag" value="" type="hidden"/>
+            <div class="text-center tip">
+                <span style="padding:14px 0px;cursor:pointer;"><button class="btn btn-primary js-btn-save" id="btn_save" type="button">交班</button></span>
+                
+				<button class="btn btn-inverse js-btn-cancel" onclick='jiaoban_mx()' >交班明细</button> 
+                
+            </div>
+      </div>
+
+</div>
+
+
+</block>
+<block name="script">
+<script>
+//console.log({$goodslist})
+$("input[name='show_goods']").prop("checked",false);
+var storage=window.localStorage;
+storage.removeItem('goods_id');
+
+ function plch()
+{   
+  var storage=window.localStorage;
+  var yixuan_id  =  storage.getItem("goods_id");
+
+  
+  layer.open({
+  type: 2,
+  title: '批量出货',
+  maxmin: true,
+  shadeClose: true, //点击遮罩关闭层
+  area : ['930px' , '570px'],
+  content: '{:U("chaoshi/plch")}?goods_id='+yixuan_id,
+  });
+}
+
+$("input[name='show_goods']").click(function(){
+if($("input[name='show_goods']").prop("checked")){
+  ceshi1(0);
+
+}else{
+  ceshi2(0);
+  
+}
+
+})
+	
+
+
+function ceshi1(aa)      //有销量
+{
+
+<!-- var  a =$('#flag').val(); -->
+<!-- alert(a); -->
+ <!-- var storage=window.localStorage; -->
+ var b  =  '0';
+ 
+   // console.log('111111');
+    var  canshu= aa;
+	<!-- alert(canshu); -->
+	
+	
+ 	  $.ajax({
+	  url:"{:U('getAllShangpinkucuinfolist')}?flag="+canshu,
+	  type:"post",
+	  dataType:"json",
+	  data:{canshu:b},
+	  success:function(data)
+	  {       
+		$("#shangjia_text").html('');
+		var html="";
+		console.log(data)
+        for (var i = 0; i <data.length; i++) 
+		{	
+		 //  alert(data[i].isValid);
+		 //  alert(data[i].is_zuhe);
+			if(data[i].isValid==0 && data[i].is_zuhe==2)
+			{
+			  continue;
+			}
+			if(data[i].xiaoshou_num==0)
+			{
+				$('#btn_save').attr({'disabled':true})
+				continue;
+			}		
+			
+			html+="<tr id=tr"+i+">"; 
+            html+='<td class="hide"><i class="fa fa-times-circle fa-2x text-danger qx " onclick="return del('+i+')" id=del'+i+'></i></td>';	
+            html+='<td>'+data[i].type_name+'</td>';			
+			if(data[i].is_zuhe==2){
+				html+='<td style="color:red">'+data[i].goods_name+'</td>';
+			}else{
+				html+='<td>'+data[i].goods_name+'</td>';
+			}
+			html+='<td>'+data[i].old_hj_num+'</td>';
+			html+='<td>'+data[i].shangjia_num+'</td>';	
+            html+='<td>'+data[i].xiajia_num+'</td>';	
+            html+='<td>'+data[i].shou_price+'</td>';			
+			html+='<td><input  name="shuliang"  type="text" value='+data[i].now_hj_num+' onkeyup="return shuliang('+i+')" id=shuliang'+i+' ><span class="pdl5">个</span></td>';
+			html+='<td>'+data[i].xiaoshou_num+'</td>';
+			html+='<td id=total'+i+'></td>';
+			html+='<td class="hide" id=goods_id'+i+'>'+data[i].goods_id+'</td>';			
+			html+="</tr>"			
+        }; 
+         $("#shangjia_text").append(html);		
+	   total();
+	   addbg();
+       issubmit();
+	    //  new TableSorter("tableid");
+		$("#tableid").tablesorter({ sortList: [[0,0], [1,0]] });
+	  }
+  }); 
+
+}
+	
+
+function ceshi2(aa) 
+{
+
+<!-- var  a =$('#flag').val(); -->
+<!-- alert(a); -->
+ <!-- var storage=window.localStorage; -->
+ var b  =  '0';
+ 
+
+    var  canshu= aa;
+	<!-- alert(canshu); -->
+	
+	
+ 	  $.ajax({
+	  url:"{:U('getAllShangpinkucuinfolist')}?flag="+canshu,
+	  type:"post",
+	  dataType:"json",
+	  data:{canshu:b},
+	  success:function(data)
+	  {       
+		$("#shangjia_text").html('');
+		var html="";
+			//tim('beg');
+		//console.log(data)
+        for (var i = 0; i <data.length; i++) 
+		{	
+		 //  alert(data[i].isValid);
+		 //  alert(data[i].is_zuhe);
+			if(data[i].isValid==0 && data[i].is_zuhe==2)
+			{
+			  continue;
+			}
+			html+="<tr id=tr"+i+">"; 
+            html+='<td class="hide"><i class="fa fa-times-circle fa-2x text-danger qx " onclick="return del('+i+')" id=del'+i+'></i></td>';	
+            html+='<td>'+data[i].type_name+'</td>';			
+			if(data[i].is_zuhe==2){
+				html+='<td style="color:red">'+data[i].goods_name+'</td>';
+			}else{
+				html+='<td>'+data[i].goods_name+'</td>';
+			}
+			html+='<td>'+data[i].old_hj_num+'</td>';
+			html+='<td>'+data[i].shangjia_num+'</td>';	
+            html+='<td>'+data[i].xiajia_num+'</td>';	
+            html+='<td>'+data[i].shou_price+'</td>';			
+			html+='<td><input  name="shuliang"  type="text" value='+data[i].now_hj_num+' onkeyup="return shuliang('+i+','+data[i].now_hj_num+')" id=shuliang'+i+' ><span class="pdl5">个</span></td>';
+			html+='<td>'+data[i].xiaoshou_num+'</td>';
+			html+='<td id=total'+i+'></td>';
+			html+='<td class="hide" id=goods_id'+i+'>'+data[i].goods_id+'</td>';			
+			html+="</tr>"			
+        }; 
+         $("#shangjia_text").append(html);		
+	   total();
+	   addbg();
+       issubmit();
+	//tim('end');
+	    // new TableSorter("tableid");
+		//$("#tableid").trigger("update");
+		$("#tableid").tablesorter({ sortList: [[0,0], [1,0]] });
+	  }
+  }); 
+
+}
+ceshi2(0);
+
+function tim(a){
+	var tim=new Date();
+	   
+	  console.log(tim.getMinutes()+':'+tim.getSeconds()+':'+tim.getMilliseconds()+'-----'+a);
+}
+				
+function del(id){
+   var newgoods_id_list='';
+   var a_goods_id=$('#goods_id'+id).text();
+   var storage=window.localStorage;
+   var goods_id_str  =  storage.getItem("goods_id");
+   
+   var goods_id_list=goods_id_str.split(",");  
+   for(var i=0;i<goods_id_list.length;i++)
+   {
+      if(goods_id_list[i]==a_goods_id)
+	  {
+	    
+	  }
+	  else
+	  {
+	    newgoods_id_list+=goods_id_list[i]+',';
+	  }
+   }
+ 
+   storage.setItem("goods_id",newgoods_id_list);
+   $('#del'+id).parents('tr').remove();
+   
+   
+  
+}
+
+function total(){
+   var s=0;
+
+     var tbl=$('#shangjia_text');
+    var trlist=tbl.find("tr");
+	
+	for (var i = 0; i<trlist.length; i++) 
+	{    //遍历Table的所有Row
+		var tr1=$(trlist[i]);	
+
+		var shou_price =Number(tr1.find('td:eq(6)').text());
+		var old_hj_num = Number(tr1.find('td:eq(3) ').text());
+		var now_hj_num = Number(tr1.find('td:eq(7) input').val());
+		var shangjia_num = Number(tr1.find('td:eq(4) ').text());
+		var xiajia_num = Number(tr1.find('td:eq(5) ').text());
+		var onegoodsnum=old_hj_num+shangjia_num-now_hj_num -xiajia_num;
+		var onegoodsprice=(old_hj_num+shangjia_num-now_hj_num -xiajia_num)*shou_price;
+		tr1.find('td:eq(8) ').text(onegoodsnum);
+		tr1.find('td:eq(9) ').text(onegoodsprice.toFixed(2));
+		<!-- alert("shou_price:"+goods_id+";old_hj_num:"+old_hj_num+";now_hj_num:"+now_hj_num+";shangjia_num:"+shangjia_num+";xiajia_num:"+xiajia_num); -->
+		
+		s+=onegoodsprice;
+
+	}
+		var num = new Number(s);
+        var sum=num.toFixed(2);
+		$("#goodstotal").text(sum);
+		
+		
+	    var total_wx= $('#wx_sum_money_khd').text();
+        var total_zfb= $('#zfb_sum_money_khd').text();
+        var total_cash= $('#cash_sum_money_khd').text(); 
+		
+		var total_wx_bt= $('#wx_sum_money_bt').text(); 
+		var total_zfb_bt= $('#zfb_sum_money_bt').text(); 
+		
+			
+		var total_wx_num = new Number(total_wx);
+        total_wx_num=total_wx_num.toFixed(2);
+		
+		var total_zfb_num = new Number(total_zfb);
+        total_zfb_num=total_zfb_num.toFixed(2);
+		
+		var total_cash_num = new Number(total_cash);
+        total_cash_num=total_cash_num.toFixed(2);
+		
+		
+		var total_wx_bt_num = new Number(total_wx_bt);
+        total_wx_bt_num=total_wx_bt_num.toFixed(2);
+		
+		var total_zfb_bt_num = new Number(total_zfb_bt);
+        total_zfb_bt_num=total_zfb_bt_num.toFixed(2);
+		
+		
+
+			
+		
+        var total_cash_bt= sum -total_wx_num- total_zfb_num- total_cash_num- total_zfb_bt_num- total_wx_bt_num ; 
+
+		
+		
+		var total_cash_bt_num = new Number(total_cash_bt);
+        total_cash_bt_num=total_cash_bt_num.toFixed(2);
+		
+		$("#cash_sum_money_bt").text(total_cash_bt_num);
+		
+	
+};
+
+
+
+function shuliang(id,now_hj_num){
+   var num=/^\+?(0|[1-9][0-9]*)$/;
+   var val=$('#shuliang'+id).val();
+   if(!(num.test(val)))
+	{
+	  myalertdanger("货架库存只能输入整数");
+	  $('#shuliang'+id).val("");
+	  
+	}
+	if(val>now_hj_num){
+		myalertdanger("数量不能大于现有货架库存");
+		$('#shuliang'+id).val(now_hj_num);
+	}
+	total();
+	
+    addbg();
+	issubmit();
+	
+}
+
+function addbg(){
+	<!-- 验证是否当前货架库存输入有误 -->
+    var tbl=$('#shangjia_text');
+    var trlist=tbl.find("tr");
+	for (var i = 0; i<trlist.length; i++) 
+	{ 
+		var tr1=$(trlist[i]);	
+		
+		var old_hj_num = Number(tr1.find('td:eq(3) ').text());
+		var now_hj_num = Number(tr1.find('td:eq(7) input').val());
+		var shangjia_num = Number(tr1.find('td:eq(4) ').text());
+		var xiajia_num = Number(tr1.find('td:eq(5) ').text());
+		var a=Number(old_hj_num+shangjia_num-now_hj_num -xiajia_num);
+		
+        if(a<0){
+		  tr1.addClass('danger');
+		}else{
+		   tr1.removeClass('danger');
+		}
+
+	}
+}
+
+/*$("#shangjia_text").on("change","input[name*=shuliang]",function()
+{ 
+    var tbl=$('#shangjia_text');
+    var trlist=tbl.find("tr");
+	
+	for (var i = 0; i<trlist.length; i++) 
+	{ 
+		var tr1=$(trlist[i]);	
+		
+		var old_hj_num = Number(tr1.find('td:eq(3) ').text());
+		var now_hj_num = Number(tr1.find('td:eq(7) input').val());
+		var shangjia_num = Number(tr1.find('td:eq(4) ').text());
+		var xiajia_num = Number(tr1.find('td:eq(5) ').text());
+		var a=Number(old_hj_num+shangjia_num-now_hj_num -xiajia_num);
+		
+        if(a<0){
+		  tr1.addClass('danger');
+		}else{
+		   tr1.removeClass('danger');
+		}
+
+	}
+	issubmit();
+	
+})*/
+
+function issubmit(){
+   $("#shangjia_text tr").each(function(){
+	  if($(this).hasClass("danger")){
+	   
+	    $("#btn_save").attr("disabled",true);
+		// myalertdanger("当前货架库存输入有误，请重新输入");
+		return false;
+	  }else{
+	
+	    $("#btn_save").attr("disabled",false); 
+		
+	  }
+	
+   });
+   
+
+}
+ $(".tip span").click(function(){
+   if($("#btn_save").prop("disabled")){
+ 
+		   myalertdanger("当前货架库存输入有误");
+   }
+   })
+
+   
+function add_print_content()
+	{
+		var tbl=$('#shangjia_text');
+		var trlist=tbl.find("tr");
+		var a_goods_name,a_goods_num,a_goods_price,a_goods_sumje='';
+		
+		var data = [];	
+		for (var i = 0; i<trlist.length; i++) 
+		{    
+			var tr1=$(trlist[i]);
+			
+			var row1 = {};
+			var shou_price =Number(tr1.find('td:eq(6)').text());
+			var old_hj_num = Number(tr1.find('td:eq(3) ').text());
+			var now_hj_num = Number(tr1.find('td:eq(7) input').val());
+			var shangjia_num = Number(tr1.find('td:eq(4) ').text());
+			var xiajia_num = Number(tr1.find('td:eq(5) ').text());
+			var onegoodsnum=old_hj_num+shangjia_num-now_hj_num -xiajia_num;
+			
+			if(onegoodsnum>0)
+			{
+			  	a_goods_name =tr1.find('td:eq(2)').text();	
+				a_goods_num = onegoodsnum;
+				a_goods_price= shou_price;		
+				a_goods_sumje=a_goods_num * a_goods_price;
+				
+				row1.goods_name = a_goods_name ;
+				row1.num = a_goods_num;
+				row1.price = a_goods_price;
+				row1.qianshu =a_goods_sumje ;
+				data.push(row1);
+			}
+															
+		}
+		//console.log(data)
+		var total_shouru= $('#goodstotal').text();	
+       
+	    var total_wx_khd= $('#wx_sum_money_khd').text();
+        var total_zfb_khd= $('#zfb_sum_money_khd').text();
+        var total_cash_khd= $('#cash_sum_money_khd').text(); 
+        var total_cash_bt= $('#cash_sum_money_bt').text(); 		
+
+
+		var jieban=$('#jieban_time').html();		
+        var jiaoban= $('#jiaoban_time').val();
+		
+		
+
+        var alldata={};    
+		alldata.goodsinfo = data;
+		alldata.total_je = total_shouru;//商品总价值
+		
+		
+		alldata.total_wx_khd = total_wx_khd;//商品金额
+		alldata.total_zfb_khd = total_zfb_khd;//商品金额
+		alldata.total_cash_khd = total_cash_khd;//商品金额
+		alldata.total_cash_bt = total_cash_bt;//商品金额
+		
+		
+
+		alldata.dt_jieban = jieban;
+		alldata.dt_jiaoban = jiaoban;
+
+        var param = JSON.stringify(alldata);   
+		var script=document.createElement("script");  
+  
+ 	
+		script.src= 'http://127.0.0.1:51243?a='+param+'&cmdid=2';
+		document.body.appendChild(script);	
+	
+	}
+	   
+ 
+ 
+$("#btn_save").click(function(){
+	//$("#btn_save").addClass("hide");
+	$("#btn_save").attr("disabled",true);
+	
+     <!-- var param = $("#agent_reg").serialize(); -->
+    issubmit();
+	 
+	var tableInfo = "";
+	var data = [] ; 
+    var tbl=$('#shangjia_text');
+    var trlist=tbl.find("tr");
+	
+	for (var i = 0; i<trlist.length; i++) 
+	{    //遍历Table的所有Row
+		var tr1=$(trlist[i]);		
+		var row1 = {};
+		row1.goods_id = tr1.find('td:eq(10)').text();
+		row1.goods_name = tr1.find('td:eq(2)').text();	
+		row1.old_hj_num = tr1.find('td:eq(3) ').text();
+		row1.now_hj_num = tr1.find('td:eq(7) input').val();
+		row1.shangjia_num = tr1.find('td:eq(4) ').text();
+		row1.xiajia_num = tr1.find('td:eq(5) ').text();
+		data.push(row1);
+		
+	}
+	
+	
+    var param = JSON.stringify(data);
+	var bz_str=$('#bz').val();
+	
+	var sumje_str=$('#goodstotal').text();
+	 
+	
+	
+	var total_wx_khd_str= $('#wx_sum_money_khd').text();
+    var total_zfb_khd_str= $('#zfb_sum_money_khd').text();
+    var total_cash_khd_str= $('#cash_sum_money_khd').text(); 
+    var total_cash_bt_str= $('#cash_sum_money_bt').text(); 
+	
+    var total_wx_bt_str= $('#wx_sum_money_bt').text(); 
+	var total_zfb_bt_str= $('#zfb_sum_money_bt').text(); 	
+
+	 
+	 
+	 
+	 var alldata = {};
+
+	 alldata.sumje=sumje_str;
+	 alldata.sumje_wx_khd=total_wx_khd_str;
+	 alldata.sumje_zfb_khd=total_zfb_khd_str;
+	 alldata.sumje_cash_khd=total_cash_khd_str; 
+	 alldata.sumje_cash_bt=total_cash_bt_str;
+	 alldata.sumje_wx_bt=total_wx_bt_str;
+	 alldata.sumje_zfb_bt=total_zfb_bt_str;
+	 alldata.bz=bz_str;
+	 alldata.goodsinfo=data;
+	 
+	 var senddata = JSON.stringify(alldata);  
+	 senddata = encodeURI(senddata);  	
+	 senddata=$.base64.btoa(senddata);
+	 
+   //  console.log(senddata);
+   
+    var token_str=$('#TOKEN').val();
+	 
+     $.ajax({
+      url : "{:U("jiaoban_edit_set")}",
+      type : "post",
+      dataType : "json",
+      data: {goodsinfo:param,bz:bz_str,sumje:sumje_str,sumje_wx_khd:total_wx_khd_str,sumje_zfb_khd:total_zfb_khd_str,sumje_cash_khd:total_cash_khd_str,sumje_cash_bt:total_cash_bt_str,sumje_wx_bt:total_wx_bt_str,sumje_zfb_bt:total_zfb_bt_str,token:token_str},
+      success : function(data) 
+      {
+      if(data.status=="1")
+      {
+	    
+         
+		
+	
+		myalertsuccess("交班成功");	
+		   add_print_content();
+		$("#btn_save").attr("disabled",false);		
+    }
+	else if(data.status =="-1")
+    {
+	  $("#btn_save").removeClass("hide");
+	    myalertdanger("交班失败");
+		$("#btn_save").attr("disabled",false);
+    }else if(data.status =="-2")
+		{
+		 myalertdanger('数据重复提交,交班失败');
+		 
+		   
+		}
+    },
+ });
+
+}); 
+
+</script>
+
+
+<script>
+	$(function() 
+	{
+	
+	
+	
+	    var projects={$goodslist};
+		$( "#project" ).autocomplete({
+			minLength: 0,
+			source: projects,
+			focus: function( event, ui ) 
+			{			    
+				$( "#project" ).val( ui.item.goods_name );
+				return false;
+			},
+			select: function( event, ui ) 
+			{			
+			   var newgoods_id_list='';
+			   var a_goods_id=ui.item.goods_id;	
+
+               	var tbl=$('#shangjia_text');
+				var trlist=tbl.find("tr");
+				
+				for (var i = 0; i<trlist.length; i++) 
+				{   
+					var tr1=$(trlist[i]);				
+					$('#tr'+i).removeClass('trbg');				                    																					
+				}			   
+			   
+			 
+	
+				var tbl=$('#shangjia_text');
+				var trlist=tbl.find("tr");
+				
+				for (var i = 0; i<trlist.length; i++) 
+				{   
+					var tr1=$(trlist[i]);
+                    var jiemian_goods_id= tr1.find('td:eq(10)').text();
+                   
+				    if(jiemian_goods_id==a_goods_id)
+                    {
+					   $('#tr'+i).addClass('trbg');
+					   $('#shuliang'+i).select();
+					}
+                    					
+				}
+				 
+				 											 			 							 			   										  												
+			
+				return false;
+			}
+		})
+		.data( "ui-autocomplete" )._renderItem = function( ul, item ) 
+		{
+			return $( "<li>" )
+				.append( "<a>" + item.goods_name +  "</a>" )
+				.appendTo( ul );
+		};
+	});
+	
+	
+	function jiaoban_mx()
+	{   
+	   
+	   	   
+		var sumje_str=$('#goodstotal').text();	 
+		
+		var total_wx_khd_str= $('#wx_sum_money_khd').text();
+		var total_zfb_khd_str= $('#zfb_sum_money_khd').text();
+		var total_cash_khd_str= $('#cash_sum_money_khd').text(); 
+		
+		var total_cash_bt_str= $('#cash_sum_money_bt').text(); 	
+		var total_wx_bt_str= $('#wx_sum_money_bt').text(); 
+		var total_zfb_bt_str= $('#zfb_sum_money_bt').text(); 
+		   
+	   	   
+	    var alldata = {};
+
+		alldata.sumje=sumje_str;
+				
+		alldata.sumje_wx_khd=total_wx_khd_str;
+		alldata.sumje_zfb_khd=total_zfb_khd_str;
+		alldata.sumje_cash_khd=total_cash_khd_str; 
+		
+		alldata.sumje_cash_bt=total_cash_bt_str;
+		alldata.sumje_wx_bt=total_wx_bt_str;
+		alldata.sumje_zfb_bt=total_zfb_bt_str;
+		
+
+		 
+		var senddata = JSON.stringify(alldata);  
+		senddata = encodeURI(senddata);  	
+		senddata=$.base64.btoa(senddata);
+	 
+	  
+	  layer.open({
+	  type: 2,
+	  offset: '100px',
+	  title: '交班明细',
+	  skin: 'layui-layer-lan',
+	  maxmin: true,
+	  shadeClose: true, //点击遮罩关闭层
+	  area :['500px' , '400px'],
+	  content: '{:U("jiaobanmxshow")}?res='+senddata,
+	  });
+	   
+	}
+	</script>
+
+
+</block>

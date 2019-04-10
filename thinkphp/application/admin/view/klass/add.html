@@ -1,0 +1,21 @@
+
+{extend name="teacher/base" /}
+{block name="title"}增加班级{/block}
+
+
+{block name="body"}
+<body>
+<form action="{:url('save')}" method="post">
+    <label for="name">name:</label><input type="text" name="name" id="name" />
+<!--    <label for="teacher">teacher_id:</label><input type="text" name="teacher_id" id="teacher" />.-->
+    <select name="teacher_id" id="teacher">
+        {volist name="teachers" id="teachers"}
+        <option value="{$teachers.id}">{$teachers.name}</option>
+        {/volist}
+
+    </select>
+    <button type="submit">submit</button>
+</form>
+</body>
+
+{/block}

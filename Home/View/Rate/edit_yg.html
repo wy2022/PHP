@@ -1,0 +1,150 @@
+<block name="head">
+<include file="Public/head" />
+<css href="__PUBLIC__/tree/css/common.css" />
+<js href="__PUBLIC__/layer/layer.js" />
+</block>
+
+<block name="content">
+<form id="form_add_yg">
+    <input type="text" hidden id="bianhao"  value = "{$oneyginfo.id}" class="w170 required" name="bianhao" />
+
+	<div id="divValidate" >
+        <div id="trnbid" class="queryItem">
+            <div class="inTitle fl"><label style="color: red;font-weight: bold;"  ></label>账号</div>
+            <div class="inElmt fl">
+                <input type="text" name="txtUser"  value="{$oneyginfo.name}" class="w170 required"  readonly="readonly" />
+            </div>
+        </div>
+		
+		<div id="trnbid" class="queryItem">
+            <div class="inTitle fl"><label style="color: red;font-weight: bold;"  ></label>密码</div>
+            <div class="inElmt fl">
+                <input type="password" name="pw"  value="{$oneyginfo.pw}" class="w170" />
+            </div>
+	    </div>
+        
+
+
+        <div class="queryItem">
+            <div class="inTitle fl">所在组</div>
+            <div class="inElmt fl">
+            <select name="yggroup_id" id="yggroup_id">
+                        <volist name="yggrouplist" id="group">
+                            <option value="{$group.role_id}">{$group.role_name}</option>
+                        </volist>
+                        <script> $('#yggroup_id option[value={$oneyginfo.role_id}]').prop('selected',true); </script>
+            </select>
+            </div>
+        </div>
+
+        <div class="sysLine"> </div>
+        <div class="layFooter">
+            <button type="button" class="btn btn-primary" onclick="submitEditYg();">确定</button>
+		    <button type="button" class="btn btn-default" onclick="exit()">取消</button>
+        </div>
+    </div>
+</form>
+</block>
+
+<block name="script">
+<script>
+function submitEditYg(){
+     var param = $("#form_add_yg").serialize();
+             $.ajax({
+              url : "{:U("edit_yg_set")}",
+              type : "post",
+              dataType : "json",
+              data: param,
+              success : function(data) 
+              {
+              
+                     if(data.result==1)
+                    {
+                      // alert('修改成功');
+                      // parent.location.reload();
+
+                      layer.msg('修改成功', {
+                              offset: 0,
+                              shift: 6,
+                              icon:1,
+                            },function(){ 
+                          parent.location.reload();
+                                        
+                          });
+                    }
+                    else
+                    {
+                       // alert(data.message);
+
+                       layer.msg(data.message, {
+                          offset: 0,
+                          shift: 6,
+                          icon:2,
+                        });
+                    } 
+
+              },//success完成
+         });    
+
+}
+
+
+// $("#form_add_yg").validate({
+// 	rules:{     
+// 	            txtUser:{
+// 				  required:true,
+// 				},
+// 				txtName:{
+// 				  required:true,
+// 				},
+				
+// 		   },
+// 	messages:{
+
+// 	            txtUser:{
+// 				  required:"请输入员工账号",
+// 			    },
+// 				txtName:{
+// 				  required:"请输入员工姓名",
+// 			    },
+				
+// 		  },
+     
+//     errorPlacement: function(error, element) {    
+// 	         //错误信息位置设置方法  
+			 
+// 			 error.appendTo( element.closest(".inElmt").find(".label-danger"));  //这里的element是录入数据的对象  
+// 	      },
+
+// 	submitHandler: function(form) {  //通过之后回调
+// 			 var param = $("#form_add_yg").serialize();
+// 			 $.ajax({
+// 			  url : "{:U("edit_yg_set")}",
+// 			  type : "post",
+// 			  dataType : "json",
+// 			  data: param,
+// 			  success : function(data) 
+// 			  {
+			  
+//              if(data.result==1)
+//             {
+//               alert('修改成功');
+//               parent.location.reload();
+//             }
+//             else
+//             {
+//                alert(data.message);
+//             } 
+// 			  },//success完成
+// 		 });	
+// 	     },
+//     invalidHandler: function(form, validator) {  
+//               return false;
+//           }
+// }); 
+
+   function exit(){
+        parent.layer.closeAll();
+   }
+</script>
+</block>

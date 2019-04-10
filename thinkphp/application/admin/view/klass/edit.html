@@ -1,0 +1,22 @@
+{extend name="teacher/base" /}
+
+{block name="title"}修改班级信息{/block}
+{block name="body"}
+
+<form action="{:url('update')}" method="post">
+    <input type="hidden" name="id" value="{$klass.id}" />
+    <label for="name">name:</label>
+    <input type="text" name="name" id="name" value="{$klass.name}" />
+    <label for="teacher">teacher:</label>
+    <select name="teacher_id" id="teacher">
+        {volist name="teacher" id="teacher"}
+
+        <option value="{$teacher.id}"
+                {eq name="teacher.id" value="$klass.teacher_id"} selected="selected" {/eq}>
+
+        {$teacher->getData('name')}</option>
+        {/volist}
+    </select>
+    <button type="submit">submit</button>
+</form>
+{/block}

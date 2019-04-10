@@ -1,0 +1,122 @@
+<extend name="Public/base" />
+
+<block name="head">
+<js href="__PUBLIC__/highcharts/highcharts.js" />
+<js href="__PUBLIC__/highcharts/exporting.js" />
+</block>
+
+<block name="content">
+<div class="row">
+	<div class="col-sm-5">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="text-center">区县</th>
+					<th class="text-center">总数</th>
+					<th class="text-center">未激活</th>
+					<th class="text-center">在线</th>
+					<th class="text-center">离线</th>
+					<th class="text-center">搬迁中</th>
+					<th class="text-center">停止营业</th>
+				</tr>
+			</thead>
+			<tbody>
+				<volist name="count.table" id="area">
+					<neq name="area.area_name" value="总数">
+						<tr>
+							<th><a href="{:U('Bar/index',array('area'=>$key,'status'=>6))}">{$area.area_name}</a></th>
+							<td><a href="{:U('Bar/index',array('area'=>$key,'status'=>6))}">{$area.total}</a></td>
+							<td><a href="{:U('Bar/index',array('area'=>$key,'status'=>0))}">{$area.0}<php>if($area[0]!=0&&$area['total']!=0){echo '('.round($area[0]/$area['total']*100,1).'%)';}</php></a></td>
+							<td><a href="{:U('Bar/online',array('area'=>$key,'status'=>1))}">{$area.4}<php>if($area[4]!=0&&$area['total']!=0){echo '('.round($area[4]/$area['total']*100,1).'%)';}</php></a></td>
+							<td><a href="{:U('Bar/offline',array('area'=>$key,'status'=>1))}">{$area.5}<php>if($area[5]!=0&&$area['total']!=0){echo '('.round($area[5]/$area['total']*100,1).'%)';}</php></a></td>
+							<td><a href="{:U('Bar/index',array('area'=>$key,'status'=>2))}">{$area.2}<php>if($area[2]!=0&&$area['total']!=0){echo '('.round($area[2]/$area['total']*100,1).'%)';}</php></a></td>
+							<td><a href="{:U('Bar/index',array('area'=>$key,'status'=>3))}">{$area.3}<php>if($area[3]!=0&&$area['total']!=0){echo '('.round($area[3]/$area['total']*100,1).'%)';}</php></a></td>
+						</tr>
+					</neq>
+				</volist>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td><a href="{:U('Bar/index',array('status'=>6))}">{$count.table.total.area_name}</a></td>
+					<td><a href="{:U('Bar/index',array('status'=>6))}">{$count.table.total.total}</a></td>
+					<td><a href="{:U('Bar/index',array('status'=>0))}">{$count.table.total.0}({$count['table']['total'][0]/$count['table']['total']['total']*100|round=###,1}%)</a></td>
+					<td><a href="{:U('Bar/online',array('status'=>1))}">{$count.table.total.4}({$count['table']['total'][4]/$count['table']['total']['total']*100|round=###,1}%)</a></td>
+					<td><a href="{:U('Bar/offline',array('status'=>1))}">{$count.table.total.5}({$count['table']['total'][5]/$count['table']['total']['total']*100|round=###,1}%)</a></td>
+					<td><a href="{:U('Bar/index',array('status'=>2))}">{$count.table.total.2}({$count['table']['total'][2]/$count['table']['total']['total']*100|round=###,1}%)</a></td>
+					<td><a href="{:U('Bar/index',array('status'=>3))}">{$count.table.total.3}({$count['table']['total'][3]/$count['table']['total']['total']*100|round=###,1}%)</a></td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+	<div class="col-sm-7"><div id="haha" style="height:615px;"></div></div>
+</div>
+</block>
+
+<block name="script">
+<script>
+$(function () {
+	$('#haha').highcharts({
+		chart: {
+			type: 'bar'
+		},
+		credits: {
+			enabled: false
+		},
+		title: {
+			text: '郑州市网吧情况统计'
+		},
+		xAxis: {
+			categories: [{$count.chart.area_name}]
+		},
+		yAxis: {
+			min: 0,
+			title: {
+				enabled: false
+			},
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
+		},
+		tooltip: {
+			pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br>',
+			shared: true
+		},
+		legend: {
+			layout: 'vertical',
+			verticalAlign: 'middle',
+			align: 'right'
+		},
+		plotOptions: {
+			series: {
+				stacking: 'normal'
+			}
+		},
+		series: [{
+			name: '停止营业',
+			color: 'black',
+			data: [{$count.chart.3}]
+		}, {
+			name: '搬迁',
+			color: 'orange',
+			data: [{$count.chart.2}]
+		}, {
+			name: '未激活',
+			color: 'gray',
+			data: [{$count.chart.0}]
+		}, {
+			name: '离线',
+			color: 'red',
+			data: [{$count.chart.5}]
+		}, {
+			name: '在线',
+			color: 'green',
+			data: [{$count.chart.4}]
+		}]
+	});
+});
+</script>
+</block>

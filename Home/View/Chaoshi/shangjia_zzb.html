@@ -1,0 +1,894 @@
+<extend name="Public/base" />
+
+<block name="head">
+    
+	<css href="__PUBLIC__/jquery-ui-1.10.3/themes/base/jquery.ui.all.css" />
+	<js href="__PUBLIC__/jquery-ui-1.10.3/jquery-1.9.1.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.core.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.widget.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.position.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.menu.js" />
+    <js href="__PUBLIC__/jquery-ui-1.10.3/ui/jquery.ui.autocomplete.js" />
+	<css href="__PUBLIC__/jquery-ui-1.10.3/demos/demos.css" /> 
+	 
+	 
+    <css href="__PUBLIC__/assets/css/ui.jqgrid.css" />
+    <js href="__PUBLIC__/assets/js/jqgrid/jquery.jqGrid.js" />
+    <js href="__PUBLIC__/assets/js/jqgrid/i18n/grid.locale-cn.js" />
+    <css href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker-bs3.css" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/moment.min.js" />
+    <js href="__PUBLIC__/bootstrap/daterangepicker/daterangepicker.js" />
+    <js href="__PUBLIC__/layer/layer.js" />
+    <js href="__PUBLIC__/layer/myalert.js" />
+     <css href="__PUBLIC__/layer/myalert.css"/>
+	<style>
+	   .mgb15{margin-bottom:15px;}
+	   .labelbold{font-weight:bold;
+	   }
+     .biaodan{float:left;padding-left:15px;}
+	   @media (min-width: 992px) {
+		  .modal-lg {
+			width: 700px;
+		  }
+		}
+		 .fontsize12{font-size:12px;}
+		 .fl{float:left;};
+		 .fr{float:right};
+		 .text-right{text-align:right;}
+		 .btn1{
+		    font-size:12px;
+			height:28px;
+			line-height:28px;
+			width:90px;
+			-webkit-border-radius:2px;
+			-moz-border-radius:2px;
+			border-radius:2px;
+			border:0;
+			padding:6px 8px;
+			text-shadow:none;
+			background-image:none;
+		 }
+		 a:hover{text-decoration:none;}
+         #tableid td{vertical-align:middle;}
+		 #tableid tr td input[type="text"],#bz{
+		    display:inline-block;
+			height:22px;
+			font-size:14px;
+			line-height:22px;
+			color:#555555;
+			vertical-align:middle;
+			-webkit-border-radius:4px !important;
+			-moz-border-radius:4px !important;
+			border-radius:4px !important;
+			border-color:#a4bed4;
+			text-align:center;
+			padding:0;
+			width:65px;
+		 }
+		 #bz{height:30px;line-height:30px;width:560px;text-align:left;padding:4px 6px;}
+		 .fa-times-circle{cursor:pointer;}
+		 .pdl5{padding-left:5px;}
+		 
+		 #project {
+				display:inline-block;
+				height:30px;
+				font-size:14px;
+				line-height:
+				color:#555555;
+				vertical-align:middle;
+				-webkit-border-radius:4px !important;
+				-moz-border-radius:4px !important;
+				border-radius:4px !important;
+				border-color:#a4bed4;
+				text-align:left;
+				padding:4px 6px;
+				width:200px;
+			 }
+	</style>
+</block>
+
+<block name="content">
+<div class="tabbable">
+	<ul class="nav nav-tabs">
+		<li id="shangjia"><a href="{:U('chaoshi/shangjia')}">上架</a></li>
+		<li id="xiajia"><a href="{:U('chaoshi/xiajia')}">下架</a></li>
+	</ul>
+<script>
+//alert({$Think.const.ACTION_NAME})
+    $('.nav li#{$Think.const.ACTION_NAME}').addClass('active');
+
+</script>
+  <div class="tab-content">
+
+   <div class="mgb15">
+
+        <div class="fr text-right">
+            
+            <span  id="ght_goodslist" style="display:none">{$goodslist}</span>    
+			
+			<span  id="zuhe_goodslist" style="display:none">{$zuhegoods_list} </span> 
+			
+			<span  id="all_goodsid_list" style="display:none">{$all_goodsid_list} </span>
+            <input type="hidden" name="TOKEN" id="TOKEN" value="{:session('TOKEN')}">			
+			
+			
+			
+            <input type="text" class="form-control" placeholder="检索商品" id="project">  
+         <!--   <ul class="span3 dropdown-menu text-left" id="js-result-list" role="menu"  aria-labelledby="dLabel"></ul> -->
+           <a href="javascript:void(0);" class="btn1 btn-primary " id="js-import-products" style="vertical-align:top;"  onclick="plch();">选择商品</a>
+           <!--   <a data-toggle="modal" href="../../barshop/statics/helpxml/inventory_inout-form.html" data-target="#modal-question" class="help_btn"><i class="icon-question-circle mt5 ml20" title="网吧超市帮助"></i></a> -->
+        </div>
+    </div>
+<div class="page_body">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover" id="tableid">
+            <thead>
+            <tr id="theadid">
+                <th>操作</th>
+                <th>商品名称</th>
+                <th>仓库库存</th>
+				<th>上架数量</th>
+				 <th>货架库存</th>
+            </tr>
+            </thead>
+            <tbody id="shangjia_text">
+            <tr class="nothing" >
+                <!-- <td colspan="7" class="text-center muted td_tip" id="js_in_tip" style="color:#999999;">若不想检索商品，您可以点击右上角  <strong style="color:#428bca">选择商品</strong></td> -->
+				<td colspan="7" class="text-center muted td_tip" id="js_in_tip" style="color:#999999;">请检索商品</td>
+            </tr> 
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="foot-container" id="js-foot-container">
+
+            <div class="text-left mgb15">
+                备注&nbsp;&nbsp;<input type="text" name="bz" id="bz" maxlength="200" >
+            </div>
+			<input id="flag" value="" type="hidden"/>
+            <div class="text-center tip" >
+                <span style="padding:14px 0px;cursor:pointer;"><button class="btn btn-primary js-btn-save" id="btn_save" type="button" disabled>保存</button></span>
+
+            </div>
+      </div>
+
+  
+</div>
+  </div>
+</div>
+
+
+</block>
+<block name="script">
+<script>
+
+var storage=window.localStorage;
+storage.removeItem('goods_id');
+
+ function plch()
+{   
+  var storage=window.localStorage;
+  var yixuan_id  =  storage.getItem("goods_id");
+//  alert(yixuan_id);
+  
+  if(yixuan_id==null || yixuan_id==undefined )
+  {
+    yixuan_id='';
+  }
+ 
+  layer.open({
+  type: 2,
+  offset: '100px',
+  title: '选择上架商品',
+  skin: 'layui-layer-lan',
+  maxmin: true,
+  shadeClose: true, //点击遮罩关闭层
+  area : ['920px' , '600px'] ,
+  content: '{:U("plch_sxj")}?goods_id='+yixuan_id,
+  });
+}
+
+
+function fnGetjiemian_goodsid_list(){
+	var ym_allGoods_id='';
+	var ym_tbody_trlist=$('tbody tr');
+	//console.log(ym_tbody_trlist);
+	
+	for(var x=0;x<ym_tbody_trlist.length;x++)
+	{
+		 var agoods_id=ym_tbody_trlist.eq(x).find('td').eq(5).html();
+		 if(agoods_id== undefined || agoods_id==''|| agoods_id==null)
+		 {
+		   
+		 }
+		 else
+		 {
+		   //alert(1);
+		    ym_allGoods_id+=agoods_id+',';
+		 }
+		// console.log(agoods_id);
+		
+	}
+	
+
+	//console.log(ym_allGoods_id);
+	return ym_allGoods_id;
+}
+
+$("#flag").change(function()
+{	
+ //   console.log(1);
+	var storage=window.localStorage;
+    var storage_goods_id_str  =  storage.getItem("goods_id");
+	console.log('本地存储goodsid_str:'+storage_goods_id_str);
+	
+    var bFind;
+    if(storage_goods_id_str)
+    {
+	   var storage_goods_id_list=storage_goods_id_str.split(",");  	
+    }
+	
+	 //判断界面是否有此数据，无则新增 ，否则就不加
+	 //先获取界面已有的数据，
+
+    var jiemian_goods_id_list,one_jiamian_goods_id='';	 
+
+	      console.log('遍历本地存储长度：'+storage_goods_id_list.length);	
+    for(var i=0;i<storage_goods_id_list.length;i++)
+    {	
+	        var bFind=0;
+	        console.log('遍历本地存储a_goods_id='+storage_goods_id_list[i]);	
+			if(storage_goods_id_list[i]==null || storage_goods_id_list[i]==undefined || storage_goods_id_list[i]=='')
+			{		
+			 continue;
+			}
+		
+	       var  a_goods_id=	storage_goods_id_list[i];			   	   
+		   var  jiemian_goodid_str=fnGetjiemian_goodsid_list();
+		   
+		  
+		//   console.log('界面goodsid_str:'+jiemian_goodid_str);		   
+			   
+			   if(jiemian_goodid_str)
+			   {
+			       var jiemian_goods_id_list=jiemian_goodid_str.split(",");  		   				 
+				   for(var i=0;i<jiemian_goods_id_list.length;i++)
+				   {
+					  if(jiemian_goods_id_list[i]==a_goods_id)
+					  {
+						bFind=1;   //已存在该商品
+					  }			  
+				   }
+			   }
+			   else
+			   {
+			     bFind=0;
+			   }
+			   
+			   
+			   console.log('界面 bFind:'+bFind);	
+			   
+			   if(bFind==0)
+			   {
+			    				 				 											    										  				 
+					var jsonlist={$goodslist};						     
+					var data=jsonlist; 	
+                    var tip= $('#shangjia_text tr').hasClass('nothing');
+					 if(tip==true)
+					 {
+						$('.nothing').remove();
+					 }	
+
+			 
+                  	var html,zuhe_id,aZuhehtml,is_zuhe="";					
+					for (var i = 0; i <data.length; i++) 
+					{
+						zuhe_id=0;
+						is_zuhe=0;
+						aZuhehtml="";
+						if(data[i]['goods_id']==a_goods_id)
+						{
+					        
+					        zuhe_id=data[i]['zuhe_id'];
+							is_zuhe=data[i]['is_zuhe'];
+							if(is_zuhe==0)    //普通商品
+							{	
+             
+							   	html+="<tr>"; 
+								html+='<td><i class="fa fa-times-circle fa-2x text-danger qx" onclick="return del('+a_goods_id+')" id=del'+a_goods_id+'></i></td>';				
+								html+='<td>'+data[i].goods_name+'</td>';
+								html+='<td><span id=ck'+a_goods_id+'>'+data[i].ck_num+'</span><span class="pdl5" >个</span></td>';
+								html+='<td><input  name="shuliang"  type="text" value="0" onkeyup="shuliang('+a_goods_id+')" id=shuliang'+a_goods_id+'><span class="pdl5">个</span></td>';
+								html+='<td ><span id=hj'+a_goods_id+'>'+data[i].hj_num+'</span><span class="pdl5" >个</span></td>';	
+								html+='<td class="hide" id=goods_id'+a_goods_id+'>'+data[i].goods_id+'</td>'; 
+								html+='<td class="hide" id=ck1'+a_goods_id+'>'+data[i].ck_num+'</td>'; 
+								html+='<td class="hide" id=hj1'+a_goods_id+'>'+data[i].hj_num+'</td>'; 
+								html+="</tr>"	
+							}
+							else if(is_zuhe==1)  //组合子商品
+							{
+							    if(storage_goods_id_str==null)
+								{
+								  // storage_goods_id_str=zuhe_id;
+								   aZuhehtml=create_one_zuhe_list(zuhe_id);
+								}
+								else
+								{							   
+								   var goods_id_list=storage_goods_id_str.split(",");  
+								   var bExist=false;
+								    for(var n=0;n<goods_id_list.length;n++)
+								    {
+									  
+									  if(goods_id_list[n]==zuhe_id)
+									  {
+										bExist=true;
+										break;
+									  }
+								    }
+									if(bExist==true)
+									{
+									   
+									}
+									else
+									{
+									  // storage_goods_id_str=storage_goods_id_str+','+zuhe_id;	
+                                       aZuhehtml=create_one_zuhe_list(zuhe_id);									   							
+									}
+								   							   
+								}	
+								//storage.setItem("goods_id",storage_goods_id_str);															
+							}
+					    
+						if(aZuhehtml==undefined || aZuhehtml=='')
+						{
+						  
+						}
+						else
+						{
+						  html=html+ aZuhehtml;
+						}
+						$("#tableid").append(html);	
+						issubmit();	
+						break;
+					  }	
+					}; 			 
+			   }
+			   else  if(bFind==1)
+			   {
+			   
+			   }
+             
+            		   
+		
+   		  
+    }
+ 	
+
+	
+})
+
+
+
+function del(id){
+   var newgoods_id_list='';
+   var a_goods_id=$('#goods_id'+id).text();
+   var storage=window.localStorage;
+   var goods_id_str  =  storage.getItem("goods_id");
+   
+   var goods_id_list=goods_id_str.split(",");  
+   for(var i=0;i<goods_id_list.length;i++)
+   {
+      if(goods_id_list[i]==a_goods_id)
+	  {
+	    
+	  }
+	  else
+	  {
+	    newgoods_id_list+=goods_id_list[i]+',';
+	  }
+   }
+ 
+   storage.setItem("goods_id",newgoods_id_list);
+   $('#del'+id).parents('tr').remove();
+      
+}
+
+function del_zuhe(id)
+{
+   var newgoods_id_list='';
+   var a_goods_id=$('#goods_id'+id).text();
+   var storage=window.localStorage;
+   var goods_id_str  =  storage.getItem("goods_id");
+   
+   
+   var goods_id_list=goods_id_str.split(",");  
+   for(var i=0;i<goods_id_list.length;i++)
+   {
+      if(goods_id_list[i]==a_goods_id)
+	  {
+	    
+	  }
+	  else
+	  {
+	    newgoods_id_list+=goods_id_list[i]+',';
+	  }
+   }
+ 
+   storage.setItem("goods_id",newgoods_id_list);
+   $('#del'+id).parents('tbody').remove();
+      
+}
+
+
+function shuliang(id){
+   var num=/^[0-9]\d*$/;
+  
+   var ck=Number($('#ck1'+id).text());
+   var hj=Number($('#hj1'+id).text());
+   var shuliang=Number($('#shuliang'+id).val());
+   if(!(num.test(shuliang)))
+	{
+	  myalertdanger("上架数量只能输入不小于0的整数");
+	  $('#shuliang'+id).val("");
+	   issubmit();
+	  return false;
+	}else if(shuliang>ck){
+	  myalertdanger("上架数量输入大于仓库库存，请重新输入！");
+	   $('#ck'+id).text(ck);
+	   $('#hj'+id).text(hj);
+	   $('#shuliang'+id).val("");
+	    issubmit();
+	  return false;
+	}else{
+	   
+	   if(ck>=shuliang){
+			ck=ck-shuliang;
+			hj=hj+shuliang;
+	   }else{
+		  hj=hj+ck;
+		  ck=0;
+	   }
+	   $('#ck'+id).text(ck);
+	   $('#hj'+id).text(hj);
+	  
+	}
+	
+ issubmit();
+}
+
+
+
+
+function shuliang_zuhe(id,zuhe_id)
+{
+   var num=/^[0-9]\d*$/;
+  
+   var ck=Number($('#ck1'+id).text());
+    var hj=Number($('#hj1'+id).text());
+   var zuhe_hj=Number($('#hj1'+zuhe_id).text());
+   var shuliang=Number($('#shuliang'+id).val());
+   if(!(num.test(shuliang)))
+	{
+	  myalertdanger("上架数量只能输入整数");
+	  $('#shuliang'+id).val("");
+	   issubmit();
+	  return false;
+	}
+	else if(shuliang>ck)
+	{
+	  myalertdanger("上架数量输入大于仓库库存，请重新输入！");
+	   $('#ck'+id).text(ck);
+	   //$('#hj'+id).text(hj);
+	   $('#shuliang'+id).val("");
+	    issubmit();
+	  return false;
+	}else{
+	   
+	   
+	   if(ck>=shuliang){
+			ck=ck-shuliang;
+			hj=hj+shuliang;
+	   }else{
+		  hj=hj+ck;
+		  ck=0;
+	   }
+	   $('#ck'+id).text(ck);
+	   $('#hj'+id).text(hj);
+	   var zuhe_tr=$('#tb'+zuhe_id).find('tr');
+	   for(var i=1;i<zuhe_tr.length;i++)
+	   {
+			//console.log(zuhe_tr.eq(i).find('td').eq(4))
+			var td_hj=parseInt(zuhe_tr.eq(i).find('td').eq(4).find('span').eq(0).html());
+			//console.log(td_hj)
+			zuhe_hj+=td_hj;
+	   }
+	   $('#hj'+zuhe_id).text(zuhe_hj);
+	  
+	}
+	
+ issubmit();
+}
+
+function issubmit(){
+	/*$("#shangjia_text tr").find('td:eq(3) input').each(function(){
+		  if($(this).val()==""){
+
+			$("#btn_save").attr("disabled",true);
+			// myalertdanger("当前货架库存输入有误，请重新输入");
+			return false;
+		  }else{
+
+			$("#btn_save").attr("disabled",false); 
+			
+		  }
+		
+	   });*/
+ 
+	
+	if($('#shangjia_text').children().length>0||$('tbody').length>1)
+	{
+			$("tbody tr").find('td:eq(3) input').each(function()
+			{
+			  if($(this).val()==""){
+
+				$("#btn_save").attr("disabled",true);
+				return false;
+			  }else{
+
+				$("#btn_save").attr("disabled",false); 
+				
+			  }
+			
+		   });
+	}
+	else
+	{
+		$("#btn_save").attr("disabled",false); 
+	}
+	
+}
+
+ $(".tip span").click(function()
+ {
+ 	var tip= $('#shangjia_text tr').hasClass('nothing');
+	
+	//$('#shangjia_text').children().length>0
+	
+	//$('tbody').length>1
+   if($("#btn_save").prop("disabled"))
+   {
+   
+	if(tip==true)
+	
+	 {
+	   myalertdanger("请先选择上架商品！");
+	 }
+	 else
+	 {
+	   myalertdanger("上架数量不能为空！");
+	 }
+		   
+   }
+   })
+$("#btn_save").click(function(){
+
+  //  alert(1);
+    //======处理单个商品=======
+	var data = [] ; 
+    var tbl=$('#shangjia_text');
+    var trlist=tbl.find("tr");
+	
+	for (var i = 0; i<trlist.length; i++) 
+	{    //遍历Table的所有Row
+		var tr1=$(trlist[i]);		
+		var row1 = {};
+		row1.is_zuhe = 0;
+		row1.goods_id = tr1.find('td:eq(5)').text();;
+		row1.num = parseInt(tr1.find('td:eq(3) input').val());
+		
+		data.push(row1);	
+	}
+		
+	//==================组合商品=================
+	//alert(2);
+	var  tbodylist= $('tbody');
+//	alert(tbodylist);
+	
+	for(var i=1;i<tbodylist.length;i++)
+	{
+	   var aTbody=$(tbodylist.eq(i));	
+	 
+	   var aTbody_id= aTbody.attr('id');
+	   var zuhe_id=aTbody_id.slice(2,aTbody_id.length);
+	   
+	   var trlist=aTbody.find("tr");
+	   var aZuheNum=0; 
+	   for(var j=1;j<trlist.length;j++)
+	   {
+	      
+	      var row1 = {};
+	      var aTr= $(trlist.eq(j));     //一个组合商品属性列表
+		  row1.is_zuhe=1;
+		
+		  row1.goods_id = aTr.find('td:eq(5)').text();;
+		  row1.zuhe_id =zuhe_id;
+		  row1.num     =parseInt(aTr.find('td:eq(3) input').val());	
+          aZuheNum+=row1.num;	  	  
+		  data.push(row1);   
+        		  
+	   } 
+      if(aZuheNum==0)
+      {
+	     myalertdanger("组合商品上架数量不能全为空！");
+	     return;
+	  }
+	  else
+      {
+	    var row1 = {};
+	    row1.is_zuhe=2;	
+		row1.goods_id = zuhe_id;
+		row1.zuhe_id =0;
+		row1.num     =aZuheNum;	
+        aZuheNum+=row1.num;	  	  
+		data.push(row1); 
+	  } 	  
+      	   
+	}
+
+	
+	//console.log(data);
+//	return;
+		
+	
+	 var token_str=$('#TOKEN').val();
+	var bz_str=$('#bz').val();
+    var param = JSON.stringify(data);	 
+     $.ajax({
+      url : "{:U("shangjia_edit_set")}",
+      type : "post",
+      dataType : "json",
+      data: {goodsinfo:param,bz:bz_str,token:token_str},
+      success : function(data) 
+      {
+      if(data.status=="1")
+      {
+	    $("#btn_save").addClass("hide");
+		 myalertsuccess("上架成功"); 
+    }
+	else if(data.status =="-1")
+    {
+	   myalertdanger("上架失败");
+    }
+	else if(data.status =="-2")
+		{
+		 myalertdanger('数据重复提交,交班失败');
+		 
+		   
+		}
+    },//success完成
+ });
+
+}); 
+
+</script>
+
+
+<script>
+
+function  create_one_zuhe_list(zuhe_id)
+{
+    var  zuhedata={$zuhegoods_list};
+	var html="";
+    for(var j=0;j<zuhedata.length;j++)
+	{
+	   if(zuhe_id==zuhedata[j].goods_id)
+	   {
+			
+			var onezuhelist=zuhedata[j].zuhelist;
+			
+			if(onezuhelist.length>0)
+			{
+				html+='<tbody id=tb'+zuhedata[j].goods_id+'>';
+				html+='	<tr class="zuhe_tr">';
+				html+='		<td class="hide"></td>'; 
+				html+='     <td><i class="fa fa-times-circle fa-2x text-danger qx" onclick="return del_zuhe('+zuhedata[j].goods_id+')" id=del'+zuhedata[j].goods_id+'></i></td>';
+				html+='		<td><span>'+zuhedata[j].goods_name+'</span></td>';
+				html+='		<td colspan=2></td>';															
+						
+				html+='		<td >';
+				html+='		    <span id=hj'+zuhedata[j].goods_id+'>'+zuhedata[j].hj_num+'</span><span class="pdl5" >个</span>';
+				html+='		</td>';
+				
+				html+='		<td class="hide" id=goods_id'+zuhedata[j].goods_id+'>'+zuhedata[j].goods_id+'</td>'; 
+				html+='		<td class="hide" id=ck1'+zuhedata[j].goods_id+'>'+zuhedata[j].ck_num+'</td>'; 
+				html+='		<td class="hide" id=hj1'+zuhedata[j].goods_id+'>'+zuhedata[j].hj_num+'</td>'; 
+				html+='	</tr>';
+				
+			
+				 for(var k=0;k<onezuhelist.length;k++)
+				 {
+					 
+
+					html+='	<tr>';
+					
+					html+='	<td></td>';                  								
+					html+='		<td><span>'+onezuhelist[k].goods_name+'</span></td>';
+					html+='		<td><span id=ck'+onezuhelist[k].goods_id+'>'+onezuhelist[k].ck_num+'</span><span class="pdl5" >个</span></td>';					
+					html+='		<td><label><input  name="shuliang"  type="text" value="0" onkeyup="shuliang_zuhe('+onezuhelist[k].goods_id+','+zuhe_id+')" id=shuliang'+onezuhelist[k].goods_id+'><span class="pdl5">个</label></td>';
+							
+					html+='		<td class="hide">';
+					html+='		    <span id=hj'+onezuhelist[k].goods_id+'>'+onezuhelist[k].hj_num+'</span><span class="pdl5" >个</span>';
+					html+='		</td>';
+					
+					html+='  	<td class="hide" id=goods_id'+onezuhelist[k].goods_id+'>'+onezuhelist[k].goods_id+'</td>'; 
+					html+='		<td class="hide" id=ck1'+onezuhelist[k].goods_id+'>'+onezuhelist[k].ck_num+'</td>'; 
+					html+='		<td class="hide" id=hj1'+onezuhelist[k].goods_id+'>'+onezuhelist[k].hj_num+'</td>'; 
+					html+='	</tr>';
+					
+				 }
+				 
+				 html+='</tbody>';
+			}
+			break;
+	   }
+	
+	
+	}
+	return  html;
+}
+
+	$(function() {
+	//alert(0);
+		var projects={$goodslist};
+		console.log(projects);
+		$( "#project" ).autocomplete({
+			minLength: 0,
+			source: projects,
+			focus: function( event, ui ) 
+			{			    
+				$( "#project" ).val( ui.item.goods_name );
+				return false;
+			},
+			select: function( event, ui ) 
+			{			
+			   var newgoods_id_list='';
+			   var a_goods_id=ui.item.goods_id;
+			   
+			   var storage=window.localStorage;
+			   var goods_id_str  =  storage.getItem("goods_id");
+			   
+			  // alert(goods_id_str);
+			   var bFind=0;
+			   if(goods_id_str)
+			   {
+			       var goods_id_list=goods_id_str.split(",");  		   
+				 
+				   for(var i=0;i<goods_id_list.length;i++)
+				   {
+					  if(goods_id_list[i]==a_goods_id)
+					  {
+						bFind=1;   //已存在该商品
+					  }			  
+				   }
+			   }
+			   else
+			   {
+			     bFind=0;
+			   }
+			   
+			   if(bFind==0)
+			   {
+			    				 				 											    										  				 
+					var jsonlist={$goodslist};						     
+					var data=jsonlist; 	
+                    var tip= $('#shangjia_text tr').hasClass('nothing');
+					 if(tip==true)
+					 {
+						$('.nothing').remove()
+					 }	
+
+			 
+                  	var html,zuhe_id,aZuhehtml,is_zuhe="";					
+					for (var i = 0; i <data.length; i++) 
+					{
+                      zuhe_id=0;
+					  is_zuhe=0;
+					  aZuhehtml="";
+					  if(data[i]['goods_id']==a_goods_id)
+					  {
+					        
+					        zuhe_id=data[i]['zuhe_id'];
+							is_zuhe=data[i]['is_zuhe'];
+							if(is_zuhe==0)    //普通商品
+							{
+							
+							    if(goods_id_str==null)
+								{
+								   goods_id_str=a_goods_id;
+								}
+								else
+								{
+								   goods_id_str=goods_id_str+','+a_goods_id;				   
+								}			
+								storage.setItem("goods_id",goods_id_str);
+							
+							   	html+="<tr>"; 
+								html+='<td><i class="fa fa-times-circle fa-2x text-danger qx" onclick="return del('+a_goods_id+')" id=del'+a_goods_id+'></i></td>';				
+								html+='<td>'+data[i].goods_name+'</td>';
+								html+='<td><span id=ck'+a_goods_id+'>'+data[i].ck_num+'</span><span class="pdl5" >个</span></td>';
+								html+='<td><input  name="shuliang"  type="text" value="0" onkeyup="shuliang('+a_goods_id+')" id=shuliang'+a_goods_id+'><span class="pdl5">个</span></td>';
+								html+='<td ><span id=hj'+a_goods_id+'>'+data[i].hj_num+'</span><span class="pdl5" >个</span></td>';	
+								html+='<td class="hide" id=goods_id'+a_goods_id+'>'+data[i].goods_id+'</td>'; 
+								html+='<td class="hide" id=ck1'+a_goods_id+'>'+data[i].ck_num+'</td>'; 
+								html+='<td class="hide" id=hj1'+a_goods_id+'>'+data[i].hj_num+'</td>'; 
+								html+="</tr>"	
+							}
+							else if(is_zuhe==1)  //组合子商品
+							{
+							    if(goods_id_str==null)
+								{
+								   goods_id_str=zuhe_id;
+								   aZuhehtml=create_one_zuhe_list(zuhe_id);
+								}
+								else
+								{							   
+								   var goods_id_list=goods_id_str.split(",");  
+								   var bExist=false;
+								    for(var n=0;n<goods_id_list.length;n++)
+								    {
+									  
+									  if(goods_id_list[n]==zuhe_id)
+									  {
+										bExist=true;
+										break;
+									  }
+								    }
+									if(bExist==true)
+									{
+									   
+									}
+									else
+									{
+									   //不存在该zuhe_id
+									   goods_id_str=goods_id_str+','+zuhe_id;	
+                                       aZuhehtml=create_one_zuhe_list(zuhe_id);									   
+							
+									}
+								   							   
+								}	
+								storage.setItem("goods_id",goods_id_str);															
+							}
+					    
+						if(aZuhehtml==undefined || aZuhehtml=='')
+						{
+						  
+						}
+						else
+						{
+						  html=html+ aZuhehtml;
+						}
+						$("#tableid").append(html);	
+						issubmit();	
+						break;
+					  }	
+					}; 			 
+			   }
+			   else  if(bFind==1)
+			   {
+			   
+			   }			 			   										  												
+			
+				return false;
+			}
+		})
+		.data( "ui-autocomplete" )._renderItem = function( ul, item ) 
+		{
+			return $( "<li>" )
+				.append( "<a>" + item.goods_name +  "</a>" )
+				.appendTo( ul );
+		};
+	});
+	</script>
+
+	</block>

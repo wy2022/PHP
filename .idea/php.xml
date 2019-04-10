@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/thinkphp/vendor/topthink/think-mongo" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/topthink/think-oracle" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/composer" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/topthink/think-queue" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/topthink/think-migration" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/topthink/think-installer" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/topthink/think-worker" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/workerman/workerman" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/topthink/think-helper" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/topthink/think-image" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/topthink/think-captcha" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/bacon/bacon-qr-code" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/endroid/qr-code" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/myclabs/php-enum" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/symfony/property-access" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/symfony/options-resolver" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/khanamiryan/qrcode-detector-decoder" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/riverslei/payment" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/thinkphp/vendor/guzzlehttp/promises" />
+    </include_path>
+  </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="5.4.0" />
+</project>

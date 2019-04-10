@@ -1,0 +1,460 @@
+<extend name="Public/base"/>
+
+<block name="head">
+    <css href="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.min.css" />
+    <js href="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.min.js" />
+    <js href="__PUBLIC__/bootstrap/datetimepicker/datetimepicker.zh-CN.js" />
+    <js href="__PUBLIC__/layer/layer.js" />
+    <js href="__PUBLIC__/layer/myalert.js" />
+    <css href="__PUBLIC__/layer/myalert.css"/>
+
+</block>
+
+<block name="content">
+    <div class="tabbable">
+        <include file="nav" />
+        <div class="tab-content">
+            <div class="tab-pane active">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button type="button" class="btn btn-primary btn-xs"  onclick="addAwardshow_ght();" style="margin-bottom:15px;">添加</button>
+                        <div class="tabbable">
+                            <div class="tab-content">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th>会员等级</th>
+                                                <th>加钱金额</th>
+                                                <th>自动奖励</th>
+                                                <th>允许等比奖励</th>
+                                                <th>分期奖励</th>
+                                                <th>分期数</th>
+                                                <th>生效时段</th>
+                                                <th>生效时段内限制</th>
+                                                <th>操作</th>
+                                            </tr>
+                                            </thead>
+											
+                                            <tbody>
+                                                <volist name="awardplanlist" id="awardplan">
+                                       
+													
+													
+                                                        <tr id="t{$awardplan.id}">
+														                               <td>{$awardplan.HyCardGuid}</td>
+                                                            <td>{$awardplan.AddMoney}</td>
+                                                            <td>{$awardplan.JLMoney}</td>
+
+                                                            <td>
+
+                                                              <if condition="$awardplan.Bljl eq 1">是</if>
+                                                              <if condition="$awardplan.Bljl eq 0">否</if>
+                                                            </td>
+
+                                                            <td>{$awardplan.FqJe}</td>
+                                                            <td>{$awardplan.FqCount}</td>
+                                                            <td>{$awardplan.LimitTimeLx}</td>
+                                                            <td>{$awardplan.LimitDays}</td>
+                                                            <td><a  onclick="editAwardshow_ght({$awardplan.id});" href="#">修改</a> <a href="javascript:deleteAwardPlan({$awardplan.id});" >删除</a></td>
+                                                        </tr>
+   
+                                                </volist>
+                                            </tbody>
+                                        </table>
+                       
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</block>
+
+<block name="script">
+    <script>
+        $(function(){
+
+			$('#addaward input[name="sxsd"]').change(function(){
+			   if($('#addaward input[name="sxsd"]').prop('checked')){
+			     
+				   $('#sxsd_time').hide();
+				    $("input[name='start']").val("");
+					$("input[name='end']").val("");
+			   }else{
+			        $('#sxsd_time').show();
+			   }
+			});
+			$('#addaward input[name="fq"]').change(function(){
+			   if($('#addaward input[name="fq"]').prop('checked')){
+			     
+				   $('#fq_limit_set').hide();
+				    $("input[name='fq_total']").val("");
+					$("input[name='fq_time']").val("");
+			   }else{
+			        $('#fq_limit_set').show();
+			   }
+			});
+			
+			$('#addaward input[name="sxsdlime"]').change(function(){
+			
+			   if($('#premon input[name="sxsdlime"]').prop('checked')){
+			  
+				  $('#sxsd_mon').show();
+				  $('#sxsd_week').hide();
+				  $("input[name='week']").each(function(){this.checked=false;});
+			   }else if($('#preweek input[name="sxsdlime"]').prop('checked')){
+			  
+				  $('#sxsd_week').show();
+				  $('#sxsd_mon').hide();
+				  $("input[name='mon']").each(function(){this.checked=false;});
+			   }else{
+			      $('#sxsd_week').hide();
+				  $('#sxsd_mon').hide();
+				  $("input[name='week']").each(function(){this.checked=false;});
+				  $("input[name='mon']").each(function(){this.checked=false;});
+			        
+			   }
+			});
+
+
+
+
+
+
+                $('#editaward input[name="sxsd"]').change(function(){
+               if($('#editaward input[name="sxsd"]').prop('checked')){
+                 
+                   $('#sxsd_time1').hide();
+                    $("input[name='start']").val("");
+                    $("input[name='end']").val("");
+               }else{
+                    $('#sxsd_time1').show();
+               }
+            });
+            $('#editaward input[name="fq"]').change(function(){
+               if($('#editaward input[name="fq"]').prop('checked')){
+                 
+                   $('#fq_limit_set1').hide();
+                    $("input[name='fq_total']").val("");
+                    $("input[name='fq_time']").val("");
+               }else{
+                    $('#fq_limit_set1').show();
+               }
+            });
+            
+            $('#editaward input[name="sxsdlime"]').change(function(){
+            
+               if($('#premon input[name="sxsdlime"]').prop('checked')){
+              
+                  $('#sxsd_mon1').show();
+                  $('#sxsd_week1').hide();
+                  $("input[name='week']").each(function(){this.checked=false;});
+               }else if($('#preweek input[name="sxsdlime"]').prop('checked')){
+              
+                  $('#sxsd_week1').show();
+                  $('#sxsd_mon1').hide();
+                  $("input[name='mon']").each(function(){this.checked=false;});
+               }else{
+                  $('#sxsd_week1').hide();
+                  $('#sxsd_mon1').hide();
+                  $("input[name='week']").each(function(){this.checked=false;});
+                  $("input[name='mon']").each(function(){this.checked=false;});
+                    
+               }
+            });
+
+
+            $('.datetime-picker').datetimepicker({
+                format:'yyyy-mm-dd hh:ii:ss',
+                autoclose:true,
+                todayBtn:true,
+                todayHighlight:true,
+                language:'zh-CN'
+            });
+        });
+
+        function addAward(){
+            var date = new Date();
+            $('#addaward input:text').val('');
+            //会员类型
+            $('#addaward input[name="hytype"]').val($('#vip-types .active a').attr('href').substr(-1));
+            $('#addaward .type-label').text($('#vip-types>.active>a').text());
+            $('#addaward input[name="start"]').val(date.format('YYYY-mm-dd 00:00:00')).prop('disabled',true);
+            date.setMonth(date.getMonth()+1);
+            $('#addaward input[name="end"]').val(date.format('YYYY-mm-dd 00:00:00')).prop('disabled',true);
+        }
+
+
+
+        function editAwardshow(id)
+        {
+        
+                $.ajax({
+                url: "{:U('editAwardshow')}",//请求数据的php链接
+                type: 'post',//传输数据格式 get/post
+                dataType : 'text', //回调类型 text/json/...
+                data: {'id':id},
+                success: function(data)            
+                {
+                    
+                     
+
+                    var mybangobj=eval("("+data+")");                
+                    var json_str,hytype_str,week_str,mon_str,price_str,auto_str,start_str,end_str,toaccount_str,sxsd_str,sxsd_limit_str,fq_str,fq_time_str,fq_total =''; 
+                  
+                    if(mybangobj.result==1)  
+                    {  
+                        $('#ght_addmoney').val(mybangobj['AddMoney']);
+                        $('#ght_auto').val(mybangobj['JLMoney']);
+
+                        if(mybangobj['Lx']==0)
+                        {                   
+                           $("#editaward input[type=radio][name='toaccount'][value=0]").attr("checked",'checked');
+                        }
+                        else if(mybangobj['Lx']==1)
+                        {
+                              $("#editaward input[type=radio][name='toaccount'][value=1]").attr("checked",'checked');
+                        }   
+
+
+                        if(mybangobj['LimitDayLx']==0)
+                        {                   
+                           $("#editaward input[type=radio][name='sxsdlime'][value=0]").attr("checked",'checked');
+                        }
+                        else if(mybangobj['LimitDayLx']==1)
+                        {
+                              $("#editaward input[type=radio][name='sxsdlime'][value=1]").attr("checked",'checked');
+                        }
+                        else if(mybangobj['LimitDayLx']==2)
+                        {
+                              $("#editaward input[type=radio][name='sxsdlime'][value=2]").attr("checked",'checked');
+                        }  
+
+
+                        if(mybangobj['LimitTimeLx']==0)
+                        {                   
+                           $("#editaward input[type=radio][name='sxsd'][value=0]").attr("checked",'checked');
+                        }
+                        else if(mybangobj['LimitTimeLx']==1)
+                        {
+                              $("#editaward input[type=radio][name='sxsd'][value=1]").attr("checked",'checked');
+                        }  
+
+
+ 
+                        
+
+
+                        if(mybangobj['FqLx']==0)
+                        {                   
+                           $("#editaward input[type=radio][name='fq'][value=0]").attr("checked",'checked');
+                        }
+                        else if(mybangobj['FqLx']==1)
+                        {
+                              $("#editaward input[type=radio][name='fq'][value=1]").attr("checked",'checked');
+                        }     
+
+
+                       var flavors = '';
+                        // $("#editaward input[type=checkbox][name='viplevel'][value=临时卡]").attr("checked",'checked');
+                        
+                $('#editaward').modal('show'); 
+                        
+                        var s = mybangobj['HyCardGuid']; 
+
+                        flavors = s.split(",");
+
+
+                    }  
+                    else if(mybangobj.result==0)//未绑定微博  
+                    {  
+
+                
+                    }    
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) 
+                {
+                   
+                    myalertdanger('error');
+
+                }
+            });
+        }
+
+      
+        function submitAddAward()
+        {
+            
+            var json_str,hytype_str,week_str,mon_str,price_str,auto_str,start_str,end_str,toaccount_str,sxsd_str,sxsd_limit_str,fq_str,fq_time_str,fq_total ='';     
+
+             json_str='';
+            $("#addaward input[name='viplevel']:checkbox:checked").each(function()
+            {
+                if(hytype_str==undefined)
+               {
+                 json_str=$(this).val();
+                 hytype_str=json_str+',';
+               }
+               else
+               {
+                hytype_str=$(this).val()+","+hytype_str;
+               }                 
+            })
+
+            json_str='';
+            $("#addaward input[name='mon']:checkbox:checked").each(function()
+            {
+              
+              if(mon_str==undefined)
+               {
+                 json_str=$(this).val();
+                 mon_str=json_str+',';
+              }
+              else
+              {
+                mon_str=$(this).val()+","+mon_str;
+              } 
+
+            })
+            
+            json_str='';
+            $("#addaward input[name='week']:checkbox:checked").each(function()
+            {
+               if(week_str==undefined)
+               {
+                 json_str=$(this).val();
+                 week_str=json_str+',';
+                  }
+                  else
+                  {
+                    week_str=$(this).val()+","+week_str;
+                  }                             
+            })
+               
+
+            sxsd_str     =$('#addaward input[name="sxsd"]:checked').val();
+            sxsdlime_str =$('#addaward input[name="sxsdlime"]:checked').val();
+
+            price_str    =$('#addaward input[name="price"]').val();
+            auto_str     =$('#addaward input[name="auto"]').val();
+            toaccount_str=$('#addaward input[name="toaccount"]:checked').val();
+            start_str    =$('#addaward input[name="start"]').val();
+            end_str      =$('#addaward input[name="end"]').val();
+            fq_str       =$('#addaward input[name="fq"]:checked').val();
+            fq_time_str  =$('#addaward input[name="fq_time"]').val();
+            fq_total_str =$('#addaward input[name="fq_total"]').val();
+ 
+
+
+            $.ajax({
+                url: "{:U('addAwardPlan')}",//请求数据的php链接
+                type: 'post',//传输数据格式 get/post
+                dataType : 'text', //回调类型 text/json/...
+                data: {'hytype':hytype_str,'price':price_str,'auto':auto_str,'sxsd':sxsd_str,'sxsdlime':sxsdlime_str,'toaccount':toaccount_str,'start':start_str,'end':end_str,'fq':fq_str,'fq_time':fq_time_str,'fq_total':fq_total_str,'mon':mon_str,'week':week_str},
+                success: function(data)
+                {
+                    var mybangobj=eval("("+data+")");                
+
+                    if(mybangobj.result==1)  
+                    {  
+                      myalertsuccess('添加成功');
+                        // alert("新增成功"); 
+                              //   layer.msg('添加成功', {
+                              //     offset: 0,
+                              //     shift: 6
+                              //   },function(){ 
+                              //                 parent.location.reload();
+                                            
+                              // }); 
+                    }  
+                    else if(mybangobj.result==0)//未绑定微博  
+                    {  
+                      myalertdanger('添加失败');
+
+                         // alert("新增失败"); 
+                            //    layer.msg('添加失败', {
+                            //   offset: 0,
+                            //   shift: 6
+                            // });
+                    }    
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) 
+                {
+                   
+                    myalertdanger('error');
+                }
+            });
+
+            
+        }
+        function submitEditAward(){
+            $.post("{:U('setAward')}",$('#editaward form').serialize(),function(data){
+                console.log(data);
+            })
+        }
+
+
+
+function editAwardshow_ght(id)
+{    
+          layer.open({
+          type: 2,
+          title: '修改奖励',
+          maxmin: true,
+          shadeClose: true, //点击遮罩关闭层
+          area : ['800px' , '570px'],
+          // content: 'addawardplay.html'
+          content: '{:U("Rate/edit_award")}?id='+id,
+          });
+}
+
+
+function addAwardshow_ght(id)
+{    
+          layer.open({
+          type: 2,
+          title: '添加奖励计划',
+          maxmin: true,
+          shadeClose: true, //点击遮罩关闭层
+          area : ['800px' , '570px'],
+          content: '{:U("Rate/add_award")}',
+          });
+}
+
+</script>
+
+
+<script type="text/javascript">
+     function deleteAwardPlan(id)
+     {  
+     
+       var tr = $('#t'+id);
+
+           var name=tr.find('td:eq(1)').text();
+      
+
+
+
+       layer.confirm('确定要删除加钱金额为"'+name+'"的奖励计划么？',{icon:3,title:'提示'},function(index){
+          $.post("{:U('deleteAwardPlan')}",{oper:'del',id:id},function(data)
+         {
+                        if(data.status=="1"){
+                          myalertsuccess('操作成功，请点击右侧 "更新重启网吧服务端"。');
+                           
+                        }else{
+                          myalertdanger('删除失败,请重新操作');
+                        }
+                    });
+           layer.close(index);
+        }) 
+
+        }  
+  
+</script>
+
+
+
+</block>

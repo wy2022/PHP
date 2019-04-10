@@ -1,0 +1,75 @@
+<extend name="Public/base" />
+
+<block name="content">
+<form action="" id="role_edit" method="post">
+	<div class="form-group row">
+		<label class="control-label col-sm-1">角色名称</label>
+		<input class="col-sm-3" name="role_name" type="text" id="role_name" value="{$role_name}" placeholder="角色名称" required />
+	</div>
+	<div class="form-group row">
+		<label class="control-label col-sm-1">IP白名单<br /><span style="font-size:12px;color:gray;">每行一个ip，如果有一行为 * 则忽略设置自动通过所有ip</span></label>
+		<textarea class="col-sm-3" name="ip_whitelist" cols="30" rows="10">{$ip_whitelist}</textarea>
+	</div>
+	<dir class="clearfix"></dir>
+	<hr />
+	<p><h3>分配权限</h3></p>
+	<div class="table-responsive">
+		<table class="table table-striped table-hover">
+			<tbody>
+				<volist name="perm_list" id="perm1">
+					<tr>
+						<th colspan="6"><label><input type="checkbox" value="{$perm1.perm_id}" name="perm[]" <?php if(in_array($perm1['perm_id'],$role_perm_list)){echo 'checked';} ?> /> {$perm1.perm_name}</label></th>
+					</tr>
+					<tr>
+						<td></td>
+						<present name="perm1._">
+						<volist name="perm1._" id="perm2">
+							<td>
+								<label><input type="checkbox" value="{$perm2.perm_id}" name="perm[]" <?php if(in_array($perm2['perm_id'],$role_perm_list)){echo 'checked';} ?> /> {$perm2.perm_name}</label>
+								<ul>
+									<present name="perm2._">
+									<volist name="perm2._" id="perm3">
+										<li><label><input type="checkbox" value="{$perm3.perm_id}" name="perm[]" <?php if(in_array($perm3['perm_id'],$role_perm_list)){echo 'checked';} ?> /> {$perm3.perm_name}</label></li>
+									</volist>
+									</present>
+								</ul>
+							</td>
+						</volist>
+						</present>
+					</tr>
+				</volist>
+			</tbody>
+		</table>
+	</div>
+	<div>
+		<button class="btn btn-info" type="submit"><i class="fa fa-check"></i>提交</button>
+	</div>
+</form>
+</block>
+
+<block name="script">
+<script>
+$(function(){
+	$('table tr:even input').change(function(){
+		if(!$(this).prop('checked')){
+			$(this).closest('tr').next().find('input').prop('checked',false);
+		}
+	});
+	$('table tr:odd input').change(function(){
+		if($(this).prop('checked')){
+			$(this).closest('tr').prev().find('input').prop('checked',true);
+		}
+	});
+	$('table tr:odd td>ul input').change(function(){
+		if($(this).prop('checked')){
+			$(this).closest('ul').prev().find('input').prop('checked',true);
+		}
+	});
+	$('table tr:odd td>label input').change(function(){
+		if(!$(this).prop('checked')){
+			$(this).closest('label').next().find('input').prop('checked',false);
+		}
+	});
+})
+</script>
+</block>

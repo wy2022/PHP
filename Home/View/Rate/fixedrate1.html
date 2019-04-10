@@ -1,0 +1,270 @@
+<extend name="Public/base" />
+
+<block name="content">
+    <div class="tabbable">
+        <include file="nav" />
+        <div class="tab-content">
+            <div class="tab-pane active">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <h4 class="header">区域选择</h4>
+                        <div class="list-group" id="district-list">
+                            <volist name="districtlist" id="district">
+                                <a class="list-group-item" id="district-{$district.id}" href="javascript:getfixedrate({$district.id});">{$district.GroupName}</a>
+                            </volist>
+                        </div>
+                    </div>
+                    <div class="col-sm-10">
+                        <h4 class="header">定额费率</h4>
+                        <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#addfixedrate" onclick="addFixedRate();">添加</button>
+                        <button class="btn btn-default btn-sm" onclick="addFreeRate();">添加自由费率</button>
+                        <table id="fixedrate-table" class="table table-bordered" style="margin-top:5px;">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>金额（元）</th>
+                                    <th>机时（分钟）</th>
+                                    <th>开始时间</th>
+                                    <th>结束时间</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addfixedrate" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title">添加定额费率</h4>
+                </div>
+                <form class="form-horizontal">
+                    <div class="modal-body">
+                            <input class="hidden" type="text" name="district" required/>
+                            <input class="hidden" type="text" name="id" required/>
+                            <div class="form-group">
+                                <label class="control-label col-sm-5">名称：</label>
+                                <input type="text" class="col-sm-4" name="name" required/><label class="control-label"></label>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-5">价格设置：</label>
+                                <input type="number" class="col-sm-4" name="price" required/><label class="control-label">&nbsp;元</label>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-5">机时：</label>
+                                <input type="number" class="col-sm-4" name="time" required/><label class="control-label">&nbsp;分钟</label>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-5">开始时间：</label>
+                                <input type="text" class="col-sm-4" name="start" required/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-5">结束时间：</label>
+                                <input type="text" class="col-sm-4" name="end" required/>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">添加</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editfixedrate" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title">修改定额费率</h4>
+                </div>
+                <form class="form-horizontal">
+                    <div class="modal-body">
+                            <input class="hidden" type="text" name="district"/>
+                            <input class="hidden" type="text" name="id"/>
+                            <div class="form-group">
+                                <label class="control-label col-sm-5">名称：</label>
+                                <input type="text" class="col-sm-4" name="name" required/><label class="control-label"></label>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-5">价格设置：</label>
+                                <input type="number" class="col-sm-4" name="price" required/><label class="control-label">&nbsp;元</label>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-5">机时：</label>
+                                <input type="number" class="col-sm-4" name="time" required/><label class="control-label">&nbsp;分钟</label>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-5">开始时间：</label>
+                                <input type="text" class="col-sm-4" name="start" required/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-5">结束时间：</label>
+                                <input type="text" class="col-sm-4" name="end" required/>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">添加</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script>
+        $(function(){
+            $('#addfixedrate form').submit(function(e){
+                e.preventDefault();
+                submitAddFixedRate();
+            });
+            $('#editfixedrate form').submit(function(e){
+                e.preventDefault();
+                submitEditFixedRate();
+            });
+            getfixedrate({$districtlist.0.id});
+        });
+        var district;
+        function submitAddFixedRate(){
+            var regex = /^\d+(\.\d+)?$/;
+            if(!regex.test($('#addfixedrate input[name="price"]').val())){
+                alert('价格只能输入数字');
+                return;
+            }
+            regex = /^\d+$/;
+            if(!regex.test($('#addfixedrate input[name="time"]').val())){
+                alert('机时只能输入数字');
+                return;
+            }
+            regex = /^\d{2}:\d{2}$/;
+            if(!regex.test($('#addfixedrate input[name="start"]').val())){
+                alert('开始时间格式错误');
+                return;
+            }
+            if(!regex.test($('#addfixedrate input[name="end"]').val())){
+                alert('结束时间格式错误');
+                return;
+            }
+            $.post("{:U('setFixedRate')}",$('#addfixedrate form').serialize() + '&oper=add',function(data){
+                if(data.status){
+                    alert('添加成功');
+                    $('#addfixedrate').modal('hide');
+                    getfixedrate(district);
+                }else{
+                    alert('添加失败');
+                }
+            })
+        }
+        function submitEditFixedRate(){
+            var regex = /^\d+(\.\d+)?$/;
+            if(!regex.test($('#editfixedrate input[name="price"]').val())){
+                alert('价格只能输入数字');
+                return;
+            }
+            regex = /^\d+$/;
+            if(!regex.test($('#editfixedrate input[name="time"]').val())){
+                alert('机时只能输入数字');
+                return;
+            }
+            regex = /^\d{2}:\d{2}$/;
+            if(!regex.test($('#editfixedrate input[name="start"]').val())){
+                alert('开始时间格式错误');
+                return;
+            }
+            if(!regex.test($('#editfixedrate input[name="end"]').val())){
+                alert('结束时间格式错误');
+                return;
+            }
+            $.post("{:U('setFixedRate')}",$('#editfixedrate form').serialize() + '&oper=edit',function(data){
+                if(data.status){
+                    alert('修改成功');
+                    $('#editfixedrate').modal('hide');
+                    getfixedrate(district);
+                }else{
+                    alert('修改失败');
+                }
+            });
+        }
+        function getfixedrate(){
+            district = arguments[0];
+            $.get("{:U('getFixedRate')}",{district:district},function(data){
+                var html = '';
+                var item;
+                for(var index in data.fixed){
+                    item = data.fixed[index];
+                    html += '<tr id="t' + item.id + '">/n<td>' + item.name + '</td><td>' + item.price + '</td><td>' + item.time + '</td><td>' + item.start + '</td><td>' + item.end + '</td><td><a href="javascript:editFixedRate(' + item.id + ');">修改</a> <a href="javascript:deleteFixedRate(' + item.id + ');">删除</a></td>/n</tr>';
+                }
+                if(data.free){
+                    html += '<tr><td colspan="5">自由设定定额费率</td><td><a href="javascript:deleteFreeRate();">删除</a></td></tr>';
+                }
+                $('#fixedrate-table tbody').html(html);
+                $('#district-list a').removeClass('active');
+                $('#district-'+district).addClass('active');
+            });
+        }
+        function addFixedRate(){
+            $('#addfixedrate input[name="id"]').val(0);
+            $('#addfixedrate input[name="district"]').val(district);
+            $('#addfixedrate input[name="name"]').val('');
+            $('#addfixedrate input[name="price"]').val(0);
+            $('#addfixedrate input[name="time"]').val(0);
+            $('#addfixedrate input[name="start"]').val('00:00');
+            $('#addfixedrate input[name="end"]').val('00:00');
+        }
+        function addFreeRate(){
+            if(confirm('是否要在“'+ $('#district-'+district).text() +'”添加自由费率？')){
+                $.post("{:U('addFreeRate')}",{district:district},function(data){
+                    if(data.status){
+                        alert('添加成功');
+                        getfixedrate(district);
+                    }else{
+                        alert('添加自由费率失败，一个区域只能有一个自由费率！');
+                    }
+                })
+            }
+        }
+        function editFixedRate(id){
+            var tr = $('#t'+id);
+            $('#editfixedrate input[name="id"]').val(id);
+            $('#editfixedrate input[name="district"]').val(district);
+            $('#editfixedrate input[name="name"]').val(tr.find('td:eq(0)').text());
+            $('#editfixedrate input[name="price"]').val(tr.find('td:eq(1)').text());
+            $('#editfixedrate input[name="time"]').val(tr.find('td:eq(2)').text());
+            $('#editfixedrate input[name="start"]').val(tr.find('td:eq(3)').text());
+            $('#editfixedrate input[name="end"]').val(tr.find('td:eq(4)').text());
+            $('#editfixedrate').modal('show');
+        }
+        function deleteFixedRate(id){
+            if(confirm('是否要删除“'+ $('#district-'+district).text() +'”的“'+ $('#t'+id).find('td:eq(0)').text() +'”费率？')){
+                $.post("{:U('deleteFixedRate')}",{oper:'del',district:district,id:id},function(data){
+                    if(data.status){
+                        alert('删除成功');
+                        getfixedrate(district);
+                    }else{
+                        alert('删除失败');
+                    }
+                });
+            }
+        }
+        function deleteFreeRate(){
+            if(confirm('是否要删除“'+ $('#district-'+district).text() +'”的自由费率？')){
+                $.post("{:U('deleteFreeRate')}",{oper:'del',district:district},function(data){
+                    if(data.status){
+                        alert('删除成功');
+                        getfixedrate(district);
+                    }else{
+                        alert('删除失败');
+                    }
+                });
+            }
+        }
+    </script>
+</block>
